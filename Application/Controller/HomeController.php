@@ -5,7 +5,7 @@
     namespace Application\Controller;
 
     use App\Core\Controller;
-use PDO;
+    use PDO;
 
     class HomeController extends Controller
     {        
@@ -23,26 +23,35 @@ use PDO;
         public function index()
         { 
             try {
-                $query = "SELECT date_in, date_out FROM hourly_control 
-                WHERE id_user = :id_user 
-                AND date_in = (SELECT MAX(date_in) FROM hourly_control)";
-                
-                $stm = $this->dbcon->pdo->prepare($query);
-                $stm->bindValue(":id_user", $_SESSION['id_user']);
-                $stm->execute();
-                $rows = $stm->fetch(PDO::FETCH_ASSOC);
-                $stm->closeCursor();
+                // Variables to render in view
+                $options = [
+                    'menus'             => $this->showNavLinks(),                     
+                    'active'            => 'home',                                  
+                ];
 
-                $workstate       = $rows['date_out'] === null ? 'Working' : 'Not Working';
-                $workstate_color = $rows['date_out'] === null ? 'success' : 'danger';                
-                
-                $this->render('main_view.twig', [
-                    'menus'             => $this->showNavLinks(), 
-                    'session'           => $_SESSION,
-                    'active'            => 'home',
-                    'workstate'         => $workstate,
-                    'workstate_color'   => $workstate_color                
-                ]);
+                // If there is an active session
+                if(isset($_SESSION['id_user'])) {
+                    $query = "SELECT date_in, date_out FROM hourly_control 
+                    WHERE id_user = :id_user 
+                    AND date_in = (SELECT MAX(date_in) FROM hourly_control)";
+                    
+                    $stm = $this->dbcon->pdo->prepare($query);
+                    $stm->bindValue(":id_user", $_SESSION['id_user']);
+                    $stm->execute();
+                    $rows = $stm->fetch(PDO::FETCH_ASSOC);
+                    $stm->closeCursor();
+
+                    $workstate       = isset($rows['date_out']) && $rows['date_out'] === null ? 'Working' : 'Not Working';
+                    $workstate_color = isset($rows['date_out']) && $rows['date_out'] === null ? 'success' : 'danger';
+
+                    $options = array_merge($options, [
+                        'session'           => $_SESSION,
+                        'workstate'         => $workstate,
+                        'workstate_color'   => $workstate_color,
+                    ]);                    
+                }
+                                                                
+                $this->render('main_view.twig', $options );
 
             } catch (\Throwable $th) {
                 $error_msg = [
