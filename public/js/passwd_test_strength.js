@@ -4,12 +4,14 @@ const passwordInput = document.getElementById('password');
 const strengthBar = document.getElementById('strength_bar');
 const message = document.getElementById('message');
 
-passwordInput.addEventListener('keyup', function() {  
-    const strength = getPasswordStrength(this.value);
-
-    strengthBar.className = 'strength_bar ' + strength.class;
-    message.textContent = strength.message;
-});
+if(passwordInput) {
+    passwordInput.addEventListener('keyup', function() {  
+        const strength = getPasswordStrength(this.value);
+    
+        strengthBar.className = 'strength_bar ' + strength.class;
+        message.textContent = strength.message;
+    });
+}
 
 function getPasswordStrength(password) {
     let strength = {

@@ -23,10 +23,9 @@
         public function index()
         { 
             try {
-                // Variables to render in view
                 $options = [
-                    'menus'             => $this->showNavLinks(),                     
-                    'active'            => 'home',                                  
+                    'menus'  => $this->showNavLinks(),                     
+                    'active' => 'home',                                 
                 ];
 
                 // If there is an active session
@@ -38,16 +37,16 @@
                     $stm = $this->dbcon->pdo->prepare($query);
                     $stm->bindValue(":id_user", $_SESSION['id_user']);
                     $stm->execute();
-                    $rows = $stm->fetch(PDO::FETCH_ASSOC);
-                    $stm->closeCursor();
 
-                    $workstate       = isset($rows['date_out']) && $rows['date_out'] === null ? 'Working' : 'Not Working';
-                    $workstate_color = isset($rows['date_out']) && $rows['date_out'] === null ? 'success' : 'danger';
+                    $rows = $stm->fetch(PDO::FETCH_ASSOC);
+
+                    $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
+                    $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
 
                     $options = array_merge($options, [
-                        'session'           => $_SESSION,
-                        'workstate'         => $workstate,
-                        'workstate_color'   => $workstate_color,
+                        'session'         => $_SESSION,
+                        'workstate'       => $workstate,
+                        'workstate_color' => $workstate_color,
                     ]);                    
                 }
                                                                 
@@ -73,4 +72,4 @@
             }                                             
         }
     }    
-?>  
+?>

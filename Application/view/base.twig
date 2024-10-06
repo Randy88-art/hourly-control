@@ -15,7 +15,12 @@
 			<link rel="stylesheet" type="text/css" href='/css/reset.css'>
 			<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
         	<link rel="stylesheet" type="text/css" href='/css/estilo.css'>			       	         
-        {% endblock %}        
+        {% endblock %}
+		{% block javascripts %}
+			<script src="/js/bootstrap.bundle.min.js"></script>
+        	<script src='/js/eventos.js'></script>
+			<script src='/js/passwd_test_strength.js'></script>         	
+        {% endblock %}       
     </head>
     <body>
     	<div class="container-fluid">
@@ -23,7 +28,7 @@
 				<div class="container-fluid">
 					<div class="row align-items-center">						
 						<div class="col-12 col-md-10 col-lg-12">							
-							<h1 class="text-success">Control Horario</h1>
+							<h1 class="text-success">Hourly Control</h1>
 						</div>						
 					</div>										
 				</div>				
@@ -54,6 +59,7 @@
 			<main class="pt-3 pb-3">
 				{% if session.user_name is defined %}
 					<p class="text-end pe-3">Logged as {{ session.user_name|capitalize }}</p>
+					<p class="date text-end pe-3" id="date"></p>
 				{% endif %}
 				
 				{% if message is defined %}
@@ -115,12 +121,7 @@
 					</div>					
 				{% endblock %}
 			</footer> 
-		</div>
-		{% block javascripts %}
-			<script src="/js/bootstrap.bundle.min.js"></script>
-        	<script src='/js/eventos.js'></script>
-			<script src='/js/passwd_test_strength.js'></script>         	
-        {% endblock %}       
+		</div>		      
     </body>
 </html>
 

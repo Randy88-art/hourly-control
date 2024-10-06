@@ -18,7 +18,7 @@
         public function view(string $name, array $data = []) 
         {
             if(!empty($data)) extract($data);
-            $filename = SITE_ROOT . "/../Application/view/" . $name . "_view.php";                      
+                $filename = SITE_ROOT . "/../Application/view/" . $name . "_view.php";                      
             
             if(file_exists($filename)) {                
                 require_once($filename);                
