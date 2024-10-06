@@ -14,7 +14,7 @@
                 "Home"				=>	"/",				
 				"Registration"		=> 	"/register",
 				"Administration"	=>	"/admin/admin",				
-				"Login"			=> 	"/login",
+				"Login"			    => 	"/login",
             ];
 
             return $this->menus;
@@ -24,9 +24,8 @@
         public function user(): array
         {
             $this->menus = [
-                "Home"				=>	"/",				
-				"Registration"		=> 	"/register",				
-				"Login"			=> 	"/login",
+                "Home"	=>	"/",												
+				"Login"	=> 	"/login",
             ];
 
             return $this->menus;
