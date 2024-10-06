@@ -1,0 +1,18 @@
+{% extends "base.twig" %}
+
+{% block section %}
+
+{% if session.user_name is defined %}
+<section class="row text-center">
+    <div class="col-2 alert alert-{{ workstate_color }}">
+        {{ workstate }}
+    </div>
+    <h2>Hours Control</h2>
+    <div>
+        <a href="/hourlycontrol/hourly/getIn" class="col-2 btn btn-outline-success">Enter</a>
+        <a href="/hourlycontrol/hourly/getOut" class="col-2 btn btn-outline-danger">Exit</a>
+    </div>        
+</section>
+{% endif %}
+
+{% endblock section %}
