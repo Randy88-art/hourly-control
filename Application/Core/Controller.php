@@ -49,15 +49,15 @@
         public function showNavLinks(): array {                     
             if(isset($_SESSION['role'])) {                
                match ($_SESSION['role']) {
-                'ROLE_ADMIN'    => $nav_links = $this->admin(),
-                'ROLE_USER'     => $nav_links = $this->user(),
+                'ROLE_ADMIN'    => $nav_links = $this->showAdminLinks(),
+                'ROLE_USER'     => $nav_links = $this->showUserLinks(),
                };
 
                array_pop($nav_links);
                $nav_links['Logout'] = '/logout';
             }
             else {
-                $nav_links = $this->user();
+                $nav_links = $this->showUserLinks();
             }
 
             return $nav_links;

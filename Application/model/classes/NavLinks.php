@@ -8,7 +8,7 @@
             
         }
 
-        public function admin(): array
+        public function showAdminLinks(): array
         {
             $this->menus = [
                 "Home"				=>	"/",				
@@ -21,7 +21,7 @@
         }
 
         
-        public function user(): array
+        public function showUserLinks(): array
         {
             $this->menus = [
                 "Home"	=>	"/",												

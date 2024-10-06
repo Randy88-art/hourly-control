@@ -5,7 +5,7 @@
     namespace Application\Controller;
 
     use App\Core\Controller;
-    use PDO;
+    use model\classes\QueryHourlyControl;   
 
     class HomeController extends Controller
     {        
@@ -30,15 +30,8 @@
 
                 // If there is an active session
                 if(isset($_SESSION['id_user'])) {
-                    $query = "SELECT date_in, date_out FROM hourly_control 
-                    WHERE id_user = :id_user 
-                    AND date_in = (SELECT MAX(date_in) FROM hourly_control)";
-                    
-                    $stm = $this->dbcon->pdo->prepare($query);
-                    $stm->bindValue(":id_user", $_SESSION['id_user']);
-                    $stm->execute();
-
-                    $rows = $stm->fetch(PDO::FETCH_ASSOC);
+                    $query = new QueryHourlyControl($this->dbcon);
+                    $rows  = $query->testWorkState();
 
                     $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
                     $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
