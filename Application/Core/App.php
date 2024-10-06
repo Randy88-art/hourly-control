@@ -73,7 +73,7 @@
 
                 /** select method */
                 if(count($url) > 0) {
-                    if(method_exists($controller, $this->method)) {                        
+                    if(method_exists($file_name, $this->method)) {                        
                         array_shift($url);
                     }
                     else {
