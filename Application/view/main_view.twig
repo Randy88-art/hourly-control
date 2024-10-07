@@ -1,18 +1,26 @@
 {% extends "base.twig" %}
 
 {% block section %}
-
-{% if session.user_name is defined %}
-<section class="row text-center">    
-    <div class="col-2 alert alert-{{ workstate_color }}">
-        {{ workstate }}
-    </div>    
-    <h2>Hours Control</h2>
-    <div>
-        <a href="/hourlycontrol/hourly/getIn" class="col-2 btn btn-outline-success">Enter</a>
-        <a href="/hourlycontrol/hourly/getOut" class="col-2 btn btn-outline-danger">Exit</a>
-    </div>        
-</section>
-{% endif %}
-
+    {% if session.user_name is defined %}
+    <section class="row text-center">    
+        <div class="col col-md-2 alert alert-{{ workstate_color }}">
+            {{ workstate }}
+        </div>    
+        <h2>Hours Control</h2>
+        <div>
+            <a href="/hourlycontrol/hourly/getIn" class="col-3 col-md-2 btn btn-outline-success">Enter</a>
+            <a href="/hourlycontrol/hourly/getOut" class="col-3 col-md-2 btn btn-outline-danger">Exit</a>
+        </div>        
+    </section>
+    {% else %}
+    <section class="row text-center">
+        <h2>Hours Control</h2>
+        <figure class="mb-3 col-6 m-auto">
+            <img src="/images/hourlycontrol.png" alt="clock">
+        </figure>
+        <div>
+            <a href="/login" class="col col-md-2 btn btn-outline-primary">Login</a>
+        </div>
+    </section>
+    {% endif %}
 {% endblock section %}
