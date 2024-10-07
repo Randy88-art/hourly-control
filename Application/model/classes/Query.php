@@ -5,7 +5,7 @@
 
     class Query 
     {
-    	public function __construct(private object $dbcon = DB_CON) {
+    	public function __construct(public object $dbcon = DB_CON) {
             
         }
         

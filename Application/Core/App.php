@@ -66,14 +66,14 @@
                 } 
                 else {                    
                     $this->controller = "ErrorController";
-                    $controller_path = '\Application\Controller\\' . ucfirst($this->controller);
+                    $controller_path = '\Application\Controller\\' . ucfirst($this->controller);                                                        
                 } 
                 
                 $controller = new $controller_path;
 
                 /** select method */
-                if(count($url) > 0) {
-                    if(method_exists($file_name, $this->method)) {                        
+                if(count($url) > 0) {                    
+                    if(method_exists($controller, $this->method)) {                        
                         array_shift($url);
                     }
                     else {

@@ -15,12 +15,7 @@
 			<link rel="stylesheet" type="text/css" href='/css/reset.css'>
 			<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
         	<link rel="stylesheet" type="text/css" href='/css/estilo.css'>			       	         
-        {% endblock %}
-		{% block javascripts %}
-			<script src="/js/bootstrap.bundle.min.js"></script>
-        	<script src='/js/eventos.js'></script>
-			<script src='/js/passwd_test_strength.js'></script>         	
-        {% endblock %}       
+        {% endblock %}		      
     </head>
     <body>
     	<div class="container-fluid">
@@ -121,7 +116,12 @@
 					</div>					
 				{% endblock %}
 			</footer> 
-		</div>		      
+		</div>
+		{% block javascripts %}
+			<script src="/js/bootstrap.bundle.min.js"></script>
+        	<script src='/js/eventos.js'></script>
+			<script src='/js/passwd_test_strength.js'></script>         	
+        {% endblock %} 		      
     </body>
 </html>
 

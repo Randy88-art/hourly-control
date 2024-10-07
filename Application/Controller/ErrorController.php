@@ -14,7 +14,8 @@
 
         }
 
-        public function index()
+
+        public function index(): void
         {  
             try {
                 $this->render('error_view.twig', [

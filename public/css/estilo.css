@@ -201,6 +201,10 @@ select {
 	font-size: 0.7em;
 }
 
+img {
+	max-width: 100%;
+}
+
 /***************** Password strength style *************************/
 .strength {
 	width: 80%;
@@ -251,17 +255,25 @@ select {
 	cursor: pointer;
 }
 
+.message {
+	text-align: center;
+	color: #888;
+}
 
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
-
+	main {
+		min-height: 0em;
+	}
 }
 
 /************************************************************************
 *			iphone 6/7/8 horizontal														*
 ************************************************************************/
 @media (min-width:481px) and (max-width: 668px) {	
-
+	main {
+		min-height: 0em;
+	}
 }
 
 /************************************************************************
