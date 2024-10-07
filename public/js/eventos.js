@@ -35,10 +35,12 @@ window.onload = function() {
 
 		dateElement.innerText = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 	}
-	  
-	// Initial update
-	updateDateTime();
+	
+	if(dateElement) {
+		// Initial update
+		updateDateTime();
 
-	// Update every second
-	setInterval(updateDateTime, 1000);
+		// Update every second
+		setInterval(updateDateTime, 1000);
+	}	
 }
