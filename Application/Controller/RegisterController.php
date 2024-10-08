@@ -16,7 +16,11 @@
 
         /** Show register view */
         public function index(): void {
+
             try {
+                // Test for privileges
+                if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+
                 $this->render('register/register_view.twig', [
                     'menus'     =>  $this->showNavLinks(),
                     'session'   =>  $_SESSION,
@@ -25,7 +29,7 @@
 
             } catch (\Throwable $th) {
                 $error_msg = [
-                    'error' =>  $th->getMessage(),
+                    'Error:' =>  $th->getMessage(),
                 ];
 
                 if(isset($_SESSION['role']) && $_SESSION['role'] === 'ROLE_ADMIN') {

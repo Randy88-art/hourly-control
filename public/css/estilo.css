@@ -89,7 +89,7 @@ p{
 td {
 	text-align: center;
 	padding: 0.5em;
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	background-color: antiquewhite;
 }
 
@@ -146,13 +146,13 @@ pre {
 }
 
 table {
-	margin-top: 2em;
+	/* margin-top: 2em; */
 }
 
 th {
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	padding: 1em;
-	background-color: yellow;
+	/* background-color: yellow; */
 }
 
 sup {

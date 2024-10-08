@@ -1,18 +1,46 @@
 {% extends "base.twig" %}
 
 {% block section %}
+    {# Shows working space if logged #}
     {% if session.user_name is defined %}
-    <section class="row text-center">    
-        <div class="col col-md-2 alert alert-{{ workstate_color }}">
-            {{ workstate }}
-        </div>    
+    <section class="row text-center mb-5">    
+        <h2>Work time information</h2>
+        <div class="col col-md-8 col-lg-6 m-auto">
+            <table class="table table-bordered table-striped m-auto">
+                <thead>
+                    <tr>
+                        <th>Work state</th>
+                        <th>Start time</th>
+                        <th>Exit time</th>
+                        <th>Duration</th>
+                        <th>Total worked at day</th>
+                    </tr>
+                </thead>
+                <tbody>                   
+                    <tr>
+                        <td>
+                            <div class="col alert alert-{{ workstate_color }} mb-0">
+                                {{ workstate }}
+                            </div>
+                        </td>
+                        <td>{{ hours.date_in }}</td>
+                        <td>{{ hours.date_out }}</td>
+                        <td>{{ hours.duration }}</td>
+                        <td>{{ hours.total_time }}</td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>                   
+    </section>
+    <section class="row text-center">
         <h2>Hours Control</h2>
         <div>
-            <a href="/hourlycontrol/hourly/getIn" class="col-3 col-md-2 btn btn-outline-success">Enter</a>
-            <a href="/hourlycontrol/hourly/getOut" class="col-3 col-md-2 btn btn-outline-danger">Exit</a>
-        </div>        
+            <a href="/hourlycontrol/hourly/setInput" class="col-3 col-md-2 btn btn-outline-success">Enter</a>
+            <a href="/hourlycontrol/hourly/setOutput" class="col-3 col-md-2 btn btn-outline-danger">Exit</a>
+        </div> 
     </section>
     {% else %}
+    {# Shows main view for not logged users #}
     <section class="row text-center">
         <h2>Hours Control</h2>
         <figure class="mb-3 col-6 m-auto">
