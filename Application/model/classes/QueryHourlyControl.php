@@ -31,7 +31,7 @@ final class QueryHourlyControl extends Query
         }
     }
 
-    public function getTotalTimeWorkedAtDay(string $date): string
+    public function getTotalTimeWorkedAtDay(string $date): string|null
     {
         $query = "SELECT SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, date_in, date_out))) AS total_time_worked
                     FROM hourly_control
