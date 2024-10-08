@@ -104,13 +104,14 @@
                 }
                 else {
                     throw new \Exception("Service unavailable", 1);                    
-                }                                
+                }  
+                                              
             } catch (\Throwable $th) {               
                 $error_msg = [
-                    'error' =>  $th->getMessage(),
+                    'Error:' =>  $th->getMessage(),
                 ];
 
-                if(isset($_SESSION['role']) && $_SESSION['role'] === 'ROLE_ADMIN') {
+                if($this->testAccess(['ROLE_ADMIN'])) {
                     $error_msg = [
                         "Message:"  =>  $th->getMessage(),
                         "Path:"     =>  $th->getFile(),
