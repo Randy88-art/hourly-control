@@ -1,0 +1,32 @@
+{% extends "base.twig" %}
+
+{% block main %}    
+    <section class="row text-center"> 
+        <h2 class="text-center pb-3">Search Results</h2> 
+        <div class="col col-md-8 col-lg-6 m-auto">
+            <table class="table table-bordered table-striped">
+                <p>Results for user: <strong>{{ user.user_name|capitalize }}</strong> at <strong>{{ date|date("d-m-Y") }}</strong></p>
+                <thead>
+                    <tr>                    
+                        <th>Start time</th>
+                        <th>Exit time</th>
+                        <th>Total time</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                    {% for hour in hours %}              
+                    <tr>                                        
+                        <td>{{ hour.date_in }}</td>
+                        <td>{{ hour.date_out }}</td>
+                        <td>{{ hour.total_time_worked }}</td>                                        
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td><strong>Total time worked: {{ total_time }}</strong></td>
+                    </tr>               
+                </tbody>
+            </table>
+        </div>              
+    </section> 
+{% endblock main %}

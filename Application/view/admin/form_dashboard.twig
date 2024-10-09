@@ -1,0 +1,20 @@
+<form class="col col-md-9 col-lg-7 col-xl-6 mx-auto credentials" action="/admin/admin/searchUserTimeWorked" method="post">
+    <h2 class="mb-5">Search form</h2>
+    <div class="row mb-5 justify-content-center">                
+        <div class="col-5 d-inline-block">
+            <select name="id_user" id="id_user">
+                <option value="0">- Select a user -</option>
+                {% for user  in users %}
+                <option value="{{ user.id }}">{{ user.user_name|capitalize }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-5 d-inline-block">
+            <input type="date" name="date" id="date" min="2022-01-01" value="">
+        </div>
+    </div>
+    
+    <div class="col-6 m-auto mb-5">
+        <input class="btn btn-outline-secondary" type="submit" value="Search">                
+    </div>
+</form>

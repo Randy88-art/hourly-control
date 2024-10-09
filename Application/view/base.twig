@@ -54,7 +54,7 @@
 			<main class="pt-3 pb-3">
 				{% if session.user_name is defined %}
 					<p class="text-end pe-3">Logged as {{ session.user_name|capitalize }}</p>
-					<p class="date text-end pe-3" id="date"></p>
+					<p class="date text-end pe-3" id="date">&nbsp;</p>
 				{% endif %}
 				
 				{% if message is defined %}

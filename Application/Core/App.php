@@ -38,7 +38,8 @@
                 }
                 else if(count($url) == 2) {
                     $this->controller = ucfirst($url[0]);
-                    $this->method = $url[1];       
+                    $this->method = $url[1]; 
+                    $this->route = $url[1] . "/";        
                 }
                 else if(count($url) > 2) {            
                     if(!empty($url) && preg_match('/^([0-9]){1,5}$/', $url[count($url) - 1])) {
