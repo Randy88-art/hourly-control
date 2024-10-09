@@ -47,8 +47,7 @@ h1 {
 }
 
 h2 {
-	font-size: 1.5em;
-	margin-bottom: 2em;
+	font-size: 1.5em;	
 }
 
 h3 {
@@ -135,6 +134,11 @@ header {
 
 input[type="button"], [type="text"], [type="number"], [type="submit"] {
 	padding: 0.5em;
+}
+
+input[type="date"] {
+	padding: 0.4em;
+	border-radius: 0.3em;
 }
 
 form {

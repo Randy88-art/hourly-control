@@ -61,7 +61,7 @@
        * 
        * @return array An array of associative arrays.
        */
-        public function selectAllBy(string $table, string $field, string $value): array  
+        public function selectAllBy(string $table, string $field, string|int $value): array  
         {
             $query = "SELECT * FROM $table WHERE $field = :val";                         
 
@@ -79,7 +79,7 @@
             }
         }
 
-        public function selectOneBy(string $table, string $field, string $value): array|bool  
+        public function selectOneBy(string $table, string $field, string|int $value): array|bool  
         {
             $query = "SELECT * FROM $table WHERE $field = :val";                         
 

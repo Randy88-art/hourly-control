@@ -48,7 +48,7 @@
             
             foreach ($fields as $key => $value) {
                 if (empty($value) || !isset($value)) {                                        
-                    $this->msg .= "<p class='alert alert-danger text-center'>'$key' es un dato requerido</p>";
+                    $this->msg .= "'$key' es un dato requerido";
                     $result = false;					
                 }
             }

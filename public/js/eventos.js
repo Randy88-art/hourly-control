@@ -1,46 +1,33 @@
 "use strict"; 
 
-window.onload = function() {
-	/* Selects all elements with the class name 'show_password'
-	and adds an event listener to them. It then checks if there are any elements found
-	with that class using `if(showPasswordChars.length > 0)`. */
-	let showPasswordChars = document.querySelectorAll('.show_password');
+window.addEventListener('DOMContentLoaded', () => {
+	const showPasswordChars = document.querySelectorAll('.show_password');
 
-	if(showPasswordChars.length > 0) {
+	/* If there are any elements with the class name 'show_password' in the
+	document, it adds a click event listener. */
+	if (showPasswordChars.length > 0) {
 		showPasswordChars.forEach(showPasswordChar => {
-			showPasswordChar.addEventListener('click', () => {				
-				let input = showPasswordChar.parentNode.previousElementSibling.querySelector('input');
-				if(input.type == 'password') {
-					input.type = 'text';
-					showPasswordChar.src = '/images/eye_closed.svg';
-				} else {
-					input.type = 'password';
-					showPasswordChar.src = '/images/eye.svg';
-				}
+			showPasswordChar.addEventListener('click', () => {
+				const input = showPasswordChar.parentNode.previousElementSibling.querySelector('input');
+				input.type = input.type === 'password' ? 'text' : 'password';
+				showPasswordChar.src = input.type === 'password' ? '/images/eye.svg' : '/images/eye_closed.svg';
 			});
 		});
 	}
-	
-	/** Show current date and time */
-	let dateElement = document.querySelector('.date');
 
-	function updateDateTime() {
-		const date = new Date();
-		const day = `0${date.getDate()}`.slice(-2);
-		const month = `0${date.getMonth() + 1}`.slice(-2);
-		const year = date.getFullYear();
-		const hours = `0${date.getHours()}`.slice(-2);
-		const minutes = `0${date.getMinutes()}`.slice(-2);
-		const seconds = `0${date.getSeconds()}`.slice(-2);
+	const dateElement = document.querySelector('.date');
 
-		dateElement.innerText = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+	/* Updates the text content of the `dateElement` every second with the 
+	current date and time in a localized format. */
+	if (dateElement) {
+		setInterval(() => dateElement.innerText = new Date().toLocaleString(), 1000);
 	}
-	
-	if(dateElement) {
-		// Initial update
-		updateDateTime();
 
-		// Update every second
-		setInterval(updateDateTime, 1000);
-	}	
-}
+	const datePicker = document.querySelector('input[type="date"]');
+
+	/* Checks if there is an input element of type "date" in the document. If such an element exists, it
+	sets the value of that input element to the current date in the format "YYYY-MM-DD". */
+	if (datePicker) {
+		datePicker.value = new Date().toISOString().split('T')[0];
+	}
+});
