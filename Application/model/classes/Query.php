@@ -328,5 +328,24 @@
                 throw new \Exception("{$th->getMessage()}");
             }
         }
+
+        public function selectFieldsFromTableById(array $fields, string $table, string $fieldId, string $value): array
+        {
+            $fields = implode(", ", $fields);
+            $query = "SELECT $fields FROM $table WHERE $fieldId = :value";
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);
+                $stm->bindValue(":value", $value);                                                   
+                $stm->execute();       
+                $rows = $stm->fetch(PDO::FETCH_ASSOC);
+                $stm->closeCursor();
+            
+                return $rows;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}");
+            }
+        }
     }    
 ?>
