@@ -53,7 +53,7 @@
                     }
 
                     // We obtain total time worked at day                    
-                    $total_time_worked_at_day = $query->getTotalTimeWorkedAtDay(date('Y-m-d'), $_SESSION['id_user']);
+                    $total_time_worked_at_day = $query->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']) ?? '--:--:--';
                     $hours = array_merge(
                         $hours, 
                         ['total_time' => $total_time_worked_at_day]

@@ -77,7 +77,7 @@ final class AdminController extends Controller
 
                 $hours_by_user = [
                     'hours'      => $queryHourlyControl->getTotalTimeWorkedAtDayByUser($fields['date'], $fields['user']),
-                    'total_time' => $queryHourlyControl->getTotalTimeWorkedAtDay($fields['date'], $fields['user']),
+                    'total_time' => $queryHourlyControl->getTotalTimeWorkedToday($fields['date'], $fields['user']),
                 ];
 
                 // Add hours to variables
