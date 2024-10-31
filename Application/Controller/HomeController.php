@@ -10,10 +10,12 @@
     use model\classes\QueryHourlyControl;   
 
     class HomeController extends Controller
-    {        
-        public function __construct(private object $dbcon = DB_CON)
-        {
+    {            
 
+        public function __construct(
+            private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl, 
+            private object $dbcon = DB_CON)
+        {                  
         }
 
         /**
@@ -32,9 +34,8 @@
 
                 // If there is an active session test the working state
                 // of the user and shows worked hours
-                if(isset($_SESSION['id_user'])) {
-                    $query = new QueryHourlyControl();
-                    $rows  = $query->testWorkState();
+                if(isset($_SESSION['id_user'])) {                    
+                    $rows  = $this->queryHourlyControl->testWorkState();
 
                     $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
                     $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
@@ -53,7 +54,7 @@
                     }
 
                     // We obtain total time worked at day                    
-                    $total_time_worked_at_day = $query->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']) ?? '--:--:--';
+                    $total_time_worked_at_day = $this->queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']) ?? '--:--:--';
                     $hours = array_merge(
                         $hours, 
                         ['total_time' => $total_time_worked_at_day]
