@@ -26,8 +26,7 @@ services:
     tty: true
     volumes: 
       - ".:/var/www"
-      - ./docker-php-ext-xdebug.ini:/usr/local/etc/php/php.ini
-      - ./docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker-php-ext-xdebug.ini:/usr/local/etc/php/php.ini      
       - "./Application/log/apache:/var/log/apache2"
       - "./Application/log/php:/var/log"
         
