@@ -23,7 +23,7 @@ RUN adduser --disabled-password --gecos '' --uid ${USER_ID} --gid ${GROUP_ID} ma
 RUN apt-get update && apt-get install -y git unzip zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev
 
 # Install Xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug
 
 # Install PHP extensions Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype && docker-php-ext-install pdo_mysql gd  

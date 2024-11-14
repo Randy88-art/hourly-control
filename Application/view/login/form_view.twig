@@ -1,4 +1,5 @@
 <form action="" method="post">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
     <div class="col-12 mb-md-2">
         <div class="col-12 col-md-3 d-inline-block text-center text-md-end">
             <label class="col-form-label text-center text-md-end" for="email">E-mail:</label>        

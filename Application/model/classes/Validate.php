@@ -63,5 +63,27 @@
         {
             return $this->msg;
         }
+
+        /**
+         * Generate and store a CSRF token in the session
+         *
+         * @return string The generated CSRF token
+         */
+        public function csrf_token(): string
+        {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            return $_SESSION['csrf_token'];
+        }
+
+        /**
+         * Validate the CSRF token from the session and form submission
+         *
+         * @return bool True if the CSRF token is valid, false otherwise
+         */
+        public function validate_csrf_token(): bool
+        {
+            return isset($_SESSION['csrf_token'], $_POST['csrf_token'])
+                && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
+        }
     }
 ?>
