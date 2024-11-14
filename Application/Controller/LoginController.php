@@ -10,9 +10,11 @@
 
     class LoginController extends Controller
     {        
-        public function __construct(private object $dbcon = DB_CON)
-        {
-
+        public function __construct(
+            private string $message = "",
+            private array $fields = []
+        )
+        {            
         }
 
         public function index(): void
@@ -22,55 +24,63 @@
 
             try {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    
                     // Get values from login form
-                    $fields = [
+                    $this->fields = [
                         'email'     =>  $validate->validate_email(strtolower($_REQUEST['email'])) ? $validate->test_input(strtolower($_REQUEST['email'])) : "",
                         'password'  =>  $validate->test_input($_REQUEST['password']) ?? "",
                     ];
 
-                    // Validate form                    
-                    if($validate->validate_form($fields)) {
-                        if(!isset($_SESSION['id_user'])) {
-                            // Test user to do login                           
-                            $result = $query->selectLoginUser('users', 'roles', 'id_role', $fields['email'], $this->dbcon);                                                       
-                                                        
-                            if($result) {                                
-                                if(password_verify($fields['password'], $result['password'])) {												
-                                    $_SESSION['id_user']    = $result['id'];						
-                                    $_SESSION['user_name']  = $result['user_name'];
-                                    $_SESSION['role']       = $result['role'];												
-                                                                                                       
-                                    header("Location: /home");
-                                    die();						
+                    $variables = [
+                        'menus'         => $this->showNavLinks(),
+                        'fields'        => $this->fields,                        
+                        'active'        => 'login',
+                        'csrf_token'    => $validate,
+                    ];
+
+                    // Validate csrf token
+                    if(!$validate->validate_csrf_token()) {
+                        $this->message = "Invalid csrf token";
+                        $variables['error_message'] = $this->message;
+                    }
+                    else {
+                        // Validate form                    
+                        if($validate->validate_form($this->fields)) {
+                            if(!isset($_SESSION['id_user'])) {
+                                // Test user to do login                           
+                                $result = $query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
+                                                            
+                                if($result) {                                
+                                    if(password_verify($this->fields['password'], $result['password'])) {												
+                                        $_SESSION['id_user']    = $result['id'];						
+                                        $_SESSION['user_name']  = $result['user_name'];
+                                        $_SESSION['role']       = $result['role'];												
+                                                                                                        
+                                        header("Location: /home");
+                                        die();						
+                                    }
+                                    else {
+                                        $variables['error_message'] = 'Please test your credentials';
+                                    }                                                                
                                 }
                                 else {
-                                    $this->render('login/login_view.twig', [
-                                        'menus'         =>  $this->showNavLinks(), 
-                                        'error_message' =>  'Please test your credentials', 
-                                        'fields'        =>  $fields,
-                                        'active'        =>  'login',                   
-                                    ]);
-                                }                                                                
+                                    $variables['error_message'] = 'Please test your credentials';
+                                }                            
                             }
                             else {
-                                $this->render('login/login_view.twig', [
-                                    'menus'         =>  $this->showNavLinks(), 
-                                    'error_message' =>  'Please test your credentials',
-                                    'fields'        =>  $fields, 
-                                    'active'        =>  'login',                
-                                ]);
-                            }                            
+                                header("Location: /home");
+                                die();	
+                            }
                         }
-                        else {
-                            header("Location: /home");
-                            die();	
-                        }
-                    }
+                    } 
+                    
+                    $this->render('login/login_view.twig', $variables);
                 }                                                                             
 
                 $this->render('login/login_view.twig', [
-                    'menus'     => $this->showNavLinks(),
-                    'active'    =>  'login',                
+                    'menus'         => $this->showNavLinks(),                    
+                    'active'        => 'login',
+                    'csrf_token'    => $validate,              
                 ]);
 
             } catch (\Throwable $th) {
@@ -78,7 +88,7 @@
                     'error' =>  $th->getMessage(),
                 ];
 
-                if(isset($_SESSION['role']) && $_SESSION['role'] === 'ROLE_ADMIN') {
+                if($this->testAccess(['ROLE_ADMIN'])) {
                     $error_msg = [
                         "Message:"  =>  $th->getMessage(),
                         "Path:"     =>  $th->getFile(),
