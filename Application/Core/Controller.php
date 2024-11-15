@@ -1,9 +1,9 @@
 <?php    
 
-    namespace App\Core;
+    namespace Application\Core;
     
-    use model\classes\AccessControl;
-    use model\classes\NavLinks; 	
+    use Application\model\classes\AccessControl;
+    use Application\model\classes\NavLinks;
 
     class Controller    
     {

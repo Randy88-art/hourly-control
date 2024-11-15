@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace model\classes;
+namespace Application\model\classes;
 
-use model\classes\Query;
+use Application\model\classes\Query;
 use PDO;
 
 final class QueryHourlyControl extends Query

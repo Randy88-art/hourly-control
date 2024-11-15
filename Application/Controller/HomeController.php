@@ -4,10 +4,10 @@
 
     namespace Application\Controller;
 
-    use App\Core\Controller;
+    use Application\Core\Controller;
     use Application\Controller\hourlycontrol\HourlyController;
     use DateTime;
-    use model\classes\QueryHourlyControl;   
+    use Application\model\classes\QueryHourlyControl;   
 
     class HomeController extends Controller
     {            

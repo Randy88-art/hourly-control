@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Application\Controller\Admin;
 
-use App\Core\Controller;
-use model\classes\Query;
-use model\classes\QueryHourlyControl;
-use model\classes\Validate;
+use Application\Core\Controller;
+use Application\model\classes\Query;
+use Application\model\classes\QueryHourlyControl;
+use Application\model\classes\Validate;
 
 final class AdminController extends Controller
 {

@@ -1,5 +1,5 @@
 <?php	
-	use Database\Connection;	
+	use Application\Database\Connection;	
 
 	Application\model\classes\Loader::init(__DIR__ . "/..");	
 		
