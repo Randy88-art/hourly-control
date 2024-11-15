@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace Application\Controller\hourlycontrol;
 
-use App\Core\Controller;
+use Application\Core\Controller;
 use DateTime;
-use model\classes\QueryHourlyControl;
+use Application\model\classes\QueryHourlyControl;
 
 class HourlyController extends Controller
 {

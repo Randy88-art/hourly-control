@@ -1,7 +1,7 @@
 <?php
     declare(strict_types = 1);
     
-    namespace model\classes;
+    namespace Application\model\classes;
     
     use PDOException;
     use PDO;

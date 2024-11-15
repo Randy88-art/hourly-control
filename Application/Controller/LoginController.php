@@ -4,9 +4,9 @@
 
     namespace Application\Controller;
 
-    use App\Core\Controller;
-    use model\classes\Query;
-    use model\classes\Validate;
+    use Application\Core\Controller;
+    use Application\model\classes\Query;
+    use Application\model\classes\Validate;
 
     class LoginController extends Controller
     {        
@@ -17,10 +17,10 @@
         {            
         }
 
-        public function index(): void
+        public function index(): string
         { 
             $validate = new Validate;
-            $query = new Query;
+            $query = new Query;            
 
             try {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
