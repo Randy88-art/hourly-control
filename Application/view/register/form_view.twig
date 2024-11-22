@@ -1,5 +1,6 @@
 <form action="/register/new" method="post">
-    <div class="col-12 mb-md-2">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
+    <div class="col-12 mb-md-2">        
         <div class="col-sm-12 col-lg-4 d-inline-block text-sm-center text-lg-end">
             <label class="col-form-label text-center text-lg-end" for="user_name">User name:</label>        
         </div>
@@ -33,7 +34,7 @@
             <label class="col-form-label text-center text-lg-end" for="repeat_password">Repeat Password:</label>       
         </div>       
         <div class="col-sm-12 col-lg-6 d-inline-block mb-3">
-            <input class="form-control" type="password" name="repeat_password" id="repeat_password" placeholder="Repeat password" required>
+            <input class="form-control" type="password" name="repeat_password" id="repeat_password" value="{{ repeat_password }}" placeholder="Repeat password" required>
         </div>
         <div class="col-1 col-md-1 d-inline-block ms-2 me-2 m-md-0">
             <img class="show_password" src="/images/eye.svg" alt="eye" height="20">

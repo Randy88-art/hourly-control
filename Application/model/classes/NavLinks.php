@@ -13,7 +13,7 @@
             $this->menus = [
                 "Home"				=>	"/",				
 				"Registration"		=> 	"/register",
-				"Administration"	=>	"/admin/admin",				
+				"Administration"	=>	"/admin/admin/index",				
 				"Login"			    => 	"/login",
             ];
 
