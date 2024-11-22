@@ -39,21 +39,34 @@
 			}
 		}
 		
-		/**
-         * Método para validar entradas de formulario
+		
+        /**
+         * Checks if required fields are empty or not set, and validates
+         * the email field before returning a boolean value.
+         * 
+         * @param array fields is an array of fields as a
+         * parameter. It iterates over each field in the array and performs validation checks. 
+         * 
+         * @return bool The `validate_form` function is returning a boolean value. If any field is
+         * empty or not set, or if the email field fails the email validation check, the function will
+         * return `false`.
          */
         public function validate_form(array $fields): bool
-        {                 
-            $result = true;
+        {                             
             
             foreach ($fields as $key => $value) {
                 if (empty($value) || !isset($value)) {                                        
-                    $this->msg .= "'$key' es un dato requerido";
-                    $result = false;					
+                    $this->msg = "'$key' is a required field.";
+                    return false;					
                 }
+                
+                if($key === "email" && !$this->validate_email($value)) {
+                    $this->msg = "Insert a valid e-mail.";
+                    return false;
+                } 
             }
                       
-            return $result;
+            return true;
         }
         
         /**

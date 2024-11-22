@@ -10,8 +10,13 @@
 
     class RegisterController extends Controller 
     {
-        public function __construct(private object $dbcon = DB_CON) {
-            $this->dbcon = $dbcon;
+        public function __construct(
+            private array $fields = [],
+            private string $message = "",
+            private Validate $validate = new Validate
+        ) 
+        {
+            
         }
 
         /** Show register view */
@@ -22,9 +27,10 @@
                 if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
                 $this->render('register/register_view.twig', [
-                    'menus'     =>  $this->showNavLinks(),
-                    'session'   =>  $_SESSION,
-                    'active'    =>  'registration',
+                    'menus'         =>  $this->showNavLinks(),
+                    'session'       =>  $_SESSION,
+                    'active'        =>  'registration',
+                    'csrf_token'    => $this->validate,
                 ]);
 
             } catch (\Throwable $th) {
@@ -48,59 +54,65 @@
         }
 
         /** Register a new user */
-        public function new(): void {
-            $validate = new Validate;
+        public function new(): void {            
             $query = new Query;             
                         
             try {                                
                 if($_SERVER['REQUEST_METHOD'] == 'POST') { 
                     
                     // Get values from register form                  
-                    $fields = [
-                        'user_name' =>  $validate->test_input(strtolower($_REQUEST['user_name'])),
-                        'email'     =>  $validate->validate_email($_REQUEST['email']) ? $validate->test_input(strtolower($_REQUEST['email'])): null,
-                        'password'  =>  $_REQUEST['password'] === $_REQUEST['repeat_password'] ? $validate->test_input($_REQUEST['password']) : "",
-                    ];                    
+                    $this->fields = [
+                        'user_name' =>  $this->validate->test_input(strtolower($_REQUEST['user_name'])),
+                        'email'     =>  $this->validate->test_input(strtolower($_REQUEST['email'])),
+                        'password'  =>  $this->validate->test_input($_REQUEST['password']),
+                    ];    
                     
-                    // Test if the e-mail is in use by other user
-                    $result = $query->selectOneBy('users', 'email', $fields['email'], $this->dbcon);                    
+                    $variables = [
+                        'menus'         => $this->showNavLinks(),
+                        'fields'        => $this->fields,
+                        'active'        => 'registration',
+                        'csrf_token'    => $this->validate,   
+                    ];
 
-                    if($result) {
-                        $this->render('register/register_view.twig', [
-                            'error_message' =>  'The user is already in use.',
-                            'fields'        =>  $fields,
-                            'menus'         =>  $this->showNavLinks(),
-                            'active'        =>  'registration',
-                        ]);
+                    // Validate csrf token
+                    if(!$this->validate->validate_csrf_token()) {                        
+                        $variables['error_message']   = "Invalid csrf token";
+                        $variables['repeat_password'] = $this->validate->test_input($_REQUEST['repeat_password']);                        
                     }
                     else {
-                        // Test if passwords are equals
-                        if(empty($fields['password'])) {
-                            $fields['password'] = $validate->test_input($_REQUEST['password']);
+                        // Test if the e-mail is in use by other user
+                        $result = $query->selectOneBy('users', 'email', $this->fields['email']);                    
 
-                            $this->render('register/register_view.twig', [
-                                'menus'         =>  $this->showNavLinks(),
-                                'error_message' =>  "Passwords are not equals", 
-                                'fields'        =>  $fields,
-                                'active'        =>  'registration',              
-                            ]);                         
+                        if($result) {
+                            $variables['error_message'] = "The e-mail is already in use."; 
+                            $variables['repeat_password'] = $this->validate->test_input($_REQUEST['repeat_password']);                           
                         }
                         else {
-                            // Validate form
-                            $ok = $validate->validate_form($fields);
-                            
-                            if($ok) {                        
-                                // Register the user
-                                $query->insertInto('users', $fields, $this->dbcon);
-    
-                                $this->render('register/register_view.twig', [
-                                    'menus'         =>  $this->showNavLinks(),
-                                    'message'       =>  "User registered successfully",
-                                    'active'        =>  'registration',                                                  
-                                ]);                                                
+                            // Test if passwords are equals
+                            if(!empty($this->fields['password'])) {
+                                if($this->fields['password'] !== $this->validate->test_input($_REQUEST['repeat_password'])) {
+                                    $variables['error_message'] = "Passwords are not equals";
+                                    $variables['repeat_password'] = $this->validate->test_input($_REQUEST['repeat_password']);  
+
+                                    $this->render('register/register_view.twig', $variables);                                  
+                                }                                                                  
                             } 
+                            
+                            // Validate form                                                               
+                            if($this->validate->validate_form($this->fields)) {                        
+                                // Register the user
+                                $query->insertInto('users', $this->fields);
+                                $variables['message'] = "User registered successfully"; 
+                                $variables['fields'] = [];                                  
+                            }
+                            else {                            
+                                $variables['error_message'] = $this->validate->get_msg();
+                                $variables['repeat_password'] = $this->validate->test_input($_REQUEST['repeat_password']);                                
+                            }
                         }
-                    }                                                                                                                                                                          
+                    } 
+                    
+                    $this->render('register/register_view.twig', $variables);
                 }
                 else {
                     throw new \Exception("Service unavailable", 1);                    
