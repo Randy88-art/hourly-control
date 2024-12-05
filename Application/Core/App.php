@@ -23,7 +23,7 @@
             return $url;
         }
 
-        public function loadController(): void {           
+        public function router(): void {           
             session_start();
 	        session_regenerate_id();
 
