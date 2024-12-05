@@ -35,7 +35,7 @@
                         'menus'         => $this->showNavLinks(),
                         'fields'        => $this->fields,                        
                         'active'        => 'login',
-                        //'csrf_token'    => $validate,
+                        'csrf_token'    => $validate,
                     ];
 
                     // Validate csrf token
@@ -56,8 +56,7 @@
                                         $_SESSION['user_name']  = $result['user_name'];
                                         $_SESSION['role']       = $result['role'];												
                                                                                                         
-                                        /* header("Location: /home"); */
-                                        $this->render("main_view.twig", ['session'=> $_SESSION,]);
+                                        header("Location: /home");                                      
                                         return;						
                                     }
                                     else {

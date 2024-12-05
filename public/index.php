@@ -8,5 +8,5 @@
 	Application\model\classes\Loader::init($_SERVER['DOCUMENT_ROOT'] . "/..");
 	
 	$app = new App;
-	$app->loadController();	
+	$app->router();	
 ?>
