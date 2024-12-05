@@ -1,5 +1,5 @@
 <?php
-    namespace Core;
+    namespace Application\Core;
 
     class App
     {
@@ -12,7 +12,7 @@
             
         }
         private function splitUrl(): array|string {           
-            $url = URL === '/' ? 'home' : URL;
+            $url = $_SERVER['REQUEST_URI'] === '/' ? 'home' : $_SERVER['REQUEST_URI'];
             $url = explode('/', trim($url, "/")); 
             
             if(empty($url[0])) {

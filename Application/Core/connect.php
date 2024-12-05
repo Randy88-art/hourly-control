@@ -3,7 +3,7 @@
 
 	Application\model\classes\Loader::init(__DIR__ . "/..");	
 		
-	define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db.config.php');				
+	//define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db.config.php');				
 	
 	try {
 		$dbcon = new Connection(include DB_CONFIG_FILE);		
