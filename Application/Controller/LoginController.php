@@ -17,7 +17,7 @@
         {            
         }
 
-        public function index(): string
+        public function index(): void
         { 
             $validate = new Validate;
             $query = new Query;            
@@ -35,7 +35,7 @@
                         'menus'         => $this->showNavLinks(),
                         'fields'        => $this->fields,                        
                         'active'        => 'login',
-                        'csrf_token'    => $validate,
+                        //'csrf_token'    => $validate,
                     ];
 
                     // Validate csrf token
@@ -56,8 +56,9 @@
                                         $_SESSION['user_name']  = $result['user_name'];
                                         $_SESSION['role']       = $result['role'];												
                                                                                                         
-                                        header("Location: /home");
-                                        die();						
+                                        /* header("Location: /home"); */
+                                        $this->render("main_view.twig", ['session'=> $_SESSION,]);
+                                        return;						
                                     }
                                     else {
                                         $variables['error_message'] = 'Please test your credentials';
