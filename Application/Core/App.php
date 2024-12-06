@@ -24,8 +24,8 @@
         }
 
         public function router(): void {           
-            session_start();
-	        session_regenerate_id();
+            /* session_start();
+	        session_regenerate_id(); */
 
             global $id;
 
