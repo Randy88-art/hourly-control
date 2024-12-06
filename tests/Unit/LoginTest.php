@@ -15,10 +15,7 @@ final class LoginTest extends TestCase
     private Validate $validate;
 
     public function setUp(): void
-    {
-        session_start();
-	    session_regenerate_id();
-
+    {       	   
         $this->app = new App();
         $this->validate = new Validate();
 
