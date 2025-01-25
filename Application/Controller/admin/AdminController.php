@@ -11,25 +11,33 @@ use Application\model\classes\Validate;
 
 final class AdminController extends Controller
 {
+    public function __construct(
+        private Query $query = new Query(),
+        private Validate $validate = new Validate,
+        private string $message = "",
+    )
+    {        
+    }
+
     public function index()
     {                        
         try {
             // Test for privileges
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+            
+            $users = $this->query->selectAll('users');
 
-            $query = new Query();
-            $users = $query->selectAll('users');
-
-        } catch (\Throwable $th) {
-            $error_msg = [
-                'Error:' =>  $th->getMessage(),
-            ];
-
+        } catch (\Throwable $th) {            
             if($this->testAccess(['ROLE_ADMIN'])) {
                 $error_msg = [
                     "Message:"  =>  $th->getMessage(),
                     "Path:"     =>  $th->getFile(),
                     "Line:"     =>  $th->getLine(),
+                ];
+            }
+            else {
+                $error_msg = [
+                    'Error:' =>  $th->getMessage(),
                 ];
             }
 
@@ -40,17 +48,16 @@ final class AdminController extends Controller
         }
 
         $this->render('admin/dashboard_view.twig', [
-            'menus'   => $this->showNavLinks(),
-            'session' => $_SESSION,
-            'users'   => $users
+            'menus'         => $this->showNavLinks(),
+            'session'       => $_SESSION,
+            'users'         => $users,
+            'csrf_token'    => $this->validate,
         ]);
     }
 
     public function searchUserTimeWorked(): void
     {        
-        try {
-            $validate = new Validate();
-
+        try {            
             // Test for privileges
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
@@ -64,15 +71,18 @@ final class AdminController extends Controller
             if($_SERVER['REQUEST_METHOD'] != 'POST') throw new \Exception('Invalid request');
 
             $fields = [
-                'user' => intval($validate->test_input($_POST['id_user'])) ?? "",
-                'date' => $validate->test_input($_POST['date'])            ?? "",
+                'user' => intval($this->validate->test_input($_POST['id_user'])) ?? "",
+                'date' => $this->validate->test_input($_POST['date'])            ?? "",
             ];
 
             // Add date to variables
             $variables['date'] = $fields['date'];
 
+            // Validate csrf token
+            if(!$this->validate->validate_csrf_token()) throw new \Exception("Invalid csrf token", 1);
+
             // Validate form
-            if($validate->validate_form($fields)) {
+            if($this->validate->validate_form($fields)) {
                 $queryHourlyControl = new QueryHourlyControl();                                    
 
                 $hours_by_user = [
@@ -86,31 +96,31 @@ final class AdminController extends Controller
                 // Add user to variables
                 $variables['user'] = $queryHourlyControl->selectOneBy('users', 'id', $fields['user']);
 
-            }else{
-                $query = new Query();
-                $users = $query->selectAll('users');
+            }else{                
+                $users = $this->query->selectAll('users');
                 
                 $this->render('admin/dashboard_view.twig', [
                     'menus'         => $this->showNavLinks(),
                     'session'       => $_SESSION,
                     'fields'        => $fields,
-                    'error_message' => $validate->get_msg(),
+                    'error_message' => $this->validate->get_msg(),
                     'users'         => $users 
                 ]);
             }
 
             $this->render('admin/search_results.twig', $variables);
             
-        } catch (\Throwable $th) {
-            $error_msg = [
-                'Error:' =>  $th->getMessage(),
-            ];
-
+        } catch (\Throwable $th) {            
             if($this->testAccess(['ROLE_ADMIN'])) {
                 $error_msg = [
                     "Message:"  =>  $th->getMessage(),
                     "Path:"     =>  $th->getFile(),
                     "Line:"     =>  $th->getLine(),
+                ];
+            }
+            else {
+                $error_msg = [
+                    'Error:' =>  $th->getMessage(),
                 ];
             }
 

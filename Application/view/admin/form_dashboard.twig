@@ -1,4 +1,5 @@
 <form class="col col-md-9 col-lg-7 col-xl-6 mx-auto credentials" action="/admin/admin/searchUserTimeWorked" method="post">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
     <h2 class="mb-5">Search form</h2>
     <div class="row mb-5 justify-content-center">                
         <div class="col-5 d-inline-block">
