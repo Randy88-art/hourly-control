@@ -18,7 +18,9 @@
          */
         public function test_input(int|string|float|null $data): int|string|float|null
         {
-            if(!is_int($data) && !is_null($data) && !is_float($data)) {
+            if(is_null($data) || ctype_space($data)) return null;            
+
+            if(!is_int($data) && !is_float($data)) {
                 $data = htmlspecialchars($data);
                 $data = trim($data);
                 $data = stripslashes($data);
