@@ -94,13 +94,18 @@ final class QueryHourlyControl extends Query
                     WHERE id_user = :id_user
                     AND date_in = (SELECT MAX(date_in))
                     AND date_out IS NULL";
-            
-        $stm = $this->dbcon->pdo->prepare($query);
-        $stm->bindValue(":id_user", $id_user);
-        $stm->execute();
+        
+        try {
+            $stm = $this->dbcon->pdo->prepare($query);
+            $stm->bindValue(":id_user", $id_user);
+            $stm->execute();
 
-        $rows = $stm->fetch(PDO::FETCH_ASSOC);
+            $rows = $stm->fetch(PDO::FETCH_ASSOC);
 
-        return $rows ? false : true;
+            return $rows ? false : true;
+
+        } catch (\Throwable $th) {
+            throw new \Exception("{$th->getMessage()}", 1);
+        }                    
     }
 }
