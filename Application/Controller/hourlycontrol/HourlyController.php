@@ -20,11 +20,10 @@ class HourlyController extends Controller
             // Test if there is already an input done without an output
             $queryHourlyControl = new QueryHourlyControl();
                        
-            $dateIn = date('Y-m-d H:i:s');
-            $query = new QueryHourlyControl();
+            $dateIn = date('Y-m-d H:i:s');            
 
             if(!$queryHourlyControl->isValidRow($_SESSION['id_user'])) {
-                $rows  = $query->testWorkState();
+                $rows  = $queryHourlyControl->testWorkState();
 
                 $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
                 $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
@@ -37,24 +36,24 @@ class HourlyController extends Controller
                 ];
 
                 // We obtain total time worked at day                    
-                $total_time_worked_at_day = $query->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
+                $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
                 $hours = array_merge(
                     $hours, 
                     ['total_time' => $total_time_worked_at_day]
                 );                
                 
                 $this->render('main_view.twig', [
-                        'menus' => $this->showNavLinks(),
-                        'session' => $_SESSION,
-                        'workstate'       => $workstate,
-                        'workstate_color' => $workstate_color,
-                        'hours'           => $hours,
-                        'active' => 'home',
-                        'error_message' => "Start time is already set",
+                        'menus'             => $this->showNavLinks(),
+                        'session'           => $_SESSION,
+                        'workstate'         => $workstate,
+                        'workstate_color'   => $workstate_color,
+                        'hours'             => $hours,
+                        'active'            => 'home',
+                        'error_message'     => "Start time is already set",
                 ]);                
             }
 
-            $query->insertInto("hourly_control", [
+            $queryHourlyControl->insertInto("hourly_control", [
                 "id_user" => $_SESSION['id_user'],
                 "date_in" => $dateIn
             ]); 
@@ -65,20 +64,20 @@ class HourlyController extends Controller
         } catch (\Throwable $th) {
             $error_msg = [
                     'Error:' =>  $th->getMessage(),
+            ];
+
+            if($this->testAccess(['ROLE_ADMIN'])) {
+                $error_msg = [
+                    "Message:"  =>  $th->getMessage(),
+                    "Path:"     =>  $th->getFile(),
+                    "Line:"     =>  $th->getLine(),
                 ];
+            }
 
-                if($this->testAccess(['ROLE_ADMIN'])) {
-                    $error_msg = [
-                        "Message:"  =>  $th->getMessage(),
-                        "Path:"     =>  $th->getFile(),
-                        "Line:"     =>  $th->getLine(),
-                    ];
-                }
-
-                $this->render('error_view.twig', [
-                    'menus'             => $this->showNavLinks(),
-                    'exception_message' => $error_msg,                
-                ]);
+            $this->render('error_view.twig', [
+                'menus'             => $this->showNavLinks(),
+                'exception_message' => $error_msg,                
+            ]);
         }
     }
 
