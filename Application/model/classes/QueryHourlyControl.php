@@ -102,7 +102,7 @@ final class QueryHourlyControl extends Query
 
             $rows = $stm->fetch(PDO::FETCH_ASSOC);
 
-            return $rows ? false : true;
+            return $rows ? true : false;
 
         } catch (\Throwable $th) {
             throw new \Exception("{$th->getMessage()}", 1);

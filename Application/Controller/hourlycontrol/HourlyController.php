@@ -22,7 +22,7 @@ class HourlyController extends Controller
                        
             $dateIn = date('Y-m-d H:i:s');            
 
-            if(!$queryHourlyControl->isValidRow($_SESSION['id_user'])) {
+            if($queryHourlyControl->isValidRow($_SESSION['id_user'])) {
                 $rows  = $queryHourlyControl->testWorkState();
 
                 $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
@@ -52,11 +52,13 @@ class HourlyController extends Controller
                         'error_message'     => "Start time is already set",
                 ]);                
             }
-
-            $queryHourlyControl->insertInto("hourly_control", [
-                "id_user" => $_SESSION['id_user'],
-                "date_in" => $dateIn
-            ]); 
+            else {
+                $queryHourlyControl->insertInto("hourly_control", [
+                    "id_user" => $_SESSION['id_user'],
+                    "date_in" => $dateIn
+                ]);
+            }
+             
             
             header("Location: /");
             die();
