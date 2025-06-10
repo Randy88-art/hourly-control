@@ -57,7 +57,8 @@
         {                             
             
             foreach ($fields as $key => $value) {
-                if (empty($value) || !isset($value)) {                                        
+                if (empty($value) || !isset($value)) {
+                    $key = ucfirst($key);                                        
                     $this->msg = "'$key' is a required field.";
                     return false;					
                 }
