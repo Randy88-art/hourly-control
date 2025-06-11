@@ -1,4 +1,6 @@
-"use strict"; 
+import { exitLink, enterLink } from "./set_hourly_times.js";
+
+"use strict";
 
 window.addEventListener('DOMContentLoaded', () => {
 	const showPasswordChars = document.querySelectorAll('.show_password');
@@ -30,4 +32,13 @@ window.addEventListener('DOMContentLoaded', () => {
 	if (datePicker) {
 		datePicker.value = new Date().toISOString().split('T')[0];
 	}
+
+	/** Add events listeners to "Enter" and "Exit" buttons */
+	let enter = document.querySelector('#enter');
+    let exit = document.querySelector('#exit');	
+
+    if(enter && exit) {
+        enter.addEventListener('click', enterLink);
+        exit.addEventListener('click', exitLink);
+    }
 });
