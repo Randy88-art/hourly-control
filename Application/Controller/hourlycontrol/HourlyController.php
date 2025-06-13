@@ -7,10 +7,18 @@ namespace Application\Controller\hourlycontrol;
 use Application\Core\Controller;
 use DateTime;
 use Application\model\classes\QueryHourlyControl;
+use Application\model\classes\Validate;
 
 class HourlyController extends Controller
 {
-    private object $dbcon = DB_CON;
+    public function __construct(
+        private object $dbcon = DB_CON,
+        private Validate $validate = new Validate(),
+    )
+    {
+        
+    }
+  
     public function setInput()
     {        
         try {
@@ -20,46 +28,71 @@ class HourlyController extends Controller
             // Test if there is already an input done without an output
             $queryHourlyControl = new QueryHourlyControl();
                        
-            $dateIn = date('Y-m-d H:i:s');            
+            $dateIn = date('Y-m-d H:i:s');
 
-            if($queryHourlyControl->isValidRow($_SESSION['id_user'])) {
-                $rows  = $queryHourlyControl->testWorkState();
+            // Set necessary variables
+            $rows  = $queryHourlyControl->testWorkState();
 
-                $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
-                $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
-                
-                // We obtain the input, output hours and total time worked
-                $hours = [
-                    'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
-                    'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
-                    'duration' => $rows['date_out'] != null ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
-                ];
+            $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
+            $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
+            
+            // We obtain the input, output hours and total time worked
+            $hours = [
+                'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
+                'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
+                'duration' => $rows['date_out'] != null ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
+            ];
 
-                // We obtain total time worked at day                    
-                $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
-                $hours = array_merge(
-                    $hours, 
-                    ['total_time' => $total_time_worked_at_day]
-                );                
-                
-                $this->render('main_view.twig', [
-                        'menus'             => $this->showNavLinks(),
-                        'session'           => $_SESSION,
-                        'workstate'         => $workstate,
-                        'workstate_color'   => $workstate_color,
-                        'hours'             => $hours,
-                        'active'            => 'home',
-                        'error_message'     => "Start time is already set",
-                ]);                
+            // We obtain total time worked at day                    
+            $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
+            $hours = array_merge(
+                $hours, 
+                ['total_time' => $total_time_worked_at_day]
+            );  
+
+            $variables = [
+                    'menus'             => $this->showNavLinks(),
+                    'session'           => $_SESSION,
+                    'workstate'         => $workstate,
+                    'workstate_color'   => $workstate_color,
+                    'hours'             => $hours,
+                    'projects'          => $queryHourlyControl->selectAll('projects'),
+                    'tasks'             => $queryHourlyControl->selectAll('tasks'),
+                    'active'            => 'home',
+                    'csrf_token'        => $this->validate                   
+            ];
+
+            if($queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
+                $variables['error_message'] =  "Start time is already set";                            
+
+                $this->render('main_view.twig', $variables);
+                die();                                                
             }
+            
+            $fields = [
+                'project' => $this->validate->test_input($_POST['project']),
+                'task'    => $this->validate->test_input($_POST['task'])
+            ];
+            
+            // Validate csrf token
+            if(!$this->validate->validate_csrf_token()) throw new \Exception("Invalid csrf token", 1);
+
+            // Validate form
+            if(!$this->validate->validate_form($fields)) {
+                $variables['error_message'] = $this->validate->get_msg();
+                array_merge($variables, $fields);
+                $this->render('main_view.twig', $variables);
+                die();              
+            }            
             else {
                 $queryHourlyControl->insertInto("hourly_control", [
-                    "id_user" => $_SESSION['id_user'],
-                    "date_in" => $dateIn
+                    "id_user"    => $_SESSION['id_user'],
+                    "date_in"    => $dateIn,
+                    "project_id" => $fields['project'],
+                    "task_id"    => $fields['task'],
                 ]);
             }
-             
-            
+                         
             header("Location: /");
             die();
 

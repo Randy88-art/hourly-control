@@ -19,8 +19,11 @@
 
                 <select class="col-2 text-center" name="task" id="task">
                     <option value="0">- Select Task -</option>
-                    <option value="1">First Task</option>
-                    <option value="2">Second Task</option>
+                    {% if tasks is defined %}
+                        {% for task in tasks %}
+                            <option value="{{ task.task_id }}">{{ task.task_name }}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select>
             </div>        
         </section>
