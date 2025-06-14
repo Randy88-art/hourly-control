@@ -1,7 +1,7 @@
-### Online Shop Project
+### Hourly Control Project
 1.- Clone the repository in a new directory of your choice ("directoryName").
 ```
-git clone https://github.com/u83mm/e-commerce.git "directoryName"
+git clone git@github.com:u83mm/hourly-control.git "directoryName"
 ```
 
 2.- Navigate to the new directory.
@@ -11,7 +11,7 @@ cd directoryName
 3.- Create "log" directory inside "Application" directory and inside "log" directory create "apache", "db" and "php" directories.
 ```
 cd Application
-mkdir log log/apache log/dg log/php
+mkdir log log/apache log/db log/php
 ```
 4.- Build the project and stands up the containers
 ```
