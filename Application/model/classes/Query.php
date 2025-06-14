@@ -40,8 +40,7 @@
                 $stm = $this->dbcon->pdo->prepare($query);               
                 $stm->execute();       
                 $rows = $stm->fetchColumn();
-                $stm->closeCursor();
-                $this->dbcon = null;
+                $stm->closeCursor();                
 
                 return $rows;
 
@@ -114,8 +113,7 @@
             try {
                 $stm = $this->dbcon->pdo->prepare($query);                        
                 $stm->execute($params);       				
-                $stm->closeCursor();
-                $this->dbcon = null;
+                $stm->closeCursor();                
 
             } catch (\Throwable $th) {
                 throw new \Exception("{$th->getMessage()}", 1);
@@ -131,8 +129,7 @@
                 $stm->bindValue(":password", password_hash($password, PASSWORD_DEFAULT));				            
                 $stm->bindValue(":id_user", $id_user);              
                 $stm->execute();       				
-                $stm->closeCursor();
-                $this->dbcon = null;
+                $stm->closeCursor();                
 
             } catch (\Throwable $th) {
                 throw new \Exception("{$th->getMessage()}", 1);
@@ -147,8 +144,7 @@
                 $stm = $this->dbcon->pdo->prepare($query);             			            
                 $stm->bindValue(":id", $id);              
                 $stm->execute();       				
-                $stm->closeCursor();
-                $this->dbcon = null;
+                $stm->closeCursor();                
 
             } catch (\Throwable $th) {
                 throw new \Exception("{$th->getMessage()}", 1); 

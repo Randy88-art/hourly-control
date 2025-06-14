@@ -41,7 +41,8 @@
                 $parameters[$key] = $value;
             }
             
-            echo $this->twig->render($template, $parameters);            
+            echo $this->twig->render($template, $parameters);
+            die();                    
         }
         
         /** Shows nav menus */

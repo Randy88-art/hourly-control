@@ -3,42 +3,67 @@
 {% block section %}
     {# Shows working space if logged #}
     {% if session.user_name is defined %}
-    <section class="row text-center mb-5">    
-        <h2>Work time information</h2>
-        <div class="col col-md-8 col-lg-6 m-auto">
-            <table class="table table-bordered table-striped m-auto">
-                <thead>
-                    <tr>
-                        <th>Work state</th>
-                        <th>Start time</th>
-                        <th>Exit time</th>
-                        <th>Duration</th>
-                        <th>Total worked today</th>
-                    </tr>
-                </thead>
-                <tbody>                   
-                    <tr>
-                        <td>
-                            <div class="col alert alert-{{ workstate_color }} mb-0">
-                                {{ workstate }}
-                            </div>
-                        </td>
-                        <td>{{ hours.date_in }}</td>
-                        <td>{{ hours.date_out }}</td>
-                        <td>{{ hours.duration }}</td>
-                        <td>{{ hours.total_time }}</td>
-                    </tr>                    
-                </tbody>
-            </table>
-        </div>                   
-    </section>
-    <section class="row text-center">
-        <h2>Hours Control</h2>
-        <div>
-            <a href="/hourlycontrol/hourly/setInput" class="col-3 col-md-2 btn btn-outline-success">Enter</a>
-            <a href="/hourlycontrol/hourly/setOutput" class="col-3 col-md-2 btn btn-outline-danger">Exit</a>
-        </div> 
-    </section>
+    <form id="hours_control_form" action="#" method="post">
+        <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
+        <section class="row mb-5">
+            <h2 class="text-center mb-4">Select project and task</h2>
+            <div class="text-center">
+                <select class="col-2 text-center" name="project" id="project">
+                    <option value="0">- Select Project -</option>
+                    {% if projects is defined %}
+                        {% for project in projects %}
+                            <option value="{{ project.project_id }}">{{ project.project_name }}</option>
+                        {% endfor %}                        
+                    {% endif %}
+                </select>
+
+                <select class="col-2 text-center" name="task" id="task">
+                    <option value="0">- Select Task -</option>
+                    {% if tasks is defined %}
+                        {% for task in tasks %}
+                            <option value="{{ task.task_id }}">{{ task.task_name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>        
+        </section>
+        <section class="row text-center mb-5">    
+            <h2>Work time information</h2>
+            <div class="col col-md-8 col-lg-6 m-auto">
+                <table class="table table-bordered table-striped m-auto">
+                    <thead>
+                        <tr>
+                            <th>Work state</th>
+                            <th>Start time</th>
+                            <th>Exit time</th>
+                            <th>Duration</th>
+                            <th>Total worked today</th>
+                        </tr>
+                    </thead>
+                    <tbody>                   
+                        <tr>
+                            <td>
+                                <div class="col alert alert-{{ workstate_color }} mb-0">
+                                    {{ workstate }}
+                                </div>
+                            </td>
+                            <td>{{ hours.date_in }}</td>
+                            <td>{{ hours.date_out }}</td>
+                            <td>{{ hours.duration }}</td>
+                            <td>{{ hours.total_time }}</td>
+                        </tr>                    
+                    </tbody>
+                </table>
+            </div>                   
+        </section>
+        <section class="row text-center">
+            <h2>Hours Control</h2>
+            <div>
+                <button id="enter" class="col-3 col-md-2 btn btn-outline-success">Enter</button>
+                <button id="exit" class="col-3 col-md-2 btn btn-outline-danger">Exit</button>                
+            </div> 
+        </section>
+    </form>
     {% else %}
     {# Shows main view for not logged users #}
     <section class="row text-center">

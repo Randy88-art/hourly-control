@@ -7,14 +7,17 @@
     use Application\Core\Controller;
     use Application\Controller\hourlycontrol\HourlyController;
     use DateTime;
-    use Application\model\classes\QueryHourlyControl;   
+    use Application\model\classes\QueryHourlyControl;
+    use Application\model\classes\Validate;
 
     class HomeController extends Controller
     {            
 
         public function __construct(
             private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl, 
-            private object $dbcon = DB_CON)
+            private object $dbcon = DB_CON,
+            private Validate $validate = new Validate()
+        )        
         {                  
         }
 
@@ -66,6 +69,9 @@
                         'workstate'       => $workstate,
                         'workstate_color' => $workstate_color,
                         'hours'           => $hours,
+                        'projects'        => $this->queryHourlyControl->selectAll('projects'),
+                        'tasks'           => $this->queryHourlyControl->selectAll('tasks'),
+                        'csrf_token'      => $this->validate
                     ]);                    
                 }
                                                                 

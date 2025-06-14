@@ -56,8 +56,12 @@ final class QueryHourlyControl extends Query
     {
         $query = "SELECT TIME(date_in) AS date_in, 
                     TIME(date_out) AS date_out,                     
-                    total_time_worked
-                    FROM hourly_control 
+                    total_time_worked,
+                    project_name,
+                    task_name                   
+                    FROM hourly_control
+                    JOIN projects USING(project_id)
+                    JOIN tasks USING(task_id)
                     WHERE id_user = :id_user 
                     AND DATE(date_in) = :date
                     ORDER BY date_in ASC";
@@ -87,20 +91,25 @@ final class QueryHourlyControl extends Query
      * 
      * @return bool Whether the user is currently working.
      */
-    public function isValidRow(int $id_user): bool
+    public function isStartedTimeTrue(int $id_user): bool
     {
         $query = "SELECT date_out 
                     FROM hourly_control
                     WHERE id_user = :id_user
                     AND date_in = (SELECT MAX(date_in))
                     AND date_out IS NULL";
-            
-        $stm = $this->dbcon->pdo->prepare($query);
-        $stm->bindValue(":id_user", $id_user);
-        $stm->execute();
+        
+        try {
+            $stm = $this->dbcon->pdo->prepare($query);
+            $stm->bindValue(":id_user", $id_user);
+            $stm->execute();
 
-        $rows = $stm->fetch(PDO::FETCH_ASSOC);
+            $rows = $stm->fetch(PDO::FETCH_ASSOC);
 
-        return $rows ? false : true;
+            return $rows ? true : false;
+
+        } catch (\Throwable $th) {
+            throw new \Exception("{$th->getMessage()}", 1);
+        }                    
     }
 }
