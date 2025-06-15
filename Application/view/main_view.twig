@@ -9,7 +9,11 @@
             <h2 class="text-center mb-4">Select project and task</h2>
             <div class="text-center">
                 <select class="col-2 text-center" name="project" id="project">
-                    <option value="0">- Select Project -</option>
+                    {% if fields.project is defined and fields.project != null %}
+                        <option value="{{ fields.project.project_id }}">{{ fields.project.project_name }}</option>
+                    {% else %}
+                        <option value="0">- Select Project -</option>
+                    {% endif %}
                     {% if projects is defined %}
                         {% for project in projects %}
                             <option value="{{ project.project_id }}">{{ project.project_name }}</option>
@@ -18,7 +22,11 @@
                 </select>
 
                 <select class="col-2 text-center" name="task" id="task">
-                    <option value="0">- Select Task -</option>
+                    {% if fields.task is defined and fields.task != null %}
+                        <option value="{{ fields.task.task_id }}">{{ fields.task.task_name }}</option>
+                    {% else %}
+                        <option value="0">- Select Task -</option>
+                    {% endif %}
                     {% if tasks is defined %}
                         {% for task in tasks %}
                             <option value="{{ task.task_id }}">{{ task.task_name }}</option>

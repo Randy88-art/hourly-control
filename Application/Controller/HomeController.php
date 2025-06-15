@@ -27,7 +27,7 @@
          * workstate to 'Not Working'.
          */
         public function index()
-        { 
+        {
             try {
                 // Initial options
                 $options = [
