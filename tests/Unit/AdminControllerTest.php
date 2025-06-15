@@ -23,7 +23,9 @@ final class AdminControllerTest extends TestCase
 	    define('DB_CON', $dbcon); 
     }
 
-    public function testSearchResultPageIsLoaded(): void {                        
+    public function testSearchResultPageIsLoaded(): void {
+        ob_start();
+
         # Send  request
         $_SESSION['role']          = 'ROLE_ADMIN';
         $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -31,16 +33,15 @@ final class AdminControllerTest extends TestCase
         $_POST['csrf_token']  = $_SESSION['csrf_token'] = $this->validate->csrf_token();
 
         $_POST['id_user']          = 1;
-        $_POST['date']             = '2022-01-01';
-        
-        ob_start();
-
-        $this->app->router();        
+        $_POST['date']             = '2024-06-15';
+               
+        $this->app->router();       
 
         $html = ob_get_contents();
 
         ob_end_clean();
 
+        $this->assertFileExists('Application/view/admin/search_results.twig');
         $this->assertStringContainsString('Search Results', $html);        
     }
 }
