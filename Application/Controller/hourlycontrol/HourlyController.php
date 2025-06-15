@@ -60,19 +60,24 @@ class HourlyController extends Controller
                     'tasks'             => $queryHourlyControl->selectAll('tasks'),
                     'active'            => 'home',
                     'csrf_token'        => $this->validate                   
+            ];            
+
+            $fields = [
+                'project' => $queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
+                                $queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) : 
+                                null,
+                'task'    => $queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
+                                $queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) : 
+                                null,
             ];
 
             if($queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
-                $variables['error_message'] =  "Start time is already set";                            
+                $variables['error_message'] =  "Start time is already set"; 
+                $variables['fields'] = $fields;                                 
 
                 $this->render('main_view.twig', $variables);
                 die();                                                
-            }
-            
-            $fields = [
-                'project' => $this->validate->test_input($_POST['project']),
-                'task'    => $this->validate->test_input($_POST['task'])
-            ];
+            }                        
             
             // Validate csrf token
             if(!$this->validate->validate_csrf_token()) throw new \Exception("Invalid csrf token", 1);
@@ -80,7 +85,7 @@ class HourlyController extends Controller
             // Validate form
             if(!$this->validate->validate_form($fields)) {
                 $variables['error_message'] = $this->validate->get_msg();
-                array_merge($variables, $fields);
+                $variables['fields'] = $fields;                
                 $this->render('main_view.twig', $variables);
                 die();              
             }            
@@ -88,8 +93,8 @@ class HourlyController extends Controller
                 $queryHourlyControl->insertInto("hourly_control", [
                     "id_user"    => $_SESSION['id_user'],
                     "date_in"    => $dateIn,
-                    "project_id" => $fields['project'],
-                    "task_id"    => $fields['task'],
+                    "project_id" => $fields['project']['project_id'],
+                    "task_id"    => $fields['task']['task_id'],
                 ]);
             }
                          
