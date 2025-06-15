@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 14, 2025 at 03:18 PM
+-- Generation Time: Jun 15, 2025 at 07:05 PM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -217,7 +217,9 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (204, 1, 2, 1, '2025-06-13 23:14:04', '2025-06-13 23:15:33', '00:01:29', '2025-06-14 15:04:18', '2025-06-14 15:04:18'),
 (205, 1, 2, 2, '2025-06-13 23:18:16', '2025-06-13 23:24:13', '00:05:57', '2025-06-14 15:04:18', '2025-06-14 15:04:18'),
 (206, 1, 3, 3, '2025-06-14 16:31:58', '2025-06-14 17:05:26', '00:33:28', '2025-06-14 15:04:18', '2025-06-14 15:05:26'),
-(207, 1, 3, 3, '2025-06-14 17:05:39', NULL, NULL, '2025-06-14 15:05:39', '2025-06-14 15:05:39');
+(207, 1, 3, 3, '2025-06-14 17:05:39', '2025-06-14 17:27:48', '00:22:09', '2025-06-14 15:05:39', '2025-06-14 15:27:48'),
+(208, 1, 3, 4, '2025-06-15 13:38:01', '2025-06-15 15:08:57', '01:30:56', '2025-06-15 11:38:01', '2025-06-15 13:08:57'),
+(209, 1, 3, 4, '2025-06-15 15:13:54', '2025-06-15 15:14:24', '00:00:30', '2025-06-15 13:13:54', '2025-06-15 13:14:24');
 
 -- --------------------------------------------------------
 
@@ -278,7 +280,9 @@ CREATE TABLE `tasks` (
 INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (1, 'Refactor HomeController', 1),
 (2, 'Refactor AdminController', 1),
-(3, 'Create Relationships between tables', 1);
+(3, 'Create Relationships between tables', 1),
+(4, 'Improve select elements in main view', 1),
+(5, 'Add tests', 1);
 
 -- --------------------------------------------------------
 
@@ -349,7 +353,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=208;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=210;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -367,7 +371,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
