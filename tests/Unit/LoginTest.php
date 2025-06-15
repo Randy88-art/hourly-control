@@ -54,6 +54,7 @@ final class LoginTest extends TestCase
 
         $expected = 'Logged as';
 
+        $this->assertFileExists('Application/view/login/login_view.twig');
         $this->assertStringContainsString($expected, $html);
     }
 }
