@@ -31,17 +31,13 @@ class HourlyController extends Controller
             $dateIn = date('Y-m-d H:i:s');
 
             // Set necessary variables
-            $rows  = $queryHourlyControl->testWorkState();
+            //$rows  = $queryHourlyControl->testWorkState();
 
-            $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
-            $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
+            $workstate       = $queryHourlyControl->getWorkState();
+            $workstate_color = $queryHourlyControl->getWorkStateSuccessOrDanger();
             
-            // We obtain the input, output hours and total time worked
-            $hours = [
-                'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
-                'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
-                'duration' => $rows['date_out'] != null ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
-            ];
+            // We obtain the input, output hours and total time worked            
+            $hours = $queryHourlyControl->getHours();
 
             // We obtain total time worked at day                    
             $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
