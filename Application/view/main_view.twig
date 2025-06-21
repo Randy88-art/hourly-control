@@ -10,7 +10,7 @@
             <div class="text-center">
                 <select class="col-2 text-center" name="project" id="project">
                     {% if fields.project is defined and fields.project != null %}
-                        <option value="{{ fields.project.project_id }}">{{ fields.project.project_name }}</option>
+                        <option value="{{ fields.project.getProjectId() }}">{{ fields.project.getProjectName() }}</option>
                     {% else %}
                         <option value="0">- Select Project -</option>
                     {% endif %}
@@ -23,7 +23,7 @@
 
                 <select class="col-2 text-center" name="task" id="task">
                     {% if fields.task is defined and fields.task != null %}
-                        <option value="{{ fields.task.task_id }}">{{ fields.task.task_name }}</option>
+                        <option value="{{ fields.task.getTaskId() }}">{{ fields.task.getTaskName() }}</option>
                     {% else %}
                         <option value="0">- Select Task -</option>
                     {% endif %}
