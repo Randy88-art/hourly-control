@@ -8,6 +8,8 @@ use Application\Core\Controller;
 use DateTime;
 use Application\model\classes\QueryHourlyControl;
 use Application\model\classes\Validate;
+use Application\model\Project;
+use Application\model\Task;
 
 class HourlyController extends Controller
 {
@@ -30,47 +32,41 @@ class HourlyController extends Controller
                        
             $dateIn = date('Y-m-d H:i:s');
 
-            // Set necessary variables
-            //$rows  = $queryHourlyControl->testWorkState();
-
+            // Set necessary variables            
             $workstate       = $queryHourlyControl->getWorkState();
             $workstate_color = $queryHourlyControl->getWorkStateSuccessOrDanger();
             
             // We obtain the input, output hours and total time worked            
             $hours = $queryHourlyControl->getHours();
 
-            // We obtain total time worked at day                    
-            $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
+            // We obtain total time worked at day                                
             $hours = array_merge(
                 $hours, 
-                ['total_time' => $total_time_worked_at_day]
+                ['total_time' => $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user'])]
             );  
 
             $variables = [
-                    'menus'             => $this->showNavLinks(),
-                    'session'           => $_SESSION,
-                    'workstate'         => $workstate,
-                    'workstate_color'   => $workstate_color,
-                    'hours'             => $hours,
-                    'projects'          => $queryHourlyControl->selectAll('projects'),
-                    'tasks'             => $queryHourlyControl->selectAll('tasks'),
-                    'active'            => 'home',
-                    'csrf_token'        => $this->validate                   
+                'menus'             => $this->showNavLinks(),
+                'session'           => $_SESSION,
+                'workstate'         => $workstate,
+                'workstate_color'   => $workstate_color, 
+                'projects'          => $queryHourlyControl->selectAll('projects'),
+                'tasks'             => $queryHourlyControl->selectAll('tasks'),
+                'active'            => 'home',
+                'csrf_token'        => $this->validate,
+                'fields'            => [
+                                        'project' => $queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
+                                                        new Project($queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
+                                                        null,
+                                        'task'    => $queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
+                                                        new Task($queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
+                                                        null,
+                                    ]
             ];            
 
-            $fields = [
-                'project' => $queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
-                                $queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) : 
-                                null,
-                'task'    => $queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
-                                $queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) : 
-                                null,
-            ];
-
             if($queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
-                $variables['error_message'] =  "Start time is already set"; 
-                $variables['fields'] = $fields;                                 
-
+                $variables['error_message'] =  "Start time is already set";
+                $variables['hours']         = $hours;                                                  
                 $this->render('main_view.twig', $variables);
                 die();                                                
             }                        
@@ -79,9 +75,9 @@ class HourlyController extends Controller
             if(!$this->validate->validate_csrf_token()) throw new \Exception("Invalid csrf token", 1);
 
             // Validate form
-            if(!$this->validate->validate_form($fields)) {
+            if(!$this->validate->validate_form($variables['fields'])) {
                 $variables['error_message'] = $this->validate->get_msg();
-                $variables['fields'] = $fields;                
+                $variables['hours']         = $hours;                        
                 $this->render('main_view.twig', $variables);
                 die();              
             }            
@@ -89,8 +85,8 @@ class HourlyController extends Controller
                 $queryHourlyControl->insertInto("hourly_control", [
                     "id_user"    => $_SESSION['id_user'],
                     "date_in"    => $dateIn,
-                    "project_id" => $fields['project']['project_id'],
-                    "task_id"    => $fields['task']['task_id'],
+                    "project_id" => $variables['fields']['project']->getProjectId(),
+                    "task_id"    => $variables['fields']['task']->getTaskId(),
                 ]);
             }
                          

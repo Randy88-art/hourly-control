@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 15, 2025 at 07:05 PM
+-- Generation Time: Jun 21, 2025 at 11:29 AM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -219,7 +219,46 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (206, 1, 3, 3, '2025-06-14 16:31:58', '2025-06-14 17:05:26', '00:33:28', '2025-06-14 15:04:18', '2025-06-14 15:05:26'),
 (207, 1, 3, 3, '2025-06-14 17:05:39', '2025-06-14 17:27:48', '00:22:09', '2025-06-14 15:05:39', '2025-06-14 15:27:48'),
 (208, 1, 3, 4, '2025-06-15 13:38:01', '2025-06-15 15:08:57', '01:30:56', '2025-06-15 11:38:01', '2025-06-15 13:08:57'),
-(209, 1, 3, 4, '2025-06-15 15:13:54', '2025-06-15 15:14:24', '00:00:30', '2025-06-15 13:13:54', '2025-06-15 13:14:24');
+(209, 1, 3, 4, '2025-06-15 15:13:54', '2025-06-15 15:14:24', '00:00:30', '2025-06-15 13:13:54', '2025-06-15 13:14:24'),
+(210, 1, 3, 5, '2025-06-15 21:06:26', '2025-06-15 22:08:59', '01:02:33', '2025-06-15 19:06:26', '2025-06-15 20:08:59'),
+(211, 1, 3, 5, '2025-06-15 22:09:36', '2025-06-15 22:39:58', '00:30:22', '2025-06-15 20:09:36', '2025-06-15 20:39:59'),
+(212, 1, 3, 5, '2025-06-16 18:09:07', '2025-06-16 19:52:55', '01:43:48', '2025-06-16 16:09:07', '2025-06-16 17:52:55'),
+(213, 1, 3, 5, '2025-06-16 21:35:39', '2025-06-16 21:38:27', '00:02:48', '2025-06-16 19:35:39', '2025-06-16 19:38:27'),
+(214, 1, 3, 5, '2025-06-16 21:44:56', '2025-06-16 21:45:28', '00:00:32', '2025-06-16 19:44:56', '2025-06-16 19:45:28'),
+(215, 1, 3, 5, '2025-06-16 21:47:22', '2025-06-16 21:47:34', '00:00:12', '2025-06-16 19:47:22', '2025-06-16 19:47:34'),
+(216, 1, 3, 5, '2025-06-17 19:08:42', '2025-06-17 19:19:46', '00:11:04', '2025-06-17 17:08:42', '2025-06-17 17:19:46'),
+(217, 1, 3, 5, '2025-06-17 19:20:07', '2025-06-17 23:38:16', '04:18:09', '2025-06-17 17:20:07', '2025-06-17 21:38:16'),
+(218, 1, 3, 5, '2025-06-18 20:36:10', '2025-06-18 21:15:29', '00:39:19', '2025-06-18 18:36:10', '2025-06-18 19:15:29'),
+(219, 1, 3, 5, '2025-06-18 21:32:14', '2025-06-18 21:33:43', '00:01:29', '2025-06-18 19:32:14', '2025-06-18 19:33:43'),
+(220, 1, 3, 5, '2025-06-18 21:33:48', '2025-06-18 21:37:34', '00:03:46', '2025-06-18 19:33:48', '2025-06-18 19:37:34'),
+(221, 1, 3, 5, '2025-06-18 21:37:40', '2025-06-18 22:03:08', '00:25:28', '2025-06-18 19:37:40', '2025-06-18 20:03:08'),
+(222, 1, 3, 6, '2025-06-19 22:07:21', '2025-06-19 23:13:44', '01:06:23', '2025-06-19 20:07:21', '2025-06-19 21:13:44'),
+(223, 1, 3, 6, '2025-06-19 23:23:43', '2025-06-19 23:38:18', '00:14:35', '2025-06-19 21:23:43', '2025-06-19 21:38:18'),
+(224, 1, 3, 6, '2025-06-19 23:53:11', '2025-06-19 23:55:59', '00:02:48', '2025-06-19 21:53:11', '2025-06-19 21:55:59'),
+(225, 1, 3, 6, '2025-06-19 23:56:32', '2025-06-19 23:57:11', '00:00:39', '2025-06-19 21:56:32', '2025-06-19 21:57:11'),
+(226, 1, 3, 6, '2025-06-21 11:17:24', '2025-06-21 12:25:23', '01:07:59', '2025-06-21 09:17:24', '2025-06-21 10:25:23'),
+(227, 1, 3, 6, '2025-06-21 12:26:36', '2025-06-21 12:45:39', '00:19:03', '2025-06-21 10:26:36', '2025-06-21 10:45:39'),
+(228, 1, 3, 6, '2025-06-21 12:45:55', '2025-06-21 12:48:03', '00:02:08', '2025-06-21 10:45:55', '2025-06-21 10:48:03'),
+(229, 1, 3, 6, '2025-06-21 12:48:39', '2025-06-21 12:56:11', '00:07:32', '2025-06-21 10:48:39', '2025-06-21 10:56:11'),
+(230, 1, 3, 6, '2025-06-21 13:11:57', '2025-06-21 13:14:12', '00:02:15', '2025-06-21 11:11:57', '2025-06-21 11:14:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hourly_control_test`
+--
+
+CREATE TABLE `hourly_control_test` (
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `id_user` int(11) NOT NULL COMMENT 'User ID',
+  `project_id` int(11) NOT NULL,
+  `task_id` int(11) NOT NULL,
+  `date_in` datetime DEFAULT NULL COMMENT 'Get in to work',
+  `date_out` datetime DEFAULT NULL COMMENT 'Get out of work',
+  `total_time_worked` time DEFAULT NULL COMMENT 'Total time worked',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -282,7 +321,8 @@ INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (2, 'Refactor AdminController', 1),
 (3, 'Create Relationships between tables', 1),
 (4, 'Improve select elements in main view', 1),
-(5, 'Add tests', 1);
+(5, 'Add tests', 1),
+(6, 'Refactor HourlyController', 1);
 
 -- --------------------------------------------------------
 
@@ -314,6 +354,16 @@ INSERT INTO `users` (`id`, `user_name`, `email`, `password`, `id_role`) VALUES
 -- Indexes for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_hourly_control_project` (`project_id`),
+  ADD KEY `fk_hourly_control_task` (`task_id`),
+  ADD KEY `idx_id_user` (`id_user`),
+  ADD KEY `idx_user_project` (`id_user`,`project_id`);
+
+--
+-- Indexes for table `hourly_control_test`
+--
+ALTER TABLE `hourly_control_test`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_hourly_control_project` (`project_id`),
   ADD KEY `fk_hourly_control_task` (`task_id`),
@@ -353,7 +403,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=210;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=231;
+
+--
+-- AUTO_INCREMENT for table `hourly_control_test`
+--
+ALTER TABLE `hourly_control_test`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -371,7 +427,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
