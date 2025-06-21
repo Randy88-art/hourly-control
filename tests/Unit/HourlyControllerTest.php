@@ -26,7 +26,7 @@ final class HourlyControllerTest extends TestCase
         $this->controller = new Controller();
        
         define("SITE_ROOT", "/var/www/public");
-        define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db.config.php');
+        define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db_test.config.php');
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon); 
 
@@ -95,7 +95,7 @@ final class HourlyControllerTest extends TestCase
             $this->assertArrayHasKey('hours', $variables);           
         }
         else {
-            $this->queryHourlyControl->insertInto("hourly_control_test", [
+            $this->queryHourlyControl->insertInto("hourly_control", [
                 "id_user"    => $_SESSION['id_user'],
                 "date_in"    => $dateIn,
                 "project_id" => $variables['fields']['project']->getProjectId(),
