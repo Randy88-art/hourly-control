@@ -25,7 +25,7 @@ final class AdminController extends Controller
             // Test for privileges
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
             
-            $users = $this->query->selectAll('users');
+            //$users = $this->query->selectAll('users');
 
         } catch (\Throwable $th) {            
             if($this->testAccess(['ROLE_ADMIN'])) {
@@ -50,8 +50,8 @@ final class AdminController extends Controller
         $this->render('admin/dashboard_view.twig', [
             'menus'         => $this->showNavLinks(),
             'session'       => $_SESSION,
-            'users'         => $users,
-            'csrf_token'    => $this->validate,
+            /* 'users'         => $users,
+            'csrf_token'    => $this->validate, */
         ]);
     }
 

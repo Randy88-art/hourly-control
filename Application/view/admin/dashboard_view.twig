@@ -2,7 +2,13 @@
 
 {% block main %}    
     <section class="row"> 
-        <h2 class="text-center">Dashboard</h2>       
-        {% include "admin/form_dashboard.twig" %}
+        <h2 class="text-center">Dashboard Panel</h2>
+        <section>
+            <h3>Search options</h3>
+            <ul>
+                <li><a href="#">Search by user and date</a></li>
+            </ul>
+        </section>       
+       {#  {% include "admin/form_dashboard.twig" %} #}
     </section> 
 {% endblock main %}
