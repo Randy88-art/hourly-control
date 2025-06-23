@@ -23,9 +23,7 @@ final class AdminController extends Controller
     {                        
         try {
             // Test for privileges
-            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-            
-            //$users = $this->query->selectAll('users');
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');                    
 
         } catch (\Throwable $th) {            
             if($this->testAccess(['ROLE_ADMIN'])) {
@@ -48,10 +46,9 @@ final class AdminController extends Controller
         }
 
         $this->render('admin/dashboard_view.twig', [
-            'menus'         => $this->showNavLinks(),
-            'session'       => $_SESSION,
-            /* 'users'         => $users,
-            'csrf_token'    => $this->validate, */
+            'menus'   => $this->showNavLinks(),
+            'session' => $_SESSION,
+            'active'  => 'administration'            
         ]);
     }
 
@@ -63,8 +60,9 @@ final class AdminController extends Controller
 
             // Initialize variables
             $variables = [
-                'menus' => $this->showNavLinks(),
-                'session' => $_SESSION
+                'menus'      => $this->showNavLinks(),
+                'session'    => $_SESSION,                
+                'active'     => 'administration',
             ];
             
             // Get values from search form
@@ -99,12 +97,14 @@ final class AdminController extends Controller
             }else{                
                 $users = $this->query->selectAll('users');
                 
-                $this->render('admin/dashboard_view.twig', [
+                $this->render('admin/search/search_view.twig', [
                     'menus'         => $this->showNavLinks(),
                     'session'       => $_SESSION,
                     'fields'        => $fields,
                     'error_message' => $this->validate->get_msg(),
-                    'users'         => $users 
+                    'csrf_token'    => $this->validate,                    
+                    'users'         => $users,
+                    'active'        => 'administration' 
                 ]);
             }
 
