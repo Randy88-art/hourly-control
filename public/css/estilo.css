@@ -87,9 +87,16 @@ p{
 
 td {
 	text-align: center;
-	padding: 0.5em;
-	/* border: 1px solid black; */
+	padding: 0.5em;	
+	border: 1px solid whitesmoke;
+}
+
+.table-antiquewhite tr {
 	background-color: antiquewhite;
+}
+
+.table-antiquewhite tr:nth-child(odd) {
+	background-color: rgb(252, 224, 187);
 }
 
 label{
