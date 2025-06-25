@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% block main %}    
+    <section class="row"> 
+        <h2 class="text-center">Tasks Index</h2>
+        <table>
+            <thead class="text-center">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-antiquewhite">
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.task_id }}</td>
+                        <td class="text-start">{{ task.task_name }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.priority }}</td>
+                        <td>{{ task.created_at }}</td>
+                        <td>{{ task.updated_at }}</td>
+                        <td>
+                            {% if task.active %}
+                                <span class="text-success">&#10003;</span> {# ✔ #}
+                            {% else %}
+                                <span class="text-danger">&#10007;</span> {# ✖ #}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-success" href="/tasks/task/edit/{{ task.id }}">Edit</a>
+                            <a class="btn btn-outline-danger" href="/tasks/task/delete/{{ task.id }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <a class="btn btn-outline-primary" href="/tasks/task/new">New Task</a>
+                    </td>
+                </tr>
+            </tbody>                        
+        </table>
+    </section> 
+{% endblock main %}

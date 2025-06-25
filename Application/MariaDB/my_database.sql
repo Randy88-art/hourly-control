@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 21, 2025 at 11:29 AM
+-- Generation Time: Jun 23, 2025 at 08:04 PM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -240,25 +240,18 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (227, 1, 3, 6, '2025-06-21 12:26:36', '2025-06-21 12:45:39', '00:19:03', '2025-06-21 10:26:36', '2025-06-21 10:45:39'),
 (228, 1, 3, 6, '2025-06-21 12:45:55', '2025-06-21 12:48:03', '00:02:08', '2025-06-21 10:45:55', '2025-06-21 10:48:03'),
 (229, 1, 3, 6, '2025-06-21 12:48:39', '2025-06-21 12:56:11', '00:07:32', '2025-06-21 10:48:39', '2025-06-21 10:56:11'),
-(230, 1, 3, 6, '2025-06-21 13:11:57', '2025-06-21 13:14:12', '00:02:15', '2025-06-21 11:11:57', '2025-06-21 11:14:12');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hourly_control_test`
---
-
-CREATE TABLE `hourly_control_test` (
-  `id` int(11) NOT NULL COMMENT 'Primary Key',
-  `id_user` int(11) NOT NULL COMMENT 'User ID',
-  `project_id` int(11) NOT NULL,
-  `task_id` int(11) NOT NULL,
-  `date_in` datetime DEFAULT NULL COMMENT 'Get in to work',
-  `date_out` datetime DEFAULT NULL COMMENT 'Get out of work',
-  `total_time_worked` time DEFAULT NULL COMMENT 'Total time worked',
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+(230, 1, 3, 6, '2025-06-21 13:11:57', '2025-06-21 13:14:12', '00:02:15', '2025-06-21 11:11:57', '2025-06-21 11:14:12'),
+(231, 1, 3, 7, '2025-06-21 19:11:43', '2025-06-21 19:28:08', '00:16:25', '2025-06-21 17:11:43', '2025-06-21 17:28:08'),
+(232, 1, 3, 7, '2025-06-21 20:11:07', '2025-06-21 20:11:20', '00:00:13', '2025-06-21 18:11:07', '2025-06-21 18:11:20'),
+(233, 1, 3, 7, '2025-06-21 20:18:13', '2025-06-21 20:22:01', '00:03:48', '2025-06-21 18:18:13', '2025-06-21 18:22:01'),
+(234, 1, 3, 1, '2025-06-21 21:09:35', '2025-06-21 21:39:35', '00:30:00', '2025-06-21 19:09:35', '2025-06-21 19:39:35'),
+(235, 1, 3, 5, '2025-06-22 11:04:33', '2025-06-22 11:30:31', '00:25:58', '2025-06-22 09:04:46', '2025-06-22 09:30:31'),
+(236, 1, 3, 5, '2025-06-22 11:31:07', '2025-06-22 11:47:16', '00:16:09', '2025-06-22 09:31:07', '2025-06-22 09:47:17'),
+(237, 1, 3, 5, '2025-06-22 20:31:38', '2025-06-22 20:33:50', '00:02:12', '2025-06-22 18:31:38', '2025-06-22 18:33:50'),
+(238, 1, 3, 9, '2025-06-22 20:33:56', '2025-06-22 20:38:03', '00:04:07', '2025-06-22 18:33:56', '2025-06-22 18:38:03'),
+(239, 1, 3, 9, '2025-06-22 23:33:30', '2025-06-22 23:33:39', '00:00:09', '2025-06-22 21:33:30', '2025-06-22 21:33:39'),
+(240, 1, 3, 10, '2025-06-22 23:36:10', '2025-06-22 23:51:06', '00:14:56', '2025-06-22 21:36:10', '2025-06-22 21:51:06'),
+(241, 1, 3, 10, '2025-06-23 18:12:04', '2025-06-23 21:38:54', '03:26:50', '2025-06-23 16:12:04', '2025-06-23 19:38:54');
 
 -- --------------------------------------------------------
 
@@ -322,7 +315,11 @@ INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (3, 'Create Relationships between tables', 1),
 (4, 'Improve select elements in main view', 1),
 (5, 'Add tests', 1),
-(6, 'Refactor HourlyController', 1);
+(6, 'Refactor HourlyController', 1),
+(7, 'Create DB my_database_test', 1),
+(8, 'Create task CRUD', 1),
+(9, 'Add dashboard', 1),
+(10, 'Create search by user and date view', 1);
 
 -- --------------------------------------------------------
 
@@ -354,16 +351,6 @@ INSERT INTO `users` (`id`, `user_name`, `email`, `password`, `id_role`) VALUES
 -- Indexes for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_hourly_control_project` (`project_id`),
-  ADD KEY `fk_hourly_control_task` (`task_id`),
-  ADD KEY `idx_id_user` (`id_user`),
-  ADD KEY `idx_user_project` (`id_user`,`project_id`);
-
---
--- Indexes for table `hourly_control_test`
---
-ALTER TABLE `hourly_control_test`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_hourly_control_project` (`project_id`),
   ADD KEY `fk_hourly_control_task` (`task_id`),
@@ -403,13 +390,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=231;
-
---
--- AUTO_INCREMENT for table `hourly_control_test`
---
-ALTER TABLE `hourly_control_test`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=242;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -427,7 +408,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
