@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 23, 2025 at 08:04 PM
+-- Generation Time: Jun 28, 2025 at 02:26 PM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -251,7 +251,12 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (238, 1, 3, 9, '2025-06-22 20:33:56', '2025-06-22 20:38:03', '00:04:07', '2025-06-22 18:33:56', '2025-06-22 18:38:03'),
 (239, 1, 3, 9, '2025-06-22 23:33:30', '2025-06-22 23:33:39', '00:00:09', '2025-06-22 21:33:30', '2025-06-22 21:33:39'),
 (240, 1, 3, 10, '2025-06-22 23:36:10', '2025-06-22 23:51:06', '00:14:56', '2025-06-22 21:36:10', '2025-06-22 21:51:06'),
-(241, 1, 3, 10, '2025-06-23 18:12:04', '2025-06-23 21:38:54', '03:26:50', '2025-06-23 16:12:04', '2025-06-23 19:38:54');
+(241, 1, 3, 10, '2025-06-23 18:12:04', '2025-06-23 21:38:54', '03:26:50', '2025-06-23 16:12:04', '2025-06-23 19:38:54'),
+(242, 1, 3, 11, '2025-06-24 19:09:56', '2025-06-24 20:38:21', '01:28:25', '2025-06-24 17:09:56', '2025-06-24 18:38:22'),
+(243, 1, 3, 11, '2025-06-25 19:34:02', '2025-06-25 20:15:48', '00:41:46', '2025-06-25 17:34:02', '2025-06-25 18:15:48'),
+(244, 1, 3, 12, '2025-06-25 21:28:26', '2025-06-25 22:57:52', '01:29:26', '2025-06-25 19:28:26', '2025-06-25 20:57:52'),
+(245, 1, 3, 12, '2025-06-28 11:24:36', '2025-06-28 13:36:58', '02:12:22', '2025-06-28 09:24:36', '2025-06-28 11:36:58'),
+(246, 1, 3, 12, '2025-06-28 16:14:05', NULL, NULL, '2025-06-28 14:14:05', '2025-06-28 14:14:05');
 
 -- --------------------------------------------------------
 
@@ -310,7 +315,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
-(1, 'Refactor HomeController', 1),
+(1, 'Refactor HomeController', 0),
 (2, 'Refactor AdminController', 1),
 (3, 'Create Relationships between tables', 1),
 (4, 'Improve select elements in main view', 1),
@@ -319,7 +324,39 @@ INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (7, 'Create DB my_database_test', 1),
 (8, 'Create task CRUD', 1),
 (9, 'Add dashboard', 1),
-(10, 'Create search by user and date view', 1);
+(10, 'Create search by user and date view', 1),
+(11, 'Create Task Index CRUD', 1),
+(12, 'Create New Task CRUD', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks_backup`
+--
+
+CREATE TABLE `tasks_backup` (
+  `task_id` int(11) NOT NULL,
+  `task_name` varchar(100) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `tasks_backup`
+--
+
+INSERT INTO `tasks_backup` (`task_id`, `task_name`, `active`) VALUES
+(1, 'Refactor HomeController', 0),
+(2, 'Refactor AdminController', 1),
+(3, 'Create Relationships between tables', 1),
+(4, 'Improve select elements in main view', 1),
+(5, 'Add tests', 1),
+(6, 'Refactor HourlyController', 1),
+(7, 'Create DB my_database_test', 1),
+(8, 'Create task CRUD', 1),
+(9, 'Add dashboard', 1),
+(10, 'Create search by user and date view', 1),
+(11, 'Create Task Index CRUD', 1),
+(12, 'Create New Task CRUD', 1);
 
 -- --------------------------------------------------------
 
@@ -376,6 +413,12 @@ ALTER TABLE `tasks`
   ADD PRIMARY KEY (`task_id`);
 
 --
+-- Indexes for table `tasks_backup`
+--
+ALTER TABLE `tasks_backup`
+  ADD PRIMARY KEY (`task_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -390,7 +433,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=242;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=247;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -408,7 +451,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `tasks_backup`
+--
+ALTER TABLE `tasks_backup`
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`

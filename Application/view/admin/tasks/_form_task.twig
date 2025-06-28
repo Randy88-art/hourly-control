@@ -1,0 +1,30 @@
+<form class="task-form" action="/tasks/task/new" method="post">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_name">Task Name</label>
+        <div class="col-md-6 col-lg-7">
+            <input type="text" class="form-control" id="task_name" name="task_name" value="{% if fields.task_name is defined %}{{ fields.task_name }}{% endif %}" placeholder="Task Name" required>
+        </div>        
+    </div>
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_description">Task Description</label>
+        <div class="col-md-6 col-lg-7">
+            <textarea class="form-control" id="task_description" name="task_description" placeholder="Task Description"></textarea>
+        </div>        
+    </div>
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_priority">Task Priority</label>
+        <div class="col-md-6 col-lg-7">
+            <select class="form-control" id="task_priority" name="task_priority">
+            <option value="1">Low</option>
+            <option value="2">Medium</option>
+            <option value="3">High</option>
+        </select>
+        </div>        
+    </div>
+    <div class="row mb-3">        
+        <div class="col-md-6 offset-md-5 col-lg-7 offset-lg-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>        
+    </div>    
+</form>

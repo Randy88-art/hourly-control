@@ -58,4 +58,43 @@ final class TaskControllerTest extends TestCase
         $this->assertIsArray($tasks);
         $this->assertStringContainsString('Tasks Index', $html);
     }
+
+    public function testNewTask(): void
+    {
+        # Set up
+        $_SESSION['role']          = 'ROLE_ADMIN';
+        $_SESSION['id_user']       = 1;
+        $_SESSION['user_name']     = 'admin';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/tasks/task/new';                
+       
+        # Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']); 
+        $saved = false;
+        
+        // load the page
+        ob_start();
+        $this->app->router();
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        // submit the form
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI']    = '/tasks/task/new';                
+        $_POST['csrf_token']       = $_SESSION['csrf_token'] = $this->validate->csrf_token();
+        $_POST['name']             = 'new task';       
+
+        if($this->validate->validate_csrf_token() && $this->validate->validate_form(['task_name' => $_POST['name']])) {
+            $this->query->insertInto('tasks', [
+                'task_name' => $_POST['name'],
+            ]);
+            
+            $saved = true;
+        }
+        
+        # Assertions
+        $this->assertFileExists('Application/view/admin/tasks/new_task_view.twig');
+        $this->assertStringContainsString('New Task', $html);
+        $this->assertTrue($saved);
+    }
 }

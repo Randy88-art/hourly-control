@@ -259,6 +259,8 @@ img {
 	width: 100%;
 }
 
+/***************** End Password strength style *************************/
+
 .show_password {
 	cursor: pointer;
 }
@@ -266,6 +268,28 @@ img {
 .message {
 	text-align: center;
 	color: #888;
+}
+
+.task-form {	
+	width: 60%;
+	margin: 0 auto;
+}
+
+.task-form button {
+	margin-top: 1em;
+}
+
+.dashboard section {
+	width: 25%;
+	border: 1px solid burlywood;
+	border-radius: 0.5em;
+	padding: 0.5em;
+}
+
+.dashboard-options {
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 0.5em;
 }
 
 /***************** Configuración para móviles **********************/
