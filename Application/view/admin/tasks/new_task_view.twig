@@ -1,0 +1,8 @@
+{% extends "base.twig" %}
+
+{% block main %}    
+    <section class="row"> 
+        <h2 class="text-center">New Task</h2>
+        {{ include('admin/tasks/_form_task.twig') }}
+    </section> 
+{% endblock main %}
