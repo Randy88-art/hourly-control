@@ -160,7 +160,7 @@ final class TaskControllerTest extends TestCase
 
         // Delete the task
         if($this->validate->validate_csrf_token()) {
-            $task_id = 2; // Assuming we are deleting task with ID 1
+            $task_id = 1; // Assuming we are deleting task with ID 1
             $this->query->deleteRegistry('tasks', 'task_id', $task_id);
             $deleted = true;
         }
