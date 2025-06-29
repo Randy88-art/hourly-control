@@ -8,6 +8,7 @@
         <section class="row mb-5">
             <h2 class="text-center mb-4">Select project and task</h2>
             <div class="text-center">
+                <!-- Project -->
                 <select class="col-2 text-center" name="project" id="project">
                     {% if fields.project is defined and fields.project != null %}
                         <option value="{{ fields.project.getProjectId() }}">{{ fields.project.getProjectName() }}</option>
@@ -21,6 +22,7 @@
                     {% endif %}
                 </select>
 
+                <!-- Task -->
                 <select class="col-2 text-center" name="task" id="task">
                     {% if fields.task is defined and fields.task != null %}
                         <option value="{{ fields.task.getTaskId() }}">{{ fields.task.getTaskName() }}</option>
@@ -29,7 +31,9 @@
                     {% endif %}
                     {% if tasks is defined %}
                         {% for task in tasks %}
-                            <option value="{{ task.task_id }}">{{ task.task_name }}</option>
+                            {% if task.active %}
+                                <option value="{{ task.task_id }}">{{ task.task_name }}</option>
+                            {% endif %}                            
                         {% endfor %}
                     {% endif %}
                 </select>
