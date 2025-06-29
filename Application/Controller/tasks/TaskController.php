@@ -31,6 +31,7 @@ final class TaskController extends Controller
             $variables = [
                 'menus'     => $this->showNavLinks(),
                 'tasks'     => $tasks,
+                'session'   => $_SESSION,
                 'active'    => 'administration',
             ];
 
@@ -62,6 +63,7 @@ final class TaskController extends Controller
         try {
             $variables = [
                 'menus'      => $this->showNavLinks(),
+                'session'    => $_SESSION,
                 'csrf_token' => $this->validate,
                 'active'     => 'administration',
             ];
@@ -119,6 +121,7 @@ final class TaskController extends Controller
 
             $variables = [
                 'menus'      => $this->showNavLinks(),
+                'session'    => $_SESSION,
                 'csrf_token' => $this->validate,
                 'active'     => 'administration',
             ];
