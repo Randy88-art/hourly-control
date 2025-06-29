@@ -292,6 +292,11 @@ div:has(input[type="checkbox"]) {
 	margin-top: 0.5em;
 }
 
+#delete_form {
+	display: inline-block;
+	margin: 0;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {

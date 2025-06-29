@@ -136,7 +136,7 @@
             }           
         }
 
-        public function deleteRegistry(string $table, string $fieldId, string $id)
+        public function deleteRegistry(string $table, string $fieldId, string|int $id)
         {
             $query = "DELETE FROM $table WHERE $fieldId = :id";                 
 

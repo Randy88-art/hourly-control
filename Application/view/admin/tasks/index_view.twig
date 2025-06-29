@@ -34,7 +34,7 @@
                         </td>
                         <td>
                             <a class="btn btn-outline-success" href="/tasks/task/edit/{{ task.task_id }}">Edit</a>
-                            <a class="btn btn-outline-danger" href="/tasks/task/delete/{{ task.task_id }}">Delete</a>
+                            {{ include('admin/tasks/_delete_form.twig') }}
                         </td>
                     </tr>
                 {% endfor %}
