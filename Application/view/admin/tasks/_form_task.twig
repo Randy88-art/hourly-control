@@ -1,4 +1,4 @@
-<form class="task-form" action="/tasks/task/new" method="post">
+<form class="task-form" action="#" method="post">
     <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
     <div class="row mb-3">
         <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_name">Task Name</label>
@@ -22,9 +22,16 @@
         </select>
         </div>        
     </div>
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_active">Task active</label>
+        <div class="col-md-6 col-lg-7">            
+            <input type="checkbox" id="task_active" name="task_active" {% if fields.active is defined and fields.active %}checked{% endif %}>            
+        </div>
+    </div>
     <div class="row mb-3">        
         <div class="col-md-6 offset-md-5 col-lg-7 offset-lg-4">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/tasks/task/index" class="btn btn-secondary">Cancel</a>
         </div>        
     </div>    
 </form>

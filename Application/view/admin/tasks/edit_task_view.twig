@@ -1,0 +1,19 @@
+{% extends "base.twig" %}
+
+{% block main %}    
+    <section class="row"> 
+        <h2 class="text-center">Edit Task</h2>
+        {{ include('admin/tasks/_form_task.twig') }}
+    </section> 
+{% endblock main %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskNameInput = document.getElementById('task_name');
+            if (taskNameInput) {
+                taskNameInput.focus();
+            }
+        });
+    </script>
+{% endblock scripts %}

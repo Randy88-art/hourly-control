@@ -54,9 +54,10 @@
          * return `false`.
          */
         public function validate_form(array $fields): bool
-        {                             
-            
+        {                                         
             foreach ($fields as $key => $value) {
+                if(is_int($value) && $value === 0) continue; // Skip numeric values
+
                 if (empty($value) || !isset($value)) {
                     $key = ucfirst($key);                                        
                     $this->msg = "'$key' is a required field.";
