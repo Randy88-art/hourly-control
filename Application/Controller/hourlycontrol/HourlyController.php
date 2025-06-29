@@ -8,12 +8,15 @@ use Application\Core\Controller;
 use DateTime;
 use Application\model\classes\QueryHourlyControl;
 use Application\model\classes\Validate;
+use Application\model\Project;
+use Application\model\Task;
 
 class HourlyController extends Controller
 {
     public function __construct(
         private object $dbcon = DB_CON,
         private Validate $validate = new Validate(),
+        private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl(),
     )
     {
         
@@ -25,71 +28,64 @@ class HourlyController extends Controller
             // Test for privileges
             if(!$this->testAccess(['ROLE_USER', 'ROLE_ADMIN'])) throw new \Exception('Only authorized users can access this page');
 
-            // Test if there is already an input done without an output
-            $queryHourlyControl = new QueryHourlyControl();
-                       
+            // Test if there is already an input done without an output                                   
             $dateIn = date('Y-m-d H:i:s');
 
-            // Set necessary variables
-            $rows  = $queryHourlyControl->testWorkState();
-
-            $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
-            $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
+            // Set necessary variables            
+            $workstate       = $this->queryHourlyControl->getWorkState();
+            $workstate_color = $this->queryHourlyControl->getWorkStateSuccessOrDanger();
             
-            // We obtain the input, output hours and total time worked
-            $hours = [
-                'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
-                'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
-                'duration' => $rows['date_out'] != null ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
-            ];
+            // We obtain the input, output hours and total time worked            
+            $hours = $this->queryHourlyControl->getHours();
 
-            // We obtain total time worked at day                    
-            $total_time_worked_at_day = $queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']);
+            // We obtain total time worked at day                                
             $hours = array_merge(
                 $hours, 
-                ['total_time' => $total_time_worked_at_day]
+                ['total_time' => $this->queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user'])]
             );  
 
             $variables = [
-                    'menus'             => $this->showNavLinks(),
-                    'session'           => $_SESSION,
-                    'workstate'         => $workstate,
-                    'workstate_color'   => $workstate_color,
-                    'hours'             => $hours,
-                    'projects'          => $queryHourlyControl->selectAll('projects'),
-                    'tasks'             => $queryHourlyControl->selectAll('tasks'),
-                    'active'            => 'home',
-                    'csrf_token'        => $this->validate                   
-            ];
+                'menus'             => $this->showNavLinks(),
+                'session'           => $_SESSION,
+                'workstate'         => $workstate,
+                'workstate_color'   => $workstate_color, 
+                'projects'          => $this->queryHourlyControl->selectAll('projects'),
+                'tasks'             => $this->queryHourlyControl->selectAll('tasks'),
+                'active'            => 'home',
+                'csrf_token'        => $this->validate,
+                'fields'            => [
+                                        'project' => $this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
+                                                        new Project($this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
+                                                        null,
+                                        'task'    => $this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
+                                                        new Task($this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
+                                                        null,
+                                    ]
+            ];            
 
-            if($queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
-                $variables['error_message'] =  "Start time is already set";                            
-
+            if($this->queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
+                $variables['error_message'] =  "Start time is already set";
+                $variables['hours']         = $hours;                                                  
                 $this->render('main_view.twig', $variables);
                 die();                                                
-            }
-            
-            $fields = [
-                'project' => $this->validate->test_input($_POST['project']),
-                'task'    => $this->validate->test_input($_POST['task'])
-            ];
+            }                        
             
             // Validate csrf token
             if(!$this->validate->validate_csrf_token()) throw new \Exception("Invalid csrf token", 1);
 
             // Validate form
-            if(!$this->validate->validate_form($fields)) {
+            if(!$this->validate->validate_form($variables['fields'])) {
                 $variables['error_message'] = $this->validate->get_msg();
-                array_merge($variables, $fields);
+                $variables['hours']         = $hours;                        
                 $this->render('main_view.twig', $variables);
                 die();              
             }            
             else {
-                $queryHourlyControl->insertInto("hourly_control", [
+                $this->queryHourlyControl->insertInto("hourly_control", [
                     "id_user"    => $_SESSION['id_user'],
                     "date_in"    => $dateIn,
-                    "project_id" => $fields['project'],
-                    "task_id"    => $fields['task'],
+                    "project_id" => $variables['fields']['project']->getProjectId(),
+                    "task_id"    => $variables['fields']['task']->getTaskId(),
                 ]);
             }
                          
@@ -120,22 +116,12 @@ class HourlyController extends Controller
     {       
         $dateTime = new \DateTime('now');
         $dateOut = $dateTime->format('Y-m-d H:i:s');       
-
-        $query = "UPDATE hourly_control 
-                SET date_out = :date_out 
-                WHERE id_user = :id_user 
-                AND date_in = (SELECT MAX(date_in) 
-                                FROM hourly_control
-                                WHERE id_user = $_SESSION[id_user]) 
-                AND date_out IS NULL";               
+                      
         try {
             // Test for privileges
-            if(!$this->testAccess(['ROLE_USER', 'ROLE_ADMIN'])) throw new \Exception('Only authorized users can access this page');
-
-            $stm = $this->dbcon->pdo->prepare($query);       
-            $stm->bindValue(":date_out", $dateOut);
-            $stm->bindValue(":id_user", $_SESSION['id_user']);
-            $stm->execute();        
+            if(!$this->testAccess(['ROLE_USER', 'ROLE_ADMIN'])) throw new \Exception('Only authorized users can access this page');            
+            
+            $this->queryHourlyControl->setOutput($dateOut);
 
             header("Location: /");
             die();

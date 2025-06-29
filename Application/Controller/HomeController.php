@@ -27,7 +27,7 @@
          * workstate to 'Not Working'.
          */
         public function index()
-        { 
+        {
             try {
                 // Initial options
                 $options = [
@@ -40,15 +40,11 @@
                 if(isset($_SESSION['id_user'])) {                    
                     $rows  = $this->queryHourlyControl->testWorkState();
 
-                    $workstate       = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
-                    $workstate_color = ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
+                    $workstate       = $this->queryHourlyControl->getWorkState();
+                    $workstate_color = $this->queryHourlyControl->getWorkStateSuccessOrDanger();
                     
                     // We obtain the input, output hours and total time worked
-                    $hours = [
-                        'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
-                        'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
-                        'duration' => $rows['date_out'] ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
-                    ];
+                    $hours = $this->queryHourlyControl->getHours();
 
                     // Update duration in the DB
                     if($rows['date_out'] !== null) {
@@ -56,12 +52,11 @@
                         $hourlyController->setDuration($hours['duration']);
                     }
 
-                    // We obtain total time worked at day                    
-                    $total_time_worked_at_day = $this->queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user']) ?? '--:--:--';
+                    // We obtain total time worked at day                                
                     $hours = array_merge(
                         $hours, 
-                        ['total_time' => $total_time_worked_at_day]
-                    );
+                        ['total_time' => $this->queryHourlyControl->getTotalTimeWorkedToday(date('Y-m-d'), $_SESSION['id_user'])]
+                    ); 
 
                     // Add new options to the lastest ones
                     $options = array_merge($options, [

@@ -1,8 +1,22 @@
 {% extends "base.twig" %}
 
 {% block main %}    
-    <section class="row"> 
-        <h2 class="text-center">Dashboard</h2>       
-        {% include "admin/form_dashboard.twig" %}
+    <section class="row dashboard"> 
+        <h2 class="text-center">Dashboard Panel</h2>
+        <div class="dashboard-options">
+            <section >
+                <h3>Search options</h3>
+                <ul>
+                    <li><a href="/admin/search/searchByUserAndDate">Search by user and date</a></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Tasks options</h3>
+                <ul>
+                    <li><a href="/tasks/task/index">Tasks Index</a></li>
+                    <li><a href="/tasks/task/new">New Task</a></li>
+                </ul>
+            </section>
+        </div>                      
     </section> 
 {% endblock main %}

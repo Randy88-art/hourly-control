@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Application\model\classes;
 
 use Application\model\classes\Query;
+use DateTime;
 use PDO;
 
 final class QueryHourlyControl extends Query
@@ -111,5 +112,48 @@ final class QueryHourlyControl extends Query
         } catch (\Throwable $th) {
             throw new \Exception("{$th->getMessage()}", 1);
         }                    
+    }
+
+    public function getWorkState() : string
+    {
+        $rows = $this->testWorkState();
+        return ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'Working' : 'Not Working';
+    }
+
+    public function getWorkStateSuccessOrDanger(): string
+    {
+        $rows = $this->testWorkState();
+        return ($rows && $rows['date_out'] === null && $rows['date_in'] !== null) ? 'success' : 'danger';
+    }
+
+    public function getHours(): array
+    {
+        $rows = $this->testWorkState();
+        return [
+            'date_in'  => $rows['date_in']  ? date_format(new DateTime($rows['date_in']), 'H:i:s')  : '--:--:--',
+            'date_out' => $rows['date_out'] ? date_format(new DateTime($rows['date_out']), 'H:i:s') : '--:--:--',
+            'duration' => $rows['date_out'] != null ? date_diff(new DateTime($rows['date_in']), new DateTime($rows['date_out']))->format('%H:%I:%S') : '--:--:--',
+        ];
+    }
+
+    public function setOutput(string $dateOut): void
+    {
+        $query = "UPDATE hourly_control 
+                SET date_out = :date_out 
+                WHERE id_user = :id_user 
+                AND date_in = (SELECT MAX(date_in) 
+                                FROM hourly_control
+                                WHERE id_user = $_SESSION[id_user]) 
+                AND date_out IS NULL";
+
+        try {
+            $stm = $this->dbcon->pdo->prepare($query);       
+            $stm->bindValue(":date_out", $dateOut);
+            $stm->bindValue(":id_user", $_SESSION['id_user']);
+            $stm->execute();
+            
+        } catch (\Throwable $th) {
+            throw new \Exception("{$th->getMessage()}", 1);
+        }
     }
 }
