@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 29, 2025 at 07:13 PM
+-- Generation Time: Jun 30, 2025 at 04:50 PM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -260,7 +260,8 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (247, 1, 3, 13, '2025-06-28 17:33:01', '2025-06-28 19:31:49', '01:58:48', '2025-06-28 15:33:01', '2025-06-28 17:31:49'),
 (248, 1, 3, 13, '2025-06-29 11:49:23', '2025-06-29 11:53:24', '00:04:01', '2025-06-29 09:49:23', '2025-06-29 09:53:24'),
 (249, 1, 3, 13, '2025-06-29 12:51:37', '2025-06-29 13:57:52', '01:06:15', '2025-06-29 10:51:37', '2025-06-29 11:57:52'),
-(250, 1, 3, 14, '2025-06-29 20:54:47', NULL, NULL, '2025-06-29 18:54:47', '2025-06-29 18:54:47');
+(250, 1, 3, 14, '2025-06-29 20:54:47', '2025-06-29 22:13:17', '01:18:30', '2025-06-29 18:54:47', '2025-06-29 20:13:17'),
+(251, 1, 3, 15, '2025-06-30 17:56:24', NULL, NULL, '2025-06-30 15:56:24', '2025-06-30 15:56:24');
 
 -- --------------------------------------------------------
 
@@ -331,8 +332,9 @@ INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (10, 'Create search by user and date view', 0),
 (11, 'Create Task Index CRUD', 0),
 (12, 'Create New Task CRUD', 0),
-(13, 'Create Edit Task CRUD', 1),
-(14, 'Create Delete Task CRUD', 1);
+(13, 'Create Edit Task CRUD', 0),
+(14, 'Create Delete Task CRUD', 0),
+(15, 'Update Task Controller', 1);
 
 -- --------------------------------------------------------
 
@@ -403,7 +405,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=251;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -421,7 +423,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -82,13 +82,15 @@ final class TaskControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REQUEST_URI']    = '/tasks/task/new';                
         $_POST['csrf_token']       = $_SESSION['csrf_token'] = $this->validate->csrf_token();
-        $_POST['name']             = 'new task';       
+        $_POST['name']             = 'new task';
+        $_POST['active']           = 1;
+        $fields = [
+            'task_name' => $_POST['name'],
+            'active'    => $_POST['active'],
+        ];       
 
-        if($this->validate->validate_csrf_token() && $this->validate->validate_form(['task_name' => $_POST['name']])) {
-            $this->query->insertInto('tasks', [
-                'task_name' => $_POST['name'],
-            ]);
-            
+        if($this->validate->validate_csrf_token() && $this->validate->validate_form($fields)) {
+            $this->query->insertInto('tasks', $fields);            
             $saved = true;
         }
         
@@ -160,7 +162,7 @@ final class TaskControllerTest extends TestCase
 
         // Delete the task
         if($this->validate->validate_csrf_token()) {
-            $task_id = 2; // Assuming we are deleting task with ID 1
+            $task_id = 1; // Assuming we are deleting task with ID 1
             $this->query->deleteRegistry('tasks', 'task_id', $task_id);
             $deleted = true;
         }
