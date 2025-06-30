@@ -30,9 +30,9 @@ final class TaskController extends Controller
 
             $variables = [
                 'menus'      => $this->showNavLinks(),
-                'tasks'      => $tasks,
-                'csrf_token' => $this->validate,
                 'session'    => $_SESSION,
+                'tasks'      => $tasks,
+                'csrf_token' => $this->validate,                
                 'active'     => 'administration',
             ];
 
@@ -74,13 +74,12 @@ final class TaskController extends Controller
 
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields  = [
-                    'task_name' => $this->validate->test_input($_POST['task_name']),                    
+                    'task_name' => $this->validate->test_input($_POST['task_name']), 
+                    'active'    => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                   
                 ];
 
                 if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
-                    $this->query->insertInto('tasks', [
-                        'task_name' => $this->fields['task_name'],
-                    ]);
+                    $this->query->insertInto('tasks', $this->fields);
 
                     header("Location: /tasks/task/index");
                 }
@@ -190,6 +189,8 @@ final class TaskController extends Controller
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_SESSION['csrf_token'] = $_POST['csrf_token'] ?? '';
+                
                 if($this->validate->validate_csrf_token()) {
                     $this->query->deleteRegistry('tasks', 'task_id', $id);
                     header("Location: /tasks/task/index");
