@@ -39,12 +39,12 @@ final class TaskControllerTest extends TestCase
     public function testIndexTask(): void
     {
         # Set up
-        $_SESSION['role']      = 'ROLE_ADMIN';
-        $_SESSION['id_user']   = 1;
-        $_SESSION['user_name'] = 'admin';
+        $_SESSION['role']          = 'ROLE_ADMIN';
+        $_SESSION['id_user']       = 1;
+        $_SESSION['user_name']     = 'admin';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/tasks/task/index';                
-       
+        $_SERVER['REQUEST_URI']    = '/tasks/task/index';
+
         # Run logic        
         $tasks = $this->query->selectAll('tasks');
 
