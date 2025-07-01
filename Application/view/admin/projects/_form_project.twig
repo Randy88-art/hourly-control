@@ -1,0 +1,27 @@
+<form class="task-form" action="#" method="post">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="project_name">Project Name</label>
+        <div class="col-md-6 col-lg-7">
+            <input type="text" class="form-control" id="project_name" name="project_name" value="{% if fields.project_name is defined %}{{ fields.project_name }}{% endif %}" placeholder="Project Name" required>
+        </div>        
+    </div>
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="project_description">Project Description</label>
+        <div class="col-md-6 col-lg-7">
+            <textarea class="form-control" id="project_description" name="project_description" placeholder="Project Description"></textarea>
+        </div>        
+    </div>    
+    <div class="row mb-3">
+        <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="project_active">Project active</label>
+        <div class="col-md-6 col-lg-7">            
+            <input type="checkbox" id="project_active" name="project_active" {% if fields.active is defined and fields.active %}checked{% endif %}>            
+        </div>
+    </div>
+    <div class="row mb-3">        
+        <div class="col-md-6 offset-md-5 col-lg-7 offset-lg-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/projects/project/index" class="btn btn-secondary">Cancel</a>
+        </div>        
+    </div>    
+</form>

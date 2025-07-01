@@ -56,5 +56,67 @@ class ProjectController extends Controller
                 'exception_message' => $error_msg,                
             ]);
         }
-    }   
+    }
+    
+    public function new(): void
+    {
+        try {
+            // Test for privileges
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+
+            $variables = [
+                'menus'      => $this->showNavLinks(),
+                'session'    => $_SESSION,
+                'csrf_token' => $this->validate,                
+                'active'     => 'administration',
+            ];
+
+            // Check if the form is submitted
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $this->fields = [
+                    'project_name' => $this->validate->test_input($_POST['project_name']),                    
+                    'active'       => isset($_POST['project_active']) ? 1 : 0, // Assuming 'active' is a checkbox
+                ];
+
+                // Validate CSRF token
+                if ($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
+                    // Insert the new project into the database
+                    $this->query->insertInto('projects', $this->fields);
+                    
+                    // Redirect to the projects index page after saving
+                    header('Location: /projects/project/index');
+
+                } else {
+                    // If validation fails, set an error message
+                    $variables['error_message'] = !$this->validate->validate_form($this->fields) ?
+                                                    $this->validate->get_msg() : 
+                                                    'Invalid form submission. Invalid csrf_token.';
+
+                    $variables['fields'] = $this->fields; // Keep the submitted data for repopulation
+                    
+                }
+            }
+
+            $this->render('admin/projects/new_project_view.twig', $variables);
+
+        } catch (\Throwable $th) {
+            if($this->testAccess(['ROLE_ADMIN'])) {
+                $error_msg = [
+                    "Message:"  =>  $th->getMessage(),
+                    "Path:"     =>  $th->getFile(),
+                    "Line:"     =>  $th->getLine(),
+                ];
+            }
+            else {
+                $error_msg = [
+                    'Error:' =>  $th->getMessage(),
+                ];
+            }
+
+            $this->render('error_view.twig', [
+                'menus'             => $this->showNavLinks(),
+                'exception_message' => $error_msg,                
+            ]);
+        }
+    }
 }
