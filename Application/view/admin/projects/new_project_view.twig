@@ -1,0 +1,8 @@
+{% extends "base.twig" %}
+
+{% block title %}New Project{% endblock %}
+
+{% block main %}
+    <h2 class="text-center">Create a New Project</h2>
+    {{ include('admin/projects/_form_project.twig') }}
+{% endblock %}

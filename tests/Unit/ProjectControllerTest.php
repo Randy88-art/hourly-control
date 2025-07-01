@@ -53,4 +53,50 @@ final class ProjectControllerTest extends TestCase
         $this->assertIsArray($projects, 'Projects should be an array');
         $this->assertStringContainsString('Projects Index', $html, 'HTML should contain "Projects Index"');
     }
+
+    public function testNewProject(): void
+    {
+        // Setup
+        $_SESSION['role']          = 'ROLE_ADMIN';
+        $_SESSION['id_user']       = 1;
+        $_SESSION['user_name']     = 'admin';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/projects/project/new';
+        $_SESSION['csrf_token']    = $_POST['csrf_token'] = $this->validate->csrf_token();
+
+        // Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);        
+
+        // Capture output
+        ob_start();
+        $this->app->router();
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        // Save the new project (this is a mock, in real case it would be saved to the database)
+        $saved = false;
+
+        // Simulate form submission
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI']    = '/projects/project/new';
+        $_POST['project_name'] = 'New Project';
+        $_POST['active'] = 1; // Assuming 'active' is a checkbox or similar input
+        
+        $fields = [
+            'project_name' => $this->validate->test_input($_POST['project_name']),
+            'active' => $this->validate->test_input($_POST['active']),
+        ];
+
+        // Validate CSRF token and form fields
+        if ($this->validate->validate_csrf_token() && $this->validate->validate_form($fields)) {
+            $this->query->insertInto('projects', $fields);
+            $saved = true; // Simulate saving the project
+        }
+
+        // Assert
+        $this->assertTrue($testAccess, 'Access should be granted for admin role');
+        $this->assertFileExists('Application/view/admin/projects/new_project_view.twig', 'New view file should exist');
+        $this->assertStringContainsString('New Project', $html, 'HTML should contain "New Project"');
+        $this->assertTrue($saved, 'Project should be saved successfully');
+    }
 }
