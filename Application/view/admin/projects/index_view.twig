@@ -1,0 +1,38 @@
+{% extends "base.twig" %}
+
+{% block title %}Projects Index{% endblock %}
+
+{% block main %}
+    <section class="row">
+        <h2 class="text-center">Projects Index</h2>
+        <table>
+            <thead class="text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody class="table-antiquewhite">
+                {% if projects is empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No projects found.</td>
+                    </tr>
+                {% endif %}           
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.project_id }}</td>
+                        <td>{{ project.project_name }}</td>
+                        <td>
+                            {% if project.active %}
+                                <span class="text-success">&#10003;</span> {# ✔ #}
+                            {% else %}
+                                <span class="text-danger">&#10007;</span> {# ✖ #}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
