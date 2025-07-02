@@ -99,4 +99,64 @@ final class ProjectControllerTest extends TestCase
         $this->assertStringContainsString('New Project', $html, 'HTML should contain "New Project"');
         $this->assertTrue($saved, 'Project should be saved successfully');
     }
+
+    public function testEditProject(): void
+    {
+        // Setup        
+        $_SESSION['role']          = 'ROLE_ADMIN';
+        $_SESSION['id_user']       = 1;
+        $_SESSION['user_name']     = 'admin';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/projects/project/edit/4';        
+        
+        global $id;           
+
+        // Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);
+                
+        // Capture output
+        ob_start();
+        $this->app->router();        
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        $project = $this->query->selectOneBy('projects', 'project_id', $id);
+                
+        // Simulate form submission
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI']    = '/projects/project/edit/' . $id;
+        $_POST['csrf_token']       = $this->validate->csrf_token(); // Simulating CSRF token for the test
+        $_POST['project_name']     = 'Updated Project';
+        $_POST['active']           = 1; // Assuming 'active' is a checkbox or similar input        
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST') { 
+            // Prepare fields for update
+            $fields = [
+                'project_id'   => $id, // Assuming $id is the project ID being edited
+                'project_name' => $this->validate->test_input($_POST['project_name']),
+                'active'       => $this->validate->test_input($_POST['active']),
+            ];
+
+            // Check if the project exists
+            if (!$project) {
+                throw new \Exception('Project not found');
+            }
+
+            // Validate CSRF token and form fields            
+            if ($this->validate->validate_csrf_token() && $this->validate->validate_form($fields)) {
+                // Simulate updating the project in the database
+                $this->query->updateRegistry('projects', $fields, 'project_id');
+                $updated = true; // Simulate successful update
+            } else {
+                $updated = false; // Simulate failed update
+            }
+        }
+        
+        // Assert
+        $this->assertTrue($testAccess, 'Access should be granted for admin role');
+        $this->assertFileExists('Application/view/admin/projects/edit_project_view.twig', 'Edit view file should exist');
+        $this->assertStringContainsString('Edit Project', $html, 'HTML should contain "Edit Project"');
+        $this->assertIsArray($project, 'Project should be an array');
+        $this->assertTrue($updated, 'Project should be updated successfully');
+    }
 }
