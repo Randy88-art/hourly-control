@@ -17,7 +17,9 @@
                     {% endif %}
                     {% if projects is defined %}
                         {% for project in projects %}
-                            <option value="{{ project.project_id }}">{{ project.project_name }}</option>
+                            {% if project.active %}
+                                <option value="{{ project.project_id }}">{{ project.project_name }}</option>
+                            {% endif %}
                         {% endfor %}                        
                     {% endif %}
                 </select>
