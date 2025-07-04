@@ -1,5 +1,7 @@
 {% extends "base.twig" %}
 
+{% block title %}Dashboard{% endblock %}
+
 {% block main %}    
     <section class="row dashboard"> 
         <h2 class="text-center">Dashboard Panel</h2>
@@ -15,6 +17,13 @@
                 <ul>
                     <li><a href="/tasks/task/index">Tasks Index</a></li>
                     <li><a href="/tasks/task/new">New Task</a></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Projects options</h3>
+                <ul>
+                    <li><a href="/projects/project/index">Projects Index</a></li> 
+                    <li><a href="/projects/project/new">New Project</a></li>                  
                 </ul>
             </section>
         </div>                      

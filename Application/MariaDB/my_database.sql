@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 30, 2025 at 04:50 PM
+-- Generation Time: Jul 04, 2025 at 06:36 PM
 -- Server version: 11.5.2-MariaDB-ubu2404
 -- PHP Version: 8.2.23
 
@@ -261,7 +261,12 @@ INSERT INTO `hourly_control` (`id`, `id_user`, `project_id`, `task_id`, `date_in
 (248, 1, 3, 13, '2025-06-29 11:49:23', '2025-06-29 11:53:24', '00:04:01', '2025-06-29 09:49:23', '2025-06-29 09:53:24'),
 (249, 1, 3, 13, '2025-06-29 12:51:37', '2025-06-29 13:57:52', '01:06:15', '2025-06-29 10:51:37', '2025-06-29 11:57:52'),
 (250, 1, 3, 14, '2025-06-29 20:54:47', '2025-06-29 22:13:17', '01:18:30', '2025-06-29 18:54:47', '2025-06-29 20:13:17'),
-(251, 1, 3, 15, '2025-06-30 17:56:24', NULL, NULL, '2025-06-30 15:56:24', '2025-06-30 15:56:24');
+(251, 1, 3, 15, '2025-06-30 17:56:24', '2025-06-30 19:10:08', '01:13:44', '2025-06-30 15:56:24', '2025-06-30 17:10:08'),
+(252, 1, 3, 16, '2025-06-30 21:00:36', '2025-06-30 21:51:21', '00:50:45', '2025-06-30 19:00:36', '2025-06-30 19:51:21'),
+(253, 1, 3, 17, '2025-07-01 17:50:27', '2025-07-01 19:09:52', '01:19:25', '2025-07-01 15:50:27', '2025-07-01 17:09:52'),
+(254, 1, 3, 18, '2025-07-02 18:18:27', '2025-07-02 20:15:10', '01:56:43', '2025-07-02 16:18:27', '2025-07-02 18:15:10'),
+(255, 1, 3, 19, '2025-07-04 19:12:03', '2025-07-04 19:56:16', '00:44:13', '2025-07-04 17:12:03', '2025-07-04 17:56:16'),
+(256, 1, 3, 19, '2025-07-04 20:07:07', '2025-07-04 20:36:24', '00:29:17', '2025-07-04 18:07:07', '2025-07-04 18:36:24');
 
 -- --------------------------------------------------------
 
@@ -280,8 +285,8 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`project_id`, `project_name`, `active`) VALUES
-(1, 'Example Project', 1),
-(2, 'Main Project', 1),
+(1, 'Example Project', 0),
+(2, 'Main Project', 0),
 (3, 'Hourly Control', 1);
 
 -- --------------------------------------------------------
@@ -327,14 +332,18 @@ INSERT INTO `tasks` (`task_id`, `task_name`, `active`) VALUES
 (5, 'Add tests', 1),
 (6, 'Refactor HourlyController', 0),
 (7, 'Create DB my_database_test', 0),
-(8, 'Create task CRUD', 1),
+(8, 'Create task CRUD', 0),
 (9, 'Add dashboard', 0),
 (10, 'Create search by user and date view', 0),
 (11, 'Create Task Index CRUD', 0),
 (12, 'Create New Task CRUD', 0),
 (13, 'Create Edit Task CRUD', 0),
 (14, 'Create Delete Task CRUD', 0),
-(15, 'Update Task Controller', 1);
+(15, 'Update Task Controller', 0),
+(16, 'Create Index Project CRUD', 0),
+(17, 'Create New Project CRUD', 0),
+(18, 'Create Edit Project CRUD', 0),
+(19, 'Create Delete Project CRUD', 1);
 
 -- --------------------------------------------------------
 
@@ -405,7 +414,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `hourly_control`
 --
 ALTER TABLE `hourly_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=252;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=257;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -423,7 +432,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -17,6 +17,11 @@
                 </tr>
             </thead>
             <tbody class="table-antiquewhite">
+                {% if tasks is empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No tasks found.</td>
+                    </tr>
+                {% endif %}
                 {% for task in tasks %}
                     <tr>
                         <td>{{ task.task_id }}</td>
@@ -37,13 +42,11 @@
                             {{ include('admin/tasks/_delete_form.twig') }}
                         </td>
                     </tr>
-                {% endfor %}
-                <tr>
-                    <td colspan="8" class="text-center">
-                        <a class="btn btn-outline-primary" href="/tasks/task/new">New Task</a>
-                    </td>
-                </tr>
+                {% endfor %}                
             </tbody>                        
         </table>
+        <div class="text-center mt-3">
+            <a href="/tasks/task/new" class="btn btn-primary">Create New Task</a>
+        </div>
     </section> 
 {% endblock main %}

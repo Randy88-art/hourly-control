@@ -1,0 +1,46 @@
+{% extends "base.twig" %}
+
+{% block title %}Projects Index{% endblock %}
+
+{% block main %}
+    <section class="row">
+        <h2 class="text-center">Projects Index</h2>
+        <table>
+            <thead class="text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-antiquewhite">
+                {% if projects is empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No projects found.</td>
+                    </tr>
+                {% endif %}           
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.project_id }}</td>
+                        <td>{{ project.project_name }}</td>
+                        <td>
+                            {% if project.active %}
+                                <span class="text-success">&#10003;</span> {# ✔ #}
+                            {% else %}
+                                <span class="text-danger">&#10007;</span> {# ✖ #}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-success" href="/projects/project/edit/{{ project.project_id }}">Edit</a>
+                            {{ include('admin/projects/_delete_form.twig') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center mt-3">
+            <a href="/projects/project/new" class="btn btn-primary">Create New Project</a>
+        </div>
+    </section>
+{% endblock %}
