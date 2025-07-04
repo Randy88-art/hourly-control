@@ -47,7 +47,7 @@ class ProjectController extends Controller
             }
             else {
                 $error_msg = [
-                    'Error:' =>  $th->getMessage(),
+                    'Error:' =>  "Please contact the admin site. ",
                 ];
             }
 
@@ -109,7 +109,7 @@ class ProjectController extends Controller
             }
             else {
                 $error_msg = [
-                    'Error:' =>  $th->getMessage(),
+                    'Error:' =>  'Please contact the admin site. ',
                 ];
             }
 
@@ -181,7 +181,7 @@ class ProjectController extends Controller
             }
             else {
                 $error_msg = [
-                    'Error:' =>  $th->getMessage(),
+                    'Error:' =>  'Please contact the admin site. ',
                 ];
             }
 
@@ -191,4 +191,55 @@ class ProjectController extends Controller
             ]);
         }
     }
+
+    public function delete(): void
+    {
+        try {
+            global $id;
+
+            // Test for privileges
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+
+            // Check if the project exists
+            $project = $this->query->selectOneBy('projects', 'project_id', $id);
+            if (!$project) {
+                throw new \Exception('Project not found');
+            }
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_SESSION['csrf_token'] = $_POST['csrf_token'] ?? '';
+
+                // Validate CSRF token
+                if ($this->validate->validate_csrf_token()) {
+                    // Delete the project from the database
+                    $this->query->deleteRegistry('projects', 'project_id', $id);
+
+                    // Redirect to the projects index page after deletion
+                    header('Location: /projects/project/index');
+
+                } else {
+                    throw new \Exception('Invalid CSRF token');
+                }
+            }
+
+        } catch (\Throwable $th) {
+           if($this->testAccess(['ROLE_ADMIN'])) {
+                $error_msg = [
+                    "Message:"  =>  $th->getMessage(),
+                    "Path:"     =>  $th->getFile(),
+                    "Line:"     =>  $th->getLine(),
+                ];
+            }
+            else {
+                $error_msg = [
+                    'Error:' =>  "You cannot delete this project. ",
+                ];
+            }
+
+            $this->render('error_view.twig', [
+                'menus'             => $this->showNavLinks(),
+                'exception_message' => $error_msg,                
+            ]);
+        }
+    }                        
 }

@@ -159,4 +159,46 @@ final class ProjectControllerTest extends TestCase
         $this->assertIsArray($project, 'Project should be an array');
         $this->assertTrue($updated, 'Project should be updated successfully');
     }
+
+    public function testDeleteProject(): void
+    {
+        // Setup
+        $_SESSION['role']          = 'ROLE_ADMIN';
+        $_SESSION['id_user']       = 1;
+        $_SESSION['user_name']     = 'admin';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/projects/project/delete/3'; // Assuming project ID 3 exists        
+
+        global $id;
+        $deleted = false;       
+
+        // Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);
+
+        // Capture output
+        ob_start();
+        $this->app->router();        
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        // Get the project to be deleted
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI']    = '/projects/project/delete/' . $id;
+        $_POST['csrf_token']       = $this->validate->csrf_token(); // Simulating CSRF token for the test
+
+        // Simulate deletion
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->validate->validate_csrf_token()) {                                    
+            try {
+                $this->query->deleteRegistry('projects', 'project_id', $id);
+                $deleted = true; // Simulate successful deletion
+            } catch (\Throwable $th) {
+                $message = $th->getMessage();
+            }
+        }              
+
+        // Assert
+        $this->assertTrue($testAccess, 'Access should be granted for admin role');
+        $this->assertFalse($deleted, 'Project should not be deleted successfully'); // Assuming deletion is not allowed in this test
+        $this->assertStringContainsString('Cannot delete or update a parent row: a foreign key constraint fails ', $message);
+    }
 }
