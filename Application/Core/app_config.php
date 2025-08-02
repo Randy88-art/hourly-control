@@ -10,5 +10,8 @@
 	
 	/** Define connection */
 	require_once(SITE_ROOT . "/../Application/Core/connect.php");
-	define('DB_CON', $dbcon);		
+	define('DB_CON', $dbcon);
+	
+	/** Define max number of pages in pagination */
+	define("MAX_PAGES", 10);
 ?>

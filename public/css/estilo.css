@@ -297,6 +297,12 @@ div:has(input[type="checkbox"]) {
 	margin: 0;
 }
 
+#pagination {
+	margin-top: 0.5em;
+	display: flex;
+	justify-content: center;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {

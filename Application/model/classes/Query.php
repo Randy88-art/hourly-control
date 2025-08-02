@@ -1,9 +1,10 @@
 <?php
     namespace Application\model\classes;
 
-    use PDO;
+use Application\interfaces\QueryInterface;
+use PDO;
 
-    class Query 
+    class Query implements QueryInterface
     {
     	public function __construct(public object $dbcon = DB_CON) {
             
@@ -213,11 +214,13 @@
       * @param string table The table name
       * @param object dbcon The database connection object.
       */
-        public function insertInto(string $table, array $fields): void
+        public function insertInto(string $table, array|object $fields): void
         {
             /** Initialice variables */
             $query = $values = "";
-            $insert = "INSERT INTO $table (";            
+            $insert = "INSERT INTO $table (";
+            
+            if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
 
             foreach ($fields as $key => $value) {
                 $insert .= $key . ",";
@@ -341,6 +344,179 @@
 
             } catch (\Throwable $th) {
                 throw new \Exception("{$th->getMessage()}");
+            }
+        }
+
+         /**
+         * Select all from "table name" and return as JSON
+         */
+        public function selectAllAsJson(string $table, object $dbcon): string
+        {
+            $query = "SELECT * FROM $table";
+
+            try {
+                $stm = $dbcon->pdo->prepare($query);
+                $stm->execute();
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();
+
+                return json_encode($rows);
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        /**
+         * Selects all rows from a specified table where a specified field matches a
+         * given value using a LIKE comparison.
+         * 
+         * @param string table The name of the database table from which you want to retrieve data.
+         * @param string field The column in the database table that you want to search for a value
+         * @param string value The given value using the `LIKE` operator in SQL.
+         * 
+         * @return array An array of rows fetched from the database table where the specified field
+         * matches the provided value using the LIKE operator.
+         */
+        public function selectAllFromTableWhereFieldLike(string $table, string $field, string $value): array     
+        {
+            $query = "SELECT * FROM $table WHERE $field LIKE :value";                 
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);
+                $value = "%$value%";
+                $stm->bindValue(":value", $value);                                             
+                $stm->execute();       
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();                
+
+                return $rows;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        public function selectAllOrderByField(string $table, string $field): array     
+        {
+            $query = "SELECT * FROM $table ORDER BY $field ASC";                 
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm->execute();       
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();                
+
+                return $rows;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        /**
+         * Select all from "table name"
+         */
+        public function selectAllOrderByFieldWhereFieldIsNotNull(string $table, string $field): array     
+        {
+            $query = "SELECT * FROM $table WHERE $field IS NOT NULL ORDER BY $field ASC";                 
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm->execute();       
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();                
+
+                return $rows;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        /**
+         * Select one registry by their "fieldName" doing JOIN with another table by their foreign key
+         */
+        public function selectOneByFieldNameInnerjoinOnfield(string $table1, string $table2, string $foreignKeyField, string $fieldName, string $field) :array|bool
+        {
+            $query = "SELECT * FROM $table1 
+                        INNER JOIN $table2
+                        ON $table1.$foreignKeyField = $table2.$foreignKeyField
+                        WHERE $table1.$fieldName = :field";
+                    
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);
+                $stm->bindValue(":field", $field);                            
+                $stm->execute();       
+                $rows = $stm->fetch(PDO::FETCH_ASSOC);            
+                $stm->closeCursor();
+
+                return $rows ?? false;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);                
+            }
+        }
+
+        public function updateRow(string $table, array|object $fields, string|int $id): void
+        {
+            /** Initialice variables */
+            $query = "";
+            $count = 0;
+            $query = "UPDATE $table SET ";            
+
+            foreach ($fields as $key => $value) {
+                if(++$count === count($fields)) {
+                    $query .= $key . " = :" . $key;
+                } else {
+                    $query .= $key . " = :" . $key . ", ";
+                }                
+            }
+            
+            $query .= " WHERE id = '$id'";            
+                                                    
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);
+                foreach ($fields as $key => $value) {
+                    if($key === 'password') {
+                        $stm->bindValue(":password", password_hash($value, PASSWORD_DEFAULT));
+                        continue;
+                    }
+                    
+                    $stm->bindValue(":$key", $value);
+                } 
+                                
+                $stm->execute();       				
+                $stm->closeCursor();
+                
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);             
+            }
+        }
+
+        /**
+         * Selects a limited number of records from a table.
+         *
+         * @param string $table The name of the table.
+         * @param int $limit The maximum number of records to return.
+         * @param int $offset The starting position for the records.
+         * @return array The fetched records.
+         * @return bool False if an error occurs.
+         */
+        public function selectRowsForPagination(string $table, int $limit, int $offset): array|bool
+        {
+            $query = "SELECT * FROM $table LIMIT $limit OFFSET $offset";
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm->execute();       
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();
+
+                return $rows ?? false;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
             }
         }
     }    

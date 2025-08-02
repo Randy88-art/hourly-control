@@ -22,6 +22,7 @@ final class TaskControllerTest extends TestCase
         define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db_test.config.php');
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon);
+        define('MAX_PAGES', 10);
 
         $this->app        = new App();
         $this->validate   = new Validate();
@@ -46,7 +47,7 @@ final class TaskControllerTest extends TestCase
         $_SERVER['REQUEST_URI']    = '/tasks/task/index';
 
         # Run logic        
-        $tasks = $this->query->selectAll('tasks');
+        $tasks = $this->query->selectRowsForPagination('tasks', MAX_PAGES, 1);
 
         ob_start();
         $this->app->router();
