@@ -22,20 +22,42 @@ final class TaskController extends Controller
 
     public function index(): void
     {
+        global $id;
+
         try {
-            // Test for privileges
-            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
-            $tasks = $this->query->selectAll('tasks');
-
+            // Initialize variables to pass to the view
             $variables = [
                 'menus'      => $this->showNavLinks(),
-                'session'    => $_SESSION,
-                'tasks'      => $tasks,
+                'session'    => $_SESSION,                
                 'csrf_token' => $this->validate,                
                 'active'     => 'administration',
             ];
 
+            // Test for privileges
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+
+            // Implements pagination
+            $currentPage = isset($id) ? (int) $id : 1;
+            $limit = MAX_PAGES;
+            $offset = ($currentPage - 1) * $limit;
+
+            $totalTasks = $this->query->selectCount('tasks'); // get total number of tasks
+            $totalPages = ceil($totalTasks / $limit); // calculate total number of pages
+
+            $tasks = $this->query->selectRowsForPagination('tasks', $limit, $offset);
+
+            if($tasks) {  
+                // New pagination variables to pass to the view                              
+                $variables = array_merge($variables, [
+                                    'tasks'       => $tasks,
+                                    'totalPages'  => $totalPages,
+                                    'currentPage' => $currentPage,
+                                    'totalTasks'  => $totalTasks,
+                                    'limit'       => $limit,
+                                ]
+                            );
+            }
+            
             $this->render('admin/tasks/index_view.twig', $variables);
             
         } catch (\Throwable $th) {
