@@ -38,7 +38,7 @@ final class TaskController extends Controller
 
             // Implements pagination
             $currentPage = isset($id) ? (int) $id : 1;
-            $limit = MAX_PAGES;
+            $limit = MAX_ROWS_PER_PAGES;
             $offset = ($currentPage - 1) * $limit;
 
             $totalTasks = $this->query->selectCount('tasks'); // get total number of tasks
@@ -49,13 +49,14 @@ final class TaskController extends Controller
             if($tasks) {  
                 // New pagination variables to pass to the view                              
                 $variables = array_merge($variables, [
-                                    'tasks'       => $tasks,
-                                    'totalPages'  => $totalPages,
-                                    'currentPage' => $currentPage,
-                                    'totalTasks'  => $totalTasks,
-                                    'limit'       => $limit,
-                                ]
-                            );
+                        'tasks'          => $tasks,
+                        'totalPages'     => $totalPages,
+                        'currentPage'    => $currentPage,
+                        'totalTasks'     => $totalTasks,
+                        'limit'          => $limit,
+                        'maxPagesToShow' => MAX_ITEMS_TO_SHOW,
+                    ]
+                );
             }
             
             $this->render('admin/tasks/index_view.twig', $variables);
