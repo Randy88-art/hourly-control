@@ -20,20 +20,43 @@ class ProjectController extends Controller
     }
 
     public function index(): void
-    {        
+    {
+        global $id;
+
         try {
             // Test for privileges
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
-            $projects = $this->query->selectAll('projects');
-
+            // Set variables to pass to the view
             $variables = [
                 'menus'      => $this->showNavLinks(),
-                'session'    => $_SESSION,
-                'projects'   => $projects,
+                'session'    => $_SESSION,                
                 'csrf_token' => $this->validate,                
                 'active'     => 'administration',
             ];
+
+
+            // Create pagination
+            $currentPage = isset($id) ? (int) $id : 1;
+            $limit = MAX_ROWS_PER_PAGES;
+            $offset = ($currentPage - 1) * $limit;
+
+            $totalProjects = $this->query->selectCount('projects'); // get total number of projects
+            $totalPages = ceil($totalProjects / $limit); // calculate total number of pages            
+
+            $projects = $this->query->selectRowsForPagination('projects', $limit, $offset);
+
+            if($projects) {
+                // New pagination variables to pass to the view
+                $variables = array_merge($variables, [
+                    'projects'       => $projects,
+                    'currentPage'    => $currentPage,
+                    'totalPages'     => $totalPages,
+                    'totalProjects'  => $totalProjects,
+                    'limit'          => $limit,
+                    'maxPagesToShow' => MAX_ITEMS_TO_SHOW,
+                ]);
+            }
 
             $this->render('admin/projects/index_view.twig', $variables);
 

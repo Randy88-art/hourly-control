@@ -22,6 +22,7 @@ final class ProjectControllerTest extends TestCase
         define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db_test.config.php');
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon);
+        define('MAX_PAGES', 10);
 
         $this->app        = new App();
         $this->validate   = new Validate();
@@ -39,7 +40,7 @@ final class ProjectControllerTest extends TestCase
 
         // Run logic
         $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);
-        $projects = $this->query->selectAll('projects');
+        $projects = $this->query->selectRowsForPagination('projects', MAX_PAGES, 1);
 
         // Capture output
         ob_start();
