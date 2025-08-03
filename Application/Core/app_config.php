@@ -13,5 +13,6 @@
 	define('DB_CON', $dbcon);
 	
 	/** Define max number of pages in pagination */
-	define("MAX_PAGES", 10);
+	define("MAX_ROWS_PER_PAGES", 8);
+	define("MAX_ITEMS_TO_SHOW", 5); // Show 5 items per page in pagination buttons
 ?>
