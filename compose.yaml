@@ -6,7 +6,7 @@ services:
     ports:
       - "3306:3306"
     volumes: 
-        - db_vol:/var/lib/mysql
+        - ./Application/db_vol:/var/lib/mysql
         - "./Application/log/db:/var/log"        
 
   phpmyadmin:    
