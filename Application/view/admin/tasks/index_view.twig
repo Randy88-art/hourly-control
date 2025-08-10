@@ -25,9 +25,9 @@
                 {% for task in tasks %}
                     <tr>
                         <td>{{ task.task_id }}</td>
-                        <td class="text-start">{{ task.task_name }}</td>
-                        <td>{{ task.description }}</td>
-                        <td>{{ task.priority }}</td>
+                        <td class="text-align-left">{{ task.task_name }}</td>
+                        <td class="text-align-left">{{ task.task_description }}</td>
+                        <td>{{ task.task_priority_level|capitalize }}</td>
                         <td>{{ task.created_at }}</td>
                         <td>{{ task.updated_at }}</td>
                         <td>

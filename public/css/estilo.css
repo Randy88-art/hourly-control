@@ -303,6 +303,10 @@ div:has(input[type="checkbox"]) {
 	justify-content: center;
 }
 
+.text-align-left {
+	text-align: left;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {

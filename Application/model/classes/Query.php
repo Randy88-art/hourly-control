@@ -50,17 +50,17 @@ use PDO;
             }
         }
 
-      /**
-       * > This function takes in a table name, a field name, a value, and a database connection
-       * object, and returns an array of all the rows in the table that match the field and value
-       * 
-       * @param string table The table name
-       * @param string field The field you want to search for.
-       * @param string value The value to be searched for.
-       * @param object dbcon The database connection object.
-       * 
-       * @return array An array of associative arrays.
-       */
+        /**
+         * > This function takes in a table name, a field name, a value, and a database connection
+         * object, and returns an array of all the rows in the table that match the field and value
+         * 
+         * @param string table The table name
+         * @param string field The field you want to search for.
+         * @param string value The value to be searched for.
+         * @param object dbcon The database connection object.
+         * 
+         * @return array An array of associative arrays.
+         */
         public function selectAllBy(string $table, string $field, string|int $value): array  
         {
             $query = "SELECT * FROM $table WHERE $field = :val";                         
@@ -97,10 +97,12 @@ use PDO;
             }
         }
 
-        public function updateRegistry(string $table, array $fields, string $primary_key_name): void
+        public function updateRegistry(string $table, array|object $fields, string $primary_key_name): void
         {
             $query = "UPDATE $table SET";
             $params = [];
+
+            if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
             
             foreach ($fields as $key => $value) {
                if($key !== $primary_key_name)  $query .= " $key = :$key,";
@@ -254,12 +256,12 @@ use PDO;
             }
         }
 
-       /**
-        * > This function truncates a table
-        * 
-        * @param string table The name of the table you want to truncate.
-        * @param dbcon This is the database connection object.
-        */
+        /**
+         * > This function truncates a table
+         * 
+         * @param string table The name of the table you want to truncate.
+         * @param dbcon This is the database connection object.
+         */
         public function truncateTable(string $table): void
         {
             $query = "TRUNCATE TABLE $table";
@@ -347,7 +349,7 @@ use PDO;
             }
         }
 
-         /**
+        /**
          * Select all from "table name" and return as JSON
          */
         public function selectAllAsJson(string $table, object $dbcon): string
@@ -463,7 +465,9 @@ use PDO;
             /** Initialice variables */
             $query = "";
             $count = 0;
-            $query = "UPDATE $table SET ";            
+            $query = "UPDATE $table SET ";
+            
+            if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
 
             foreach ($fields as $key => $value) {
                 if(++$count === count($fields)) {
@@ -500,12 +504,20 @@ use PDO;
          * @param string $table The name of the table.
          * @param int $limit The maximum number of records to return.
          * @param int $offset The starting position for the records.
+         * @param string|null $innerJoinTable The name of the table to join.
+         * @param string|null $onField The field to join on.
          * @return array The fetched records.
          * @return bool False if an error occurs.
          */
-        public function selectRowsForPagination(string $table, int $limit, int $offset): array|bool
+        public function selectRowsForPagination(string $table, int $limit, int $offset, ?string $innerJoinTable = null, ?string $onField = null): array|bool
         {
-            $query = "SELECT * FROM $table LIMIT $limit OFFSET $offset";
+            $query = "SELECT * FROM $table";
+
+            if(isset($innerJoinTable) && isset($onField)) {
+                $query .= " INNER JOIN $innerJoinTable USING($onField)";
+            }
+
+            $query .= " LIMIT $limit OFFSET $offset";
 
             try {
                 $stm = $this->dbcon->pdo->prepare($query);                                             
