@@ -6,9 +6,11 @@ namespace Application\model;
 
 final class Task
 {
-    private ?int    $task_id   = null;
-    private ?string $task_name = null;
-    private ?int    $active    = null;
+    private ?int    $task_id          = null;
+    private ?string $task_name        = null;
+    private ?string $task_description = null;
+    private ?int    $task_priority    = null;
+    private ?int    $active           = null;
 
     public function __construct(
         private array $fields = []
@@ -55,6 +57,30 @@ final class Task
     public function getTaskName(): string
     {
         return $this->task_name;
+    }
+
+    public function setTaskDescription(?string $description = null): self
+    {
+        $this->task_description = $description;
+
+        return $this;
+    }
+
+    public function getTaskDescription(): string|null
+    {
+        return $this->task_description;
+    }
+
+    public function setTaskPriorityId(int $priority): self
+    {
+        $this->task_priority = $priority;
+
+        return $this;
+    }
+
+    public function getTaskPriorityId(): int
+    {
+        return $this->task_priority;
     }
 
     public function setActive(int $active): self

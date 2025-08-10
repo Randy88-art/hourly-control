@@ -20,7 +20,7 @@ interface QueryInterface {
     public function selectOneByFieldNameInnerjoinOnfield(string $table1, string $table2, string $foreignKeyField, string $fieldName, string $field): array|bool;   
     public function truncateTable(string $table);
     public function updatePassword(string $table, string $password, string $id_user);
-    public function updateRegistry(string $table, array $fields, string $primary_key_name);
+    public function updateRegistry(string $table, array|object $fields, string $primary_key_name);
     public function updateRow(string $table, array|object $fields, string|int $id);
-    public function selectRowsForPagination(string $table, int $limit, int $offset): array|bool;
+    public function selectRowsForPagination(string $table, int $limit, int $offset, string $innerJoinTable, string $onField): array|bool;
 }

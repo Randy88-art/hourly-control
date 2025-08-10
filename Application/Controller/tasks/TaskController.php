@@ -44,7 +44,7 @@ final class TaskController extends Controller
             $totalTasks = $this->query->selectCount('tasks'); // get total number of tasks
             $totalPages = ceil($totalTasks / $limit); // calculate total number of pages
 
-            $tasks = $this->query->selectRowsForPagination('tasks', $limit, $offset);
+            $tasks = $this->query->selectRowsForPagination('tasks', $limit, $offset, 'tasks_priority', 'task_priority_id');
 
             if($tasks) {  
                 // New pagination variables to pass to the view                              
@@ -87,6 +87,7 @@ final class TaskController extends Controller
         try {
             $variables = [
                 'menus'      => $this->showNavLinks(),
+                'priorities' => $this->query->selectAll('tasks_priority'),
                 'session'    => $_SESSION,
                 'csrf_token' => $this->validate,
                 'active'     => 'administration',
@@ -97,8 +98,10 @@ final class TaskController extends Controller
 
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields  = [
-                    'task_name' => $this->validate->test_input($_POST['task_name']), 
-                    'active'    => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                   
+                    'task_name'        => $this->validate->test_input($_POST['task_name']),
+                    'task_description' => $this->validate->test_input($_POST['task_description']),
+                    'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
+                    'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                   
                 ];
 
                 if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
@@ -144,6 +147,7 @@ final class TaskController extends Controller
 
             $variables = [
                 'menus'      => $this->showNavLinks(),
+                'priorities' => $this->query->selectAll('tasks_priority'),
                 'session'    => $_SESSION,
                 'csrf_token' => $this->validate,
                 'active'     => 'administration',
@@ -154,19 +158,23 @@ final class TaskController extends Controller
 
             $task = new Task($this->query->selectOneBy('tasks', 'task_id', $id));
             $this->fields = [
-                'task_name' => $task->getTaskName(),
-                'active'    => $task->getActive(),
+                'task_name'        => $task->getTaskName(),
+                'task_description' => $task->getTaskDescription(),
+                'task_priority'    => $task->getTaskPriorityId(),
+                'active'           => $task->getActive(),
             ];            
 
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields  = [
-                    'task_id'   => $id,
-                    'task_name' => $this->validate->test_input($_POST['task_name']),
-                    'active'    => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                    
+                    'task_id'          => $id,
+                    'task_name'        => $this->validate->test_input($_POST['task_name']),
+                    'task_description' => $this->validate->test_input($_POST['task_description']),
+                    'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
+                    'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                    
                 ];
 
                 if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
-                    $this->query->updateRegistry('tasks', $this->fields, 'task_id');
+                    $this->query->updateRegistry('tasks', $this->fields, 'task_id');                    
 
                     header("Location: /tasks/task/index");
                 }
