@@ -23,11 +23,13 @@ final class ProjectControllerTest extends TestCase
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon);
         define('MAX_PAGES', 10);
+        define('MAX_ROWS_PER_PAGES', 8);
+        define('MAX_ITEMS_TO_SHOW', 5);
 
         $this->app        = new App();
         $this->validate   = new Validate();
         $this->controller = new Controller();
-        $this->query      = new Query();
+        $this->query      = new Query();        
     }
     public function testIndexProjects(): void
     {
@@ -62,8 +64,7 @@ final class ProjectControllerTest extends TestCase
         $_SESSION['id_user']       = 1;
         $_SESSION['user_name']     = 'admin';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/projects/project/new';
-        $_SESSION['csrf_token']    = $_POST['csrf_token'] = $this->validate->csrf_token();
+        $_SERVER['REQUEST_URI']    = '/projects/project/new';        
 
         // Run logic
         $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);        
@@ -74,6 +75,9 @@ final class ProjectControllerTest extends TestCase
         $html = ob_get_contents();
         ob_end_clean();
 
+        // Simulate form submission
+        $_POST['csrf_token'] = $this->validate->csrf_token();
+
         // Save the new project (this is a mock, in real case it would be saved to the database)
         $saved = false;
 
@@ -81,11 +85,13 @@ final class ProjectControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REQUEST_URI']    = '/projects/project/new';
         $_POST['project_name'] = 'New Project';
+        $_POST['project_description'] = 'New Project Description';
         $_POST['active'] = 1; // Assuming 'active' is a checkbox or similar input
         
         $fields = [
-            'project_name' => $this->validate->test_input($_POST['project_name']),
-            'active' => $this->validate->test_input($_POST['active']),
+            'project_name'        => $this->validate->test_input($_POST['project_name']),
+            'project_description' => $this->validate->test_input($_POST['project_description']),
+            'active'              => $this->validate->test_input($_POST['active']),
         ];
 
         // Validate CSRF token and form fields
@@ -124,18 +130,20 @@ final class ProjectControllerTest extends TestCase
         $project = $this->query->selectOneBy('projects', 'project_id', $id);
                 
         // Simulate form submission
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REQUEST_URI']    = '/projects/project/edit/' . $id;
-        $_POST['csrf_token']       = $this->validate->csrf_token(); // Simulating CSRF token for the test
-        $_POST['project_name']     = 'Updated Project';
-        $_POST['active']           = 1; // Assuming 'active' is a checkbox or similar input        
+        $_SERVER['REQUEST_METHOD']    = 'POST';
+        $_SERVER['REQUEST_URI']       = '/projects/project/edit/' . $id;
+        $_POST['csrf_token']          = $this->validate->csrf_token(); // Simulating CSRF token for the test
+        $_POST['project_name']        = 'Updated Project';
+        $_POST['project_description'] = 'Updated Project Description';
+        $_POST['active']              = 1; // Assuming 'active' is a checkbox or similar input        
 
         if($_SERVER['REQUEST_METHOD'] === 'POST') { 
             // Prepare fields for update
             $fields = [
-                'project_id'   => $id, // Assuming $id is the project ID being edited
-                'project_name' => $this->validate->test_input($_POST['project_name']),
-                'active'       => $this->validate->test_input($_POST['active']),
+                'project_id'          => $id, // Assuming $id is the project ID being edited
+                'project_name'        => $this->validate->test_input($_POST['project_name']),
+                'project_description' => $this->validate->test_input($_POST['project_description']),
+                'active'              => $this->validate->test_input($_POST['active']),
             ];
 
             // Check if the project exists

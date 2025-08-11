@@ -97,8 +97,9 @@ class ProjectController extends Controller
             // Check if the form is submitted
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields = [
-                    'project_name' => $this->validate->test_input($_POST['project_name']),                    
-                    'active'       => isset($_POST['project_active']) ? 1 : 0, // Assuming 'active' is a checkbox
+                    'project_name'        => $this->validate->test_input($_POST['project_name']),
+                    'project_description' => $this->validate->test_input($_POST['project_description']),                    
+                    'active'              => isset($_POST['project_active']) ? 1 : 0, // Assuming 'active' is a checkbox
                 ];
 
                 // Validate CSRF token
@@ -165,9 +166,10 @@ class ProjectController extends Controller
             // Check if the form is submitted
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields = [
-                    'project_id'   => $id, // Assuming $id is the project ID being edited
-                    'project_name' => $this->validate->test_input($_POST['project_name']),
-                    'active'       => isset($_POST['project_active']) ? 1 : 0, // Checkbox handling
+                    'project_id'          => $id, // Assuming $id is the project ID being edited
+                    'project_name'        => $this->validate->test_input($_POST['project_name']),
+                    'project_description' => $this->validate->test_input($_POST['project_description']),
+                    'active'              => isset($_POST['project_active']) ? 1 : 0, // Checkbox handling
                 ];
 
                 // Validate CSRF token and form fields
