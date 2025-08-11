@@ -10,6 +10,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Description</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -24,6 +25,7 @@
                     <tr>
                         <td>{{ project.project_id }}</td>
                         <td>{{ project.project_name }}</td>
+                        <td class="text-align-left">{{ project.project_description }}</td>
                         <td>
                             {% if project.active %}
                                 <span class="text-success">&#10003;</span> {# ✔ #}
