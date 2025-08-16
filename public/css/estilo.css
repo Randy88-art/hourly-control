@@ -181,7 +181,7 @@ select {
 	box-shadow: 0em 0em 1em;
 	text-align: center;
 	padding: 1em;
-	margin-top: 3em;
+	margin: 3em auto 0em;
 }
 
 .credentials p, .credentials a {
@@ -303,8 +303,22 @@ div:has(input[type="checkbox"]) {
 	justify-content: center;
 }
 
+#pagination form {
+	margin: 0;
+}
+
 .text-align-left {
 	text-align: left;
+}
+
+.text-align-center {
+	text-align: center;
+}
+
+#search_by_project_name {
+	width: 65%;
+	display: inline-block;
+	margin-bottom: 2em;
 }
 
 /***************** Configuración para móviles **********************/

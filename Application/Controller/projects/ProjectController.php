@@ -167,8 +167,7 @@ class ProjectController extends Controller
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields = [
                     'project_id'          => $id, // Assuming $id is the project ID being edited
-                    'project_name'        => $this->validate->test_input($_POST['project_name']),
-                    'project_description' => $this->validate->test_input($_POST['project_description']),
+                    'project_name'        => $this->validate->test_input($_POST['project_name']),                    
                     'active'              => isset($_POST['project_active']) ? 1 : 0, // Checkbox handling
                 ];
 
@@ -180,6 +179,7 @@ class ProjectController extends Controller
                     }
 
                     // Update the project in the database
+                    $this->fields['project_description'] = $this->validate->test_input($_POST['project_description']);
                     $this->query->updateRegistry('projects', $this->fields, 'project_id');
 
                     // Redirect to the projects index page after saving
