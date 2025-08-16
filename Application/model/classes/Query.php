@@ -209,13 +209,13 @@ use PDO;
             }
         }
 
-     /**
-      * > This function inserts a record into a table
-      * 
-      * @param array fields an array of fields to be inserted into the database.
-      * @param string table The table name
-      * @param object dbcon The database connection object.
-      */
+        /**
+         * > This function inserts a record into a table
+         * 
+         * @param array fields an array of fields to be inserted into the database.
+         * @param string table The table name
+         * @param object dbcon The database connection object.
+         */
         public function insertInto(string $table, array|object $fields): void
         {
             /** Initialice variables */
@@ -521,6 +521,25 @@ use PDO;
 
             try {
                 $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm->execute();       
+                $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+                $stm->closeCursor();
+
+                return $rows ?? false;
+
+            } catch (\Throwable $th) {
+                throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        public function selectRowsForPaginationWhereFieldLikeValue(string $table, int $limit, int $offset, string $field, string $value): array|bool
+        {
+            $query = "SELECT * FROM $table WHERE $field LIKE :value LIMIT $limit OFFSET $offset";
+
+            try {
+                $stm = $this->dbcon->pdo->prepare($query);
+                $value = "%$value%";
+                $stm->bindValue(":value", $value);                                             
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
