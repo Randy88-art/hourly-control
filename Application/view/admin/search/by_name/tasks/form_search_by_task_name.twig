@@ -1,0 +1,10 @@
+<form class="col col-md-9 col-lg-7 col-xl-6 credentials" action="#" method="post">
+    <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
+    <h2>Search form</h2>
+    <label for="search_by_project_name">Task Name</label>
+    <input class="form-control" type="text" name="search_by_task_name" id="search_by_task_name" placeholder="Enter a task name">
+    
+    <div class="col-6 m-auto mb-5">
+        <input class="btn btn-outline-secondary" type="submit" value="Search">                
+    </div>
+</form>

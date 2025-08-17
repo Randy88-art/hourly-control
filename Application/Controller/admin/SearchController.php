@@ -168,4 +168,84 @@ final class SearchController extends Controller
             ]);
         }
     }
+
+    public function searchByTaskName(): void
+    {
+        try {
+            // Test for privileges
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
+
+            // Initialize variables
+            $variables = [
+                'menus'      => $this->showNavLinks(),
+                'session'    => $_SESSION,                
+                'csrf_token' => $this->validate,
+                'active'     => 'administration'
+            ];
+
+            if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $fields = [
+                    'task_name' => isset($_POST['search_by_task_name']) ? $this->validate->test_input($_POST['search_by_task_name']) : "",
+                ];                
+
+                if(!$this->validate->validate_csrf_token()) {
+                    $variables['error_message'] = "Invalid token";                                                      
+                }
+                else if($this->validate->validate_form($fields)) {
+                    global $id;
+
+                    // Create pagination
+                    $currentPage = isset($id) ? (int) $id : 1;
+                    $limit = MAX_ROWS_PER_PAGES;
+                    $offset = ($currentPage - 1) * $limit;
+
+                    $totalTasks = $this->queryHourlyControl->selectAllFromTableWhereFieldLike('tasks', 'task_name', $fields['task_name']);
+                    $totalPages = ceil(count($totalTasks) / $limit); // calculate total number of pages   
+
+                    $tasks = $this->queryHourlyControl->selectRowsForPaginationWhereFieldLikeValue('tasks', $limit, $offset, 'task_name', $fields['task_name']);
+
+                    if($tasks) {
+                        // New pagination variables to pass to the view
+                        $variables = array_merge($variables, [
+                            'tasks'          => $tasks,
+                            'task_name'      => $fields['task_name'],
+                            'currentPage'    => $currentPage,
+                            'totalPages'     => $totalPages,
+                            'totalTasks'     => $totalTasks,
+                            'limit'          => $limit,
+                            'maxPagesToShow' => MAX_ITEMS_TO_SHOW,
+                        ]);
+                    }
+
+                    $this->render('admin/search/by_name/tasks/search_results_view.twig', $variables);
+                    die;                    
+                }
+                else {
+                    $variables['error_message'] = $this->validate->get_msg(); 
+                    $variables['fields']        = $fields;                  
+                }
+            }
+            
+            $this->render('admin/search/by_name/tasks/search_by_task_name_view.twig', $variables);
+            
+        } catch (\Throwable $th) {
+            if($this->testAccess(['ROLE_ADMIN'])) {
+                $error_msg = [
+                    "Message:"  =>  $th->getMessage(),
+                    "Path:"     =>  $th->getFile(),
+                    "Line:"     =>  $th->getLine(),
+                ];
+            }
+            else {
+                $error_msg = [
+                    'Error:' =>  $th->getMessage(),
+                ];
+            }
+
+            $this->render('error_view.twig', [
+                'menus'             => $this->showNavLinks(),
+                'exception_message' => $error_msg,                
+            ]);
+        }
+    }
 }

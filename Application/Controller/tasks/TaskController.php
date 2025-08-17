@@ -98,13 +98,13 @@ final class TaskController extends Controller
 
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields  = [
-                    'task_name'        => $this->validate->test_input($_POST['task_name']),
-                    'task_description' => $this->validate->test_input($_POST['task_description']),
+                    'task_name'        => $this->validate->test_input($_POST['task_name']),                    
                     'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
                     'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                   
                 ];
 
                 if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
+                    $this->fields['task_description'] = isset($_POST['task_description']) ? $this->validate->test_input($_POST['task_description']) : "";
                     $this->query->insertInto('tasks', $this->fields);
 
                     header("Location: /tasks/task/index");
@@ -167,13 +167,13 @@ final class TaskController extends Controller
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->fields  = [
                     'task_id'          => $id,
-                    'task_name'        => $this->validate->test_input($_POST['task_name']),
-                    'task_description' => $this->validate->test_input($_POST['task_description']),
+                    'task_name'        => $this->validate->test_input($_POST['task_name']),                    
                     'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
                     'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                    
                 ];
 
                 if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
+                    $this->fields['task_description'] = isset($_POST['task_description']) ? $this->validate->test_input($_POST['task_description']) : "";
                     $this->query->updateRegistry('tasks', $this->fields, 'task_id');                    
 
                     header("Location: /tasks/task/index");
