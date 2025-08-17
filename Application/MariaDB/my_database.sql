@@ -38,7 +38,7 @@ CREATE TABLE `hourly_control` (
   KEY `fk_hourly_control_task` (`task_id`),
   KEY `idx_id_user` (`id_user`),
   KEY `idx_user_project` (`id_user`,`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=277 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=284 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,7 +290,14 @@ INSERT INTO `hourly_control` VALUES
 (273,1,3,25,'2025-08-09 13:09:02','2025-08-09 14:33:51','01:24:49','2025-08-09 11:09:02','2025-08-09 12:33:51'),
 (274,1,3,25,'2025-08-09 20:39:10','2025-08-09 23:33:29','02:54:19','2025-08-09 18:39:10','2025-08-09 21:33:29'),
 (275,1,3,25,'2025-08-10 07:52:42','2025-08-10 08:55:38','01:02:56','2025-08-10 05:52:42','2025-08-10 06:55:38'),
-(276,1,3,26,'2025-08-11 21:57:26',NULL,NULL,'2025-08-11 19:57:26','2025-08-11 19:57:26');
+(276,1,3,26,'2025-08-11 21:57:26','2025-08-11 22:58:18','01:00:52','2025-08-11 19:57:26','2025-08-11 20:58:18'),
+(277,1,3,26,'2025-08-15 10:32:30','2025-08-15 10:38:11','00:05:41','2025-08-15 08:32:30','2025-08-15 08:38:11'),
+(278,1,3,27,'2025-08-15 10:46:06','2025-08-15 11:04:07','00:18:01','2025-08-15 08:46:06','2025-08-15 09:04:07'),
+(279,1,3,5,'2025-08-15 12:19:38','2025-08-15 13:05:51','00:46:13','2025-08-15 10:19:38','2025-08-15 11:05:51'),
+(280,1,3,27,'2025-08-16 10:15:03','2025-08-16 13:37:59','03:22:56','2025-08-16 08:15:03','2025-08-16 11:37:59'),
+(281,1,3,27,'2025-08-16 14:10:41','2025-08-16 14:40:43','00:30:02','2025-08-16 12:10:41','2025-08-16 12:40:43'),
+(282,1,3,5,'2025-08-17 07:41:59','2025-08-17 08:19:42','00:37:43','2025-08-17 05:41:59','2025-08-17 06:19:42'),
+(283,1,3,28,'2025-08-17 08:19:46','2025-08-17 09:02:15','00:42:29','2025-08-17 06:19:46','2025-08-17 07:02:15');
 /*!40000 ALTER TABLE `hourly_control` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,13 +326,13 @@ LOCK TABLES `projects` WRITE;
 INSERT INTO `projects` VALUES
 (1,'Example Project','Example description for this project',0),
 (2,'Main Project',NULL,0),
-(3,'Hourly Control',NULL,1),
+(3,'Hourly Control','',1),
 (4,'Restaurant PHP',NULL,1),
-(5,'Ravenclow',NULL,0),
+(5,'Ravenclow','',0),
 (6,'AutoGest-Automotive',NULL,0),
 (7,'Symfony Restaurant',NULL,0),
-(8,'Symfony E-commerce',NULL,0),
-(9,'E-commerce PHP',NULL,0);
+(8,'Symfony E-commerce','',0),
+(9,'E-commerce PHP','E-commerce developed with PHP native.',0);
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,7 +378,7 @@ CREATE TABLE `tasks` (
   PRIMARY KEY (`task_id`),
   KEY `tasks_fk_priority` (`task_priority_id`),
   CONSTRAINT `tasks_fk_priority` FOREIGN KEY (`task_priority_id`) REFERENCES `tasks_priority` (`task_priority_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -405,8 +412,10 @@ INSERT INTO `tasks` VALUES
 (22,'Save Invoice Data',NULL,1,0),
 (23,'Create Cash Box',NULL,1,1),
 (24,'Create pagination',NULL,1,0),
-(25,'Refactor TaskController','Save task description and task priority when we add a new task or edit an existing task.',2,1),
-(26,'Refactor ProjectController','Save a description for a project',2,1);
+(25,'Refactor TaskController','Save task description and task priority when we add a new task or edit an existing task.',2,0),
+(26,'Refactor ProjectController','Save a description for a project',2,0),
+(27,'Implement search a project by some word in their name','We need to implement a search option to find a project or projects list by some word contained in their name.',2,0),
+(28,'Implement search a task by some word in their name','We need to implement a search option to find a task or tasl list by some word contained in their name.',1,1);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -477,4 +486,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-08-11 22:47:33
+-- Dump completed on 2025-08-17  9:06:27
