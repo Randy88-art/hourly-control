@@ -1,0 +1,134 @@
+{% extends "base.twig" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block main %}
+    <section class="row">
+        <h2 class="text-center">Search Results</h2>
+        <table>
+            <thead class="text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-antiquewhite">
+                {% if tasks is empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No tasks found.</td>
+                    </tr>
+                {% endif %}           
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.task_id }}</td>
+                        <td>{{ task.task_name }}</td>
+                        <td class="text-align-left">{{ task.task_description }}</td>
+                        <td>
+                            {% if task.active %}
+                                <span class="text-success">&#10003;</span> {# ✔ #}
+                            {% else %}
+                                <span class="text-danger">&#10007;</span> {# ✖ #}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-success" href="/tasks/task/edit/{{ task.task_id }}">Edit</a>
+                            {{ include('admin/tasks/_delete_form.twig') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-3">
+            <a href="/tasks/tasks/new" class="btn btn-primary">Create New Task</a>
+        </div>
+        <!-- Pagination -->
+        {% if totalPages > 1 %}
+            <nav id="pagination" aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if csrf_token is defined %} {% set csrf_token = csrf_token.csrf_token %} {% endif %}
+                                            
+                    {% if currentPage > 1 %}                        
+                        <li class="page-item">                            
+                            <form action="/admin/search/searchByTaskName/{{ currentPage - 1 }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token }}{% endif %}">
+                                <input type="hidden" name="search_by_task_name" value="{{ task_name }}">
+                                <button class="page-link" type="submit">Previous</button>
+                            </form>
+                        </li>
+                        <li class="page-item">                            
+                            <form action="/admin/search/searchByTaskName/{{ 1 }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token }}{% endif %}">
+                                <input type="hidden" name="search_by_task_name" value="{{ task_name }}">
+                                <button class="page-link" type="submit"><<</button>
+                            </form>
+                        </li>
+                    {% endif %}
+
+                    {# Dynamic Page Number Links #}                    
+                    {% set startPage = currentPage - (maxPagesToShow / 2)|round(0, 'floor') %}
+                    {% set endPage = currentPage + (maxPagesToShow / 2)|round(0, 'floor') %}
+
+                    {# Adjust start and end pages for the beginning of the range #}
+                    {% if startPage < 1 %}
+                        {% set startPage = 1 %}
+                        {% set endPage = maxPagesToShow %}
+                    {% endif %}
+
+                    {# Adjust start and end pages for the end of the range #}
+                    {% if endPage > totalPages %}
+                        {% set endPage = totalPages %}
+                        {% set startPage = totalPages - maxPagesToShow + 1 %}
+                        {% if startPage < 1 %} {# In case totalPages is less than maxPagesToShow #}
+                            {% set startPage = 1 %}
+                        {% endif %}
+                    {% endif %}
+
+                    {# Display '...' at the beginning if needed #}
+                    {% if startPage > 1 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+
+                    {# Loop through the calculated page range #}
+                    {% for i in startPage..endPage %}
+                        <li class="page-item {% if i == currentPage %}active{% endif %}">                            
+                            <form action="/admin/search/searchByTaskName/{{ i }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token }}{% endif %}">
+                                <input type="hidden" name="search_by_task_name" value="{{ task_name }}">
+                                <button class="page-link" type="submit">{{ i }}</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+
+                    {# Display '...' at the end if needed #}
+                    {% if endPage < totalPages %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">                            
+                            <form action="/admin/search/searchByTaskName/{{ totalPages }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token }}{% endif %}">
+                                <input type="hidden" name="search_by_task_name" value="{{ task_name }}">
+                                <button class="page-link" type="submit">>></button>
+                            </form>
+                        </li>
+                        <li class="page-item">                            
+                            <form action="/admin/search/searchByTaskName/{{ currentPage + 1 }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token }}{% endif %}">
+                                <input type="hidden" name="search_by_task_name" value="{{ task_name }}">
+                                <button class="page-link" type="submit">Next</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %} 
+    </section>
+{% endblock %}

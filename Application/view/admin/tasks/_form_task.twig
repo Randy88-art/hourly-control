@@ -9,16 +9,16 @@
     <div class="row mb-3">
         <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_description">Task Description</label>
         <div class="col-md-6 col-lg-7">
-            <textarea class="form-control" id="task_description" name="task_description" placeholder="Task Description"></textarea>
+            <textarea class="form-control" id="task_description" name="task_description" placeholder="Task Description">{% if fields.task_description is defined %}{{ fields.task_description }}{% endif %}</textarea>
         </div>        
     </div>
     <div class="row mb-3">
         <label class="col-12 text-center col-md-5 col-lg-4 text-md-end col-form-label" for="task_priority">Task Priority</label>
         <div class="col-md-6 col-lg-7">
-            <select class="form-control" id="task_priority" name="task_priority">
-            <option value="1">Low</option>
-            <option value="2">Medium</option>
-            <option value="3">High</option>
+            <select class="form-control" id="task_priority" name="task_priority">            
+            {% for priority in priorities %}
+            <option value="{{ priority.task_priority_id }}" {% if fields.task_priority is defined and fields.task_priority == priority.task_priority_id %}selected{% endif %}>{{ priority.task_priority_level|capitalize }}</option>
+            {% endfor %}            
         </select>
         </div>        
     </div>

@@ -23,6 +23,8 @@ final class TaskControllerTest extends TestCase
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon);
         define('MAX_PAGES', 10);
+        define('MAX_ROWS_PER_PAGES', 8);
+        define('MAX_ITEMS_TO_SHOW', 5);
 
         $this->app        = new App();
         $this->validate   = new Validate();
@@ -83,12 +85,16 @@ final class TaskControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REQUEST_URI']    = '/tasks/task/new';                
         $_POST['csrf_token']       = $_SESSION['csrf_token'] = $this->validate->csrf_token();
-        $_POST['name']             = 'new task';
+        $_POST['task_name']        = 'new task';
+        $_POST['task_description'] = 'new task description';
+        $_POST['task_priority']    = 1;
         $_POST['active']           = 1;
         $fields = [
-            'task_name' => $_POST['name'],
-            'active'    => $_POST['active'],
-        ];       
+            'task_name'        => $_POST['task_name'],
+            'task_description' => $_POST['task_description'],
+            'task_priority_id' => $_POST['task_priority'],
+            'active'           => $_POST['active'],
+        ];                
 
         if($this->validate->validate_csrf_token() && $this->validate->validate_form($fields)) {
             $this->query->insertInto('tasks', $fields);            
@@ -124,17 +130,28 @@ final class TaskControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REQUEST_URI']    = '/tasks/task/edit/1';                
         $_POST['csrf_token']       = $_SESSION['csrf_token'] = $this->validate->csrf_token();
-        $_POST['name']             = 'updated task';
+        $_POST['task_name']        = 'updated task';
+        $_POST['task_description'] = 'updated description';
+        $_POST['task_priority']    = 1;
         $_POST['active']           = 1;
-        $task_id = 1; // Assuming we are editing task with ID 2      
+        $task_id = 3; // Assuming we are editing task with ID 2
+        
+        $fields = [
+            'task_name'        => $_POST['task_name'],
+            'task_description' => $_POST['task_description'],
+            'task_priority'    => $_POST['task_priority'],
+            'active'           => $_POST['active'],
+        ];              
 
-        if($this->validate->validate_csrf_token() && $this->validate->validate_form(['task_name' => $_POST['name']])) {
+        if($this->validate->validate_csrf_token() && $this->validate->validate_form($fields)) {
             $this->query->updateRegistry(
                 'tasks', 
                 [
-                    'task_id'   => $task_id,
-                    'task_name' => $_POST['name'],
-                    'active'    => $_POST['active'] ? 1 : 0,
+                    'task_id'          => $task_id,
+                    'task_name'        => $_POST['task_name'],
+                    'task_description' => $_POST['task_description'],
+                    'task_priority_id' => $_POST['task_priority'],
+                    'active'           => $_POST['active'] ? 1 : 0,
                 ], 
                 'task_id');
             

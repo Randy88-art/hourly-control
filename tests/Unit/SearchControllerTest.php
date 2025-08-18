@@ -19,9 +19,11 @@ class SearchControllerTest extends TestCase
 
     public function setUp(): void {
         define("SITE_ROOT", "/var/www/public");
-        define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db.config.php');
+        define('DB_CONFIG_FILE', SITE_ROOT . '/../Application/Core/db_test.config.php');
         require_once(SITE_ROOT . "/../Application/Core/connect.php");
 	    define('DB_CON', $dbcon);
+        define('MAX_ROWS_PER_PAGES', 8);
+        define("MAX_ITEMS_TO_SHOW", 5); // Show 5 items per page in pagination buttons
 
         $this->app = new App();
         $this->validate = new Validate();
@@ -134,5 +136,129 @@ class SearchControllerTest extends TestCase
         $this->assertArrayHasKey('total_time', $variables);
         $this->assertArrayHasKey('user', $variables);
         $this->assertEquals('/admin/admin/searchUserTimeWorked', $_SERVER['REQUEST_URI']);
+    }
+
+    public function testSearchProjectByTheirName(): void
+    {
+        # Set up
+        $_SESSION['role']           = 'ROLE_ADMIN';
+        $_SESSION['id_user']        = 1;
+        $_SESSION['user_name']      = 'admin';        
+        $_SERVER['REQUEST_URI']     = '/admin/search/searchByProjectName';                
+        $_POST['project_name']      = 'project';
+        $_SERVER['REQUEST_METHOD']  = '';               
+
+        # Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);        
+
+        ob_start();                                                                        
+        $this->app->router();       
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        $_POST['csrf_token']        = $this->validate->csrf_token(); // Simulating CSRF token for the test                        
+        $_SERVER['REQUEST_METHOD']  = 'POST'; 
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $fields = [
+                'project_name' => $_POST['project_name'] != "" ? $this->validate->test_input($_POST['project_name']) : "",
+            ];
+
+            if(!$this->validate->validate_csrf_token()) {
+                $variables['error_message'] = "Invalid token";                
+            }
+            else if($this->validate->validate_form($fields)) {                
+                // Add project to variables
+                $variables['projects'] = $this->queryHourlyControl->selectAllFromTableWhereFieldLike('projects', 'project_name', $fields['project_name']);
+                
+                // Render the page
+                $_SERVER['REQUEST_URI'] = '/admin/search/searchByProjectName';
+
+                $this->app = new App();
+
+                ob_start();                                                                        
+                $this->app->router();       
+                $search_result = ob_get_contents();
+                ob_end_clean();
+                
+                $_POST['csrf_token'] = $this->validate->csrf_token(); // Simulating CSRF token for the test 
+            }
+            else {
+                $variables['error_message'] = $this->validate->get_msg(); 
+                $variables['fields']        = $fields;                  
+            }
+        }                       
+
+        # Assertions
+        $this->assertTrue($testAccess);
+        $this->assertTrue($this->validate->validate_csrf_token());
+        $this->assertFileExists('Application/view/admin/search/by_name/search_by_project_name_view.twig');
+        $this->assertStringContainsString('Search by project name', $html);
+        $this->assertStringContainsString('Search form', $html);
+        $this->assertEquals('', $variables['error_message']);
+        $this->assertStringContainsString($fields['project_name'], $search_result);
+        $this->assertTrue($this->validate->validate_form($fields));        
+    }
+
+    public function testSearchTaskByTheirName(): void
+    {
+        # Set up
+        $_SESSION['role']           = 'ROLE_ADMIN';
+        $_SESSION['id_user']        = 1;
+        $_SESSION['user_name']      = 'admin';        
+        $_SERVER['REQUEST_URI']     = '/admin/search/searchByTaskName';                
+        $_POST['task_name']         = 'task';
+        $_SERVER['REQUEST_METHOD']  = '';               
+
+        # Run logic
+        $testAccess = $this->controller->testAccess(['ROLE_ADMIN']);        
+
+        ob_start();                                                                        
+        $this->app->router();       
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        $_POST['csrf_token']        = $this->validate->csrf_token(); // Simulating CSRF token for the test                        
+        $_SERVER['REQUEST_METHOD']  = 'POST'; 
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $fields = [
+                'task_name' => $_POST['task_name'] != "" ? $this->validate->test_input($_POST['task_name']) : "",
+            ];
+
+            if(!$this->validate->validate_csrf_token()) {
+                $variables['error_message'] = "Invalid token";                
+            }
+            else if($this->validate->validate_form($fields)) {                
+                // Add task to variables
+                $variables['tasks'] = $this->queryHourlyControl->selectAllFromTableWhereFieldLike('tasks', 'task_name', $fields['task_name']);
+                
+                // Render the page
+                $_SERVER['REQUEST_URI'] = '/admin/search/searchByTaskName';
+
+                $this->app = new App();
+
+                ob_start();                                                                        
+                $this->app->router();       
+                $search_result = ob_get_contents();
+                ob_end_clean();
+                
+                $_POST['csrf_token'] = $this->validate->csrf_token(); // Simulating CSRF token for the test 
+            }
+            else {
+                $variables['error_message'] = $this->validate->get_msg(); 
+                $variables['fields']        = $fields;                  
+            }
+        }                       
+
+        # Assertions
+        $this->assertTrue($testAccess);
+        $this->assertTrue($this->validate->validate_csrf_token());
+        $this->assertFileExists('Application/view/admin/search/by_name/tasks/search_by_task_name_view.twig', 'File not found');
+        $this->assertStringContainsString('Search by task name', $html);
+        $this->assertStringContainsString('Search form', $html);
+        $this->assertEquals('', $variables['error_message']);
+        $this->assertStringContainsString($fields['task_name'], $search_result);
+        $this->assertTrue($this->validate->validate_form($fields));        
     }
 }
