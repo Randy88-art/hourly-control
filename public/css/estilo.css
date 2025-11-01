@@ -336,6 +336,15 @@ div:has(input[type="checkbox"]) {
 	main {
 		min-height: 0em;
 	}
+
+	.dashboard-options {
+		flex-direction: column;
+
+		section {
+			width: 100%;
+			margin: 0.5em 0em;
+		}
+	}
 }
 
 /************************************************************************
@@ -345,13 +354,29 @@ div:has(input[type="checkbox"]) {
 	main {
 		min-height: 0em;
 	}
+
+	.dashboard-options {
+		flex-direction: column;
+
+		section {
+			width: 100%;
+			margin: 0.5em 0em;
+		}
+	}
 }
 
 /************************************************************************
 *			Configuración para tablets portrait (retrato)						*
 ************************************************************************/
 @media (min-width:481px) and (max-width: 768px) {
-	
+	.dashboard-options {
+		flex-direction: column;
+
+		section {
+			width: 100%;
+			margin: 0.5em 0em;
+		}
+	}
 }
 
 /***************************************************************
