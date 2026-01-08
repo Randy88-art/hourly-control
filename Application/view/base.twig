@@ -42,7 +42,7 @@
 							{% block navlinks %}
 								{% for key, value in menus %}
 								<li class="nav-item d-lg-inline-block">
-									<a class="nav-link {% if key == active|capitalize %}active{% endif %}" aria-current="page" href="{{ value }}">{{ key }}</a>
+									<a class="nav-link {% if key|lower == active|lower %}active{% endif %}" aria-current="page" href="{{ value }}">{{ key }}</a>
 								</li>
 								{% endfor %}	
 							{% endblock navlinks %}							
