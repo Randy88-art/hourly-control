@@ -10,45 +10,45 @@
 
     class LoginController extends Controller
     {        
-        public function __construct(
+        public function __construct(                        
+            private Validate $validate,
+            private Query $query,
             private string $message = "",
-            private array $fields = []
+            private array $fields = [],
         )
         {            
         }
 
         public function index(): void
-        { 
-            $validate = new Validate;
-            $query = new Query;            
+        {               
 
             try {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Get values from login form
                     $this->fields = [
-                        'email'     =>  $validate->validate_email(strtolower($_REQUEST['email'])) ? $validate->test_input(strtolower($_REQUEST['email'])) : "",
-                        'password'  =>  $validate->test_input($_REQUEST['password']) ?? "",
+                        'email'     =>  $this->validate->validate_email(strtolower($_REQUEST['email'])) ? $this->validate->test_input(strtolower($_REQUEST['email'])) : "",
+                        'password'  =>  $this->validate->test_input($_REQUEST['password']) ?? "",
                     ];
 
                     $variables = [
                         'menus'         => $this->showNavLinks(),
                         'fields'        => $this->fields,                        
                         'active'        => 'login',
-                        'csrf_token'    => $validate,
+                        'csrf_token'    => $this->validate,
                     ];
 
                     // Validate csrf token
-                    if(!$validate->validate_csrf_token()) {
+                    if(!$this->validate->validate_csrf_token()) {
                         $this->message = "Invalid csrf token";
                         $variables['error_message'] = $this->message;
                     }
                     else {
                         // Validate form                    
-                        if($validate->validate_form($this->fields)) {
+                        if($this->validate->validate_form($this->fields)) {
                             if(!isset($_SESSION['id_user'])) {
                                 // Test user to do login                           
-                                $result = $query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
+                                $result = $this->query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
                                                             
                                 if($result) {                                
                                     if(password_verify($this->fields['password'], $result['password'])) {												
@@ -80,7 +80,7 @@
                 $this->render('login/login_view.twig', [
                     'menus'         => $this->showNavLinks(),                    
                     'active'        => 'login',
-                    'csrf_token'    => $validate,              
+                    'csrf_token'    => $this->validate,              
                 ]);
 
             } catch (\Throwable $th) {
