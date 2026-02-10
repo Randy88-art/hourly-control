@@ -11,8 +11,8 @@ use Application\model\classes\Validate;
 final class SearchController extends Controller
 {
     public function __construct(
-        private Validate $validate = new Validate,
-        private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl(),
+        private Validate $validate,
+        private QueryHourlyControl $queryHourlyControl,
         private string $message = "",
     )
     {

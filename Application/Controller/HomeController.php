@@ -14,9 +14,9 @@
     {            
 
         public function __construct(
-            private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl, 
-            private object $dbcon = DB_CON,
-            private Validate $validate = new Validate()
+            private Validate $validate,
+            private QueryHourlyControl $queryHourlyControl,
+            private HourlyController $hourlyController                        
         )        
         {                  
         }
@@ -48,8 +48,8 @@
 
                     // Update duration in the DB
                     if($rows['date_out'] !== null) {
-                        $hourlyController = new HourlyController();
-                        $hourlyController->setDuration($hours['duration']);
+                        //$hourlyController = new HourlyController();
+                        $this->hourlyController->setDuration($hours['duration']);
                     }
 
                     // We obtain total time worked at day                                

@@ -12,18 +12,16 @@ use Application\model\Task;
 final class TaskController extends Controller
 {
     public function __construct(
-        private Query $query = new Query(),
-        private Validate $validate = new Validate,    
+        private Validate $validate,
+        private Query $query,        
         private array $fields = [],        
     )
     {
         
     }
 
-    public function index(): void
-    {
-        global $id;
-
+    public function index($id = null): void
+    {        
         try {
             // Initialize variables to pass to the view
             $variables = [
@@ -140,11 +138,9 @@ final class TaskController extends Controller
         }               
     }
 
-    public function edit(): void
+    public function edit($id): void
     {
-        try {
-            global $id;
-
+        try {           
             $variables = [
                 'menus'      => $this->showNavLinks(),
                 'priorities' => $this->query->selectAll('tasks_priority'),
@@ -211,11 +207,9 @@ final class TaskController extends Controller
         }
     }
 
-    public function delete(): void
+    public function delete($id): void
     {
-        try {
-            global $id;
-
+        try {            
             // Test for privileges
             if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
