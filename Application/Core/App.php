@@ -12,7 +12,7 @@
             private string $controller = "", 
             private string $method = "index",
             private string $route = "",
-             private array $dependencies = []
+            private array $dependencies = []
         )
         {
             $this->dependencies['query']    = new Query();
@@ -30,12 +30,7 @@
             return $url;
         }
 
-        public function router(): void {           
-            /* session_start();
-	        session_regenerate_id(); */
-
-            global $id;
-
+        public function router(): void {                                 
             $url = $this->splitUrl();
 
             // Test diferent options to configure to Controller                         
@@ -75,8 +70,7 @@
                     $this->controller = "ErrorController";
                     $controller_path = '\Application\Controller\\' . ucfirst($this->controller);                                                        
                 } 
-                
-                //$controller = new $controller_path;
+                                
                 $controller = $this->createController($controller_path);
 
                 /** select method */
@@ -89,7 +83,9 @@
                     }
                 }
 
-                call_user_func_array([$controller, $this->method], []);
+                $params = isset($id) ? [$id] : [];
+
+                call_user_func_array([$controller, $this->method], $params);
         }
 
         private function createController(string $className): object

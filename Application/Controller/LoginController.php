@@ -27,8 +27,8 @@
                     
                     // Get values from login form
                     $this->fields = [
-                        'email'     =>  $this->validate->validate_email(strtolower($_REQUEST['email'])) ? $this->validate->test_input(strtolower($_REQUEST['email'])) : "",
-                        'password'  =>  $this->validate->test_input($_REQUEST['password']) ?? "",
+                        'email'     =>  $this->validate->validate_email(strtolower($_POST['email'])) ? $this->validate->test_input(strtolower($_POST['email'])) : "",
+                        'password'  =>  $this->validate->test_input($_POST['password']) ?? "",
                     ];
 
                     $variables = [
@@ -51,7 +51,9 @@
                                 $result = $this->query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
                                                             
                                 if($result) {                                
-                                    if(password_verify($this->fields['password'], $result['password'])) {												
+                                    if(password_verify($this->fields['password'], $result['password'])) {
+                                        session_regenerate_id();
+
                                         $_SESSION['id_user']    = $result['id'];						
                                         $_SESSION['user_name']  = $result['user_name'];
                                         $_SESSION['role']       = $result['role'];												
