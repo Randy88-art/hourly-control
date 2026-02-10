@@ -3,7 +3,9 @@
 
     namespace Application\Core;
 
+    use Application\Controller\hourlycontrol\HourlyController;
     use Application\model\classes\Query;
+    use Application\model\classes\QueryHourlyControl;
     use Application\model\classes\Validate;
 
     class App
@@ -12,11 +14,16 @@
             private string $controller = "", 
             private string $method = "index",
             private string $route = "",
-             private array $dependencies = []
+            private array $dependencies = []
         )
         {
-            $this->dependencies['query']    = new Query();
-            $this->dependencies['validate'] = new Validate;
+            $this->dependencies['validate']             = new Validate;
+            $this->dependencies['query']                = new Query();
+            $this->dependencies['query_hourly_control'] = new QueryHourlyControl();
+            $this->dependencies['hourly_control']       = new HourlyController(
+                $this->dependencies['validate'], 
+                $this->dependencies['query_hourly_control']
+            );
         }
         private function splitUrl(): array|string {           
             $url = $_SERVER['REQUEST_URI'] === '/' ? 'home' : $_SERVER['REQUEST_URI'];
@@ -30,12 +37,7 @@
             return $url;
         }
 
-        public function router(): void {           
-            /* session_start();
-	        session_regenerate_id(); */
-
-            global $id;
-
+        public function router(): void {                                 
             $url = $this->splitUrl();
 
             // Test diferent options to configure to Controller                         
@@ -75,8 +77,7 @@
                     $this->controller = "ErrorController";
                     $controller_path = '\Application\Controller\\' . ucfirst($this->controller);                                                        
                 } 
-                
-                //$controller = new $controller_path;
+                                
                 $controller = $this->createController($controller_path);
 
                 /** select method */
@@ -89,17 +90,50 @@
                     }
                 }
 
-                call_user_func_array([$controller, $this->method], []);
+                $params = isset($id) ? [$id] : [];
+
+                call_user_func_array([$controller, $this->method], $params);
         }
 
         private function createController(string $className): object
-        {
-            if ($className === "\Application\Controller\LoginController") {
-                return new $className(
+        { 
+            $controllerMaps = [
+                "\Application\Controller\LoginController" => fn() => new $className(
                     $this->dependencies['validate'],
-                    $this->dependencies['query'],                    
-                );
-            }
+                    $this->dependencies['query']
+                ),
+                "\Application\Controller\RegisterController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query']
+                ),
+                "\Application\Controller\admin\AdminController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query']
+                ),
+                "\Application\Controller\HomeController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query_hourly_control'],
+                    $this->dependencies['hourly_control']
+                ),
+                "\Application\Controller\admin\SearchController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query_hourly_control']
+                ),
+                "\Application\Controller\hourlycontrol\HourlyController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query_hourly_control']
+                ),
+                "\Application\Controller\projects\ProjectController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query']
+                ),
+                "\Application\Controller\Tasks\TaskController" => fn() => new $className(
+                    $this->dependencies['validate'],
+                    $this->dependencies['query']
+                ),
+            ];
+
+            if(isset($controllerMaps[$className])) return $controllerMaps[$className]();
 
             return new $className;
         }

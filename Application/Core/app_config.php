@@ -1,6 +1,5 @@
 <?php	
-	session_start();
-	session_regenerate_id();
+	session_start();	
 
 	/** Define root folder */
 	define("SITE_ROOT", $_SERVER['DOCUMENT_ROOT']);	

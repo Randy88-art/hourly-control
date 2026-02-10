@@ -11,8 +11,8 @@ use Application\model\classes\Validate;
 final class AdminController extends Controller
 {
     public function __construct(
-        private Query $query = new Query(),
-        private Validate $validate = new Validate,
+        private Validate $validate,
+        private Query $query,        
         private string $message = "",
     )
     {        

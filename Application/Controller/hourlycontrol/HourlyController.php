@@ -14,9 +14,9 @@ use Application\model\Task;
 class HourlyController extends Controller
 {
     public function __construct(
-        private object $dbcon = DB_CON,
-        private Validate $validate = new Validate(),
-        private QueryHourlyControl $queryHourlyControl = new QueryHourlyControl(),
+        private Validate $validate,
+        private QueryHourlyControl $queryHourlyControl,
+        private object $dbcon = DB_CON,        
     )
     {
         
@@ -54,13 +54,13 @@ class HourlyController extends Controller
                 'active'            => 'home',
                 'csrf_token'        => $this->validate,
                 'fields'            => [
-                                        'project' => $this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
-                                                        new Project($this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
-                                                        null,
-                                        'task'    => $this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
-                                                        new Task($this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
-                                                        null,
-                                    ]
+                    'project' => $this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
+                                    new Project($this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
+                                    null,
+                    'task'    => $this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
+                                    new Task($this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
+                                    null,
+                ]
             ];            
 
             if($this->queryHourlyControl->isStartedTimeTrue($_SESSION['id_user'])) {
@@ -149,12 +149,12 @@ class HourlyController extends Controller
     public function setDuration(string $duration): void
     {
         $query = "UPDATE hourly_control 
-                SET total_time_worked = :duration 
-                WHERE id_user = :id_user 
-                AND date_in = (SELECT MAX(date_in) 
-                                FROM hourly_control
-                                WHERE id_user = $_SESSION[id_user]) 
-                AND date_out IS NOT NULL";               
+                  SET total_time_worked = :duration 
+                  WHERE id_user = :id_user 
+                  AND date_in = (SELECT MAX(date_in) 
+                                 FROM hourly_control
+                                 WHERE id_user = $_SESSION[id_user]) 
+                  AND date_out IS NOT NULL";               
         try {
             // Test for privileges
             if(!$this->testAccess(['ROLE_USER', 'ROLE_ADMIN'])) throw new \Exception('Only authorized users can access this page');
