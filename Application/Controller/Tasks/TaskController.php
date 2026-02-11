@@ -105,7 +105,7 @@ final class TaskController extends Controller
                     $this->fields['task_description'] = isset($_POST['task_description']) ? $this->validate->test_input($_POST['task_description']) : "";
                     $this->query->insertInto('tasks', $this->fields);
 
-                    header("Location: /tasks/task/index");
+                    header("Location: /Tasks/task/index");
                 }
                 else {
                     $variables['fields']        = $this->fields;
@@ -218,7 +218,7 @@ final class TaskController extends Controller
                 
                 if($this->validate->validate_csrf_token()) {
                     $this->query->deleteRegistry('tasks', 'task_id', $id);
-                    header("Location: /tasks/task/index");
+                    header("Location: /Tasks/task/index");
                 }
                 else {
                     throw new \Exception("Invalid csrf_token");
