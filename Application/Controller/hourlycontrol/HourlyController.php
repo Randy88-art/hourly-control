@@ -10,13 +10,14 @@ use Application\model\classes\QueryHourlyControl;
 use Application\model\classes\Validate;
 use Application\model\Project;
 use Application\model\Task;
+use PDO;
 
 class HourlyController extends Controller
 {
     public function __construct(
         private Validate $validate,
         private QueryHourlyControl $queryHourlyControl,
-        private object $dbcon = DB_CON,        
+        private PDO $pdo,        
     )
     {
         
@@ -159,7 +160,7 @@ class HourlyController extends Controller
             // Test for privileges
             if(!$this->testAccess(['ROLE_USER', 'ROLE_ADMIN'])) throw new \Exception('Only authorized users can access this page');
             
-            $stm = $this->dbcon->pdo->prepare($query);       
+            $stm = $this->pdo->prepare($query);       
             $stm->bindValue(":duration", $duration);
             $stm->bindValue(":id_user", $_SESSION['id_user']);
             $stm->execute();

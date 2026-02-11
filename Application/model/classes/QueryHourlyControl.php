@@ -19,7 +19,7 @@ final class QueryHourlyControl extends Query
                                 WHERE id_user = $_SESSION[id_user])";
 
         try {                        
-            $stm = $this->dbcon->pdo->prepare($query);
+            $stm = $this->pdo->prepare($query);
             $stm->bindValue(":id_user", $_SESSION['id_user']);            
             $stm->execute();
 
@@ -40,7 +40,7 @@ final class QueryHourlyControl extends Query
                     AND DATE(date_in) = :date";
 
         try {
-            $stm = $this->dbcon->pdo->prepare($query);
+            $stm = $this->pdo->prepare($query);
             $stm->bindValue(":id_user", $id_user);
             $stm->bindValue(":date", $date);
             $stm->execute();
@@ -68,7 +68,7 @@ final class QueryHourlyControl extends Query
                     ORDER BY date_in ASC";
 
         try {
-            $stm = $this->dbcon->pdo->prepare($query);
+            $stm = $this->pdo->prepare($query);
             $stm->bindValue(":id_user", $id_user);
             $stm->bindValue(":date", $date);
             $stm->execute();
@@ -101,7 +101,7 @@ final class QueryHourlyControl extends Query
                     AND date_out IS NULL";
         
         try {
-            $stm = $this->dbcon->pdo->prepare($query);
+            $stm = $this->pdo->prepare($query);
             $stm->bindValue(":id_user", $id_user);
             $stm->execute();
 
@@ -147,7 +147,7 @@ final class QueryHourlyControl extends Query
                 AND date_out IS NULL";
 
         try {
-            $stm = $this->dbcon->pdo->prepare($query);       
+            $stm = $this->pdo->prepare($query);       
             $stm->bindValue(":date_out", $dateOut);
             $stm->bindValue(":id_user", $_SESSION['id_user']);
             $stm->execute();

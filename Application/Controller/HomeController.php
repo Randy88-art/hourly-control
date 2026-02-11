@@ -47,8 +47,7 @@
                     $hours = $this->queryHourlyControl->getHours();
 
                     // Update duration in the DB
-                    if($rows['date_out'] !== null) {
-                        //$hourlyController = new HourlyController();
+                    if($rows['date_out'] !== null) {                        
                         $this->hourlyController->setDuration($hours['duration']);
                     }
 

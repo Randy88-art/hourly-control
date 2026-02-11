@@ -1,30 +1,33 @@
 <?php
-	namespace Application\Database;
-	
-	use Exception;
-	use PDO;
-	use PDOException;
-	
-	class Connection {
-		const ERROR_UNABLE = 'ERROR: Unable to create database connection';
-		
-		public $pdo;
-		
-		public function __construct(array $config) {
-			if(!isset($config['driver'])) {
-				$message = __METHOD__ . ' : ' . self::ERROR_UNABLE;
-				
-				throw new Exception($message);
-			}
-			
-			$dsn = $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'] . ';charset=' . $config['charset'];
-			
-			try {
-				$this->pdo = new PDO($dsn, $config['user'], $config['password'], $config['errmode']);
-			}
-			catch(PDOException $e) {
-				error_log($e->getMessage());	
-			}
-		}
-	}
-?>
+declare(strict_types=1);
+
+namespace Application\Database;
+
+use PDO;
+
+final class Connection
+{
+    private ?PDO $pdo = null;
+
+    public function __construct(
+        private array $config
+    )
+    {
+        
+    }
+
+    public function getConnection(): PDO
+    {
+        if($this->pdo === null) {
+            try {
+                $dsn = $this->config['driver'] . ':host=' . $this->config['host'] . ';dbname=' . $this->config['dbname'] . ';charset=' . $this->config['charset'];
+                $this->pdo = new PDO($dsn, $this->config['user'], $this->config['password'], $this->config['errmode']);
+                
+            } catch (\Throwable $th) {
+                throw new \Exception("Error connecting to database: {$th->getMessage()}", 1);                
+            }            
+        }
+
+        return $this->pdo;
+    }
+}
