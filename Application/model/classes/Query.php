@@ -6,7 +6,7 @@ use PDO;
 
     class Query implements QueryInterface
     {
-    	public function __construct(public object $dbcon = DB_CON) {
+    	public function __construct(public object $pdo) {
             
         }
         
@@ -18,7 +18,7 @@ use PDO;
             $query = "SELECT * FROM $table";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);               
+                $stm = $this->pdo->prepare($query);               
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();                
@@ -38,7 +38,7 @@ use PDO;
             $query = "SELECT COUNT(*) FROM $table";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);               
+                $stm = $this->pdo->prepare($query);               
                 $stm->execute();       
                 $rows = $stm->fetchColumn();
                 $stm->closeCursor();                
@@ -66,7 +66,7 @@ use PDO;
             $query = "SELECT * FROM $table WHERE $field = :val";                         
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->bindValue(":val", $value);                            
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
@@ -84,7 +84,7 @@ use PDO;
             $query = "SELECT * FROM $table WHERE $field = :val";                         
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->bindValue(":val", $value);                            
                 $stm->execute();       
                 $rows = $stm->fetch(PDO::FETCH_ASSOC);
@@ -114,7 +114,7 @@ use PDO;
             $params[":$primary_key_name"] = $fields[$primary_key_name];                        
                                                   
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                        
+                $stm = $this->pdo->prepare($query);                        
                 $stm->execute($params);       				
                 $stm->closeCursor();                
 
@@ -128,7 +128,7 @@ use PDO;
             $query = "UPDATE $table SET password = :password WHERE id_user = :id_user";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query); 
+                $stm = $this->pdo->prepare($query); 
                 $stm->bindValue(":password", password_hash($password, PASSWORD_DEFAULT));				            
                 $stm->bindValue(":id_user", $id_user);              
                 $stm->execute();       				
@@ -144,7 +144,7 @@ use PDO;
             $query = "DELETE FROM $table WHERE $fieldId = :id";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);             			            
+                $stm = $this->pdo->prepare($query);             			            
                 $stm->bindValue(":id", $id);              
                 $stm->execute();       				
                 $stm->closeCursor();                
@@ -165,7 +165,7 @@ use PDO;
                         WHERE $table1.$fieldId = :id";
                     
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->bindValue(":id", $id);                            
                 $stm->execute();       
                 $rows = $stm->fetch(PDO::FETCH_ASSOC);            
@@ -197,7 +197,7 @@ use PDO;
                         ON $table1.$foreignKeyField = $table2.$foreignKeyField";                            
                 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                                   
+                $stm = $this->pdo->prepare($query);                                                   
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
@@ -239,7 +239,7 @@ use PDO;
             $query = $insert . $values;            
                                                     
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 foreach ($fields as $key => $value) {
                     if($key === 'password') {
                         $stm->bindValue(":password", password_hash($value, PASSWORD_DEFAULT));
@@ -267,7 +267,7 @@ use PDO;
             $query = "TRUNCATE TABLE $table";
                 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                                   
+                $stm = $this->pdo->prepare($query);                                                   
                 $stm->execute();                   
                 $stm->closeCursor();
 
@@ -297,7 +297,7 @@ use PDO;
             $query = "SELECT $fields FROM $table ORDER BY $orderByField DESC";
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                                   
+                $stm = $this->pdo->prepare($query);                                                   
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
@@ -318,7 +318,7 @@ use PDO;
                         WHERE $table1.email = :val";                                    
                 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                                   
+                $stm = $this->pdo->prepare($query);                                                   
                 $stm->execute([$email]);       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
@@ -336,7 +336,7 @@ use PDO;
             $query = "SELECT $fields FROM $table WHERE $fieldId = :value";
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->bindValue(":value", $value);                                                   
                 $stm->execute();       
                 $rows = $stm->fetch(PDO::FETCH_ASSOC);
@@ -357,7 +357,7 @@ use PDO;
             $query = "SELECT * FROM $table";
 
             try {
-                $stm = $dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->execute();
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
@@ -385,7 +385,7 @@ use PDO;
             $query = "SELECT * FROM $table WHERE $field LIKE :value";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $value = "%$value%";
                 $stm->bindValue(":value", $value);                                             
                 $stm->execute();       
@@ -404,7 +404,7 @@ use PDO;
             $query = "SELECT * FROM $table ORDER BY $field ASC";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm = $this->pdo->prepare($query);                                             
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();                
@@ -424,7 +424,7 @@ use PDO;
             $query = "SELECT * FROM $table WHERE $field IS NOT NULL ORDER BY $field ASC";                 
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm = $this->pdo->prepare($query);                                             
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();                
@@ -447,7 +447,7 @@ use PDO;
                         WHERE $table1.$fieldName = :field";
                     
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $stm->bindValue(":field", $field);                            
                 $stm->execute();       
                 $rows = $stm->fetch(PDO::FETCH_ASSOC);            
@@ -480,7 +480,7 @@ use PDO;
             $query .= " WHERE id = '$id'";            
                                                     
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 foreach ($fields as $key => $value) {
                     if($key === 'password') {
                         $stm->bindValue(":password", password_hash($value, PASSWORD_DEFAULT));
@@ -520,7 +520,7 @@ use PDO;
             $query .= " LIMIT $limit OFFSET $offset";
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);                                             
+                $stm = $this->pdo->prepare($query);                                             
                 $stm->execute();       
                 $rows = $stm->fetchAll(PDO::FETCH_ASSOC);
                 $stm->closeCursor();
@@ -537,7 +537,7 @@ use PDO;
             $query = "SELECT * FROM $table WHERE $field LIKE :value LIMIT $limit OFFSET $offset";
 
             try {
-                $stm = $this->dbcon->pdo->prepare($query);
+                $stm = $this->pdo->prepare($query);
                 $value = "%$value%";
                 $stm->bindValue(":value", $value);                                             
                 $stm->execute();       

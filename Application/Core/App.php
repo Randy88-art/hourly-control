@@ -4,6 +4,7 @@
     namespace Application\Core;
 
     use Application\Controller\hourlycontrol\HourlyController;
+    use Application\Database\Connection;
     use Application\model\classes\Query;
     use Application\model\classes\QueryHourlyControl;
     use Application\model\classes\Validate;
@@ -11,18 +12,22 @@
     class App
     {       
         public function __construct(
+            private ?Connection $dbcon = null,
             private string $controller = "", 
             private string $method = "index",
             private string $route = "",
-            private array $dependencies = []
+            private array $dependencies = [],            
         )
         {
+            $this->dbcon = new Connection(include DB_CONFIG_FILE);
+
             $this->dependencies['validate']             = new Validate;
-            $this->dependencies['query']                = new Query();
-            $this->dependencies['query_hourly_control'] = new QueryHourlyControl();
+            $this->dependencies['query']                = new Query($this->dbcon->getConnection());
+            $this->dependencies['query_hourly_control'] = new QueryHourlyControl($this->dbcon->getConnection());
             $this->dependencies['hourly_control']       = new HourlyController(
                 $this->dependencies['validate'], 
-                $this->dependencies['query_hourly_control']
+                $this->dependencies['query_hourly_control'],
+                $this->dbcon->getConnection()
             );
         }
         private function splitUrl(): array|string {           
@@ -121,7 +126,8 @@
                 ),
                 "\Application\Controller\hourlycontrol\HourlyController" => fn() => new $className(
                     $this->dependencies['validate'],
-                    $this->dependencies['query_hourly_control']
+                    $this->dependencies['query_hourly_control'],
+                    $this->dbcon->getConnection()
                 ),
                 "\Application\Controller\projects\ProjectController" => fn() => new $className(
                     $this->dependencies['validate'],
