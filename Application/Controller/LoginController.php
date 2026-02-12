@@ -21,88 +21,67 @@
 
         public function index(): void
         {               
-
-            try {
-                if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
-                    // Get values from login form
-                    $this->fields = [
-                        'email'     =>  $this->validate->validate_email(strtolower($_POST['email'])) ? $this->validate->test_input(strtolower($_POST['email'])) : "",
-                        'password'  =>  $this->validate->test_input($_POST['password']) ?? "",
-                    ];
+                // Get values from login form
+                $this->fields = [
+                    'email'     =>  $this->validate->validate_email(strtolower($_POST['email'])) ? $this->validate->test_input(strtolower($_POST['email'])) : "",
+                    'password'  =>  $this->validate->test_input($_POST['password']) ?? "",
+                ];
 
-                    $variables = [
-                        'menus'         => $this->showNavLinks(),
-                        'fields'        => $this->fields,                        
-                        'active'        => 'login',
-                        'csrf_token'    => $this->validate,
-                    ];
+                $variables = [
+                    'menus'         => $this->showNavLinks(),
+                    'fields'        => $this->fields,                        
+                    'active'        => 'login',
+                    'csrf_token'    => $this->validate,
+                ];
 
-                    // Validate csrf token
-                    if(!$this->validate->validate_csrf_token()) {
-                        $this->message = "Invalid csrf token";
-                        $variables['error_message'] = $this->message;
-                    }
-                    else {
-                        // Validate form                    
-                        if($this->validate->validate_form($this->fields)) {
-                            if(!isset($_SESSION['id_user'])) {
-                                // Test user to do login                           
-                                $result = $this->query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
-                                                            
-                                if($result) {                                
-                                    if(password_verify($this->fields['password'], $result['password'])) {
-                                        session_regenerate_id();
+                // Validate csrf token
+                if(!$this->validate->validate_csrf_token()) {
+                    $this->message = "Invalid csrf token";
+                    $variables['error_message'] = $this->message;
+                }
+                else {
+                    // Validate form                    
+                    if($this->validate->validate_form($this->fields)) {
+                        if(!isset($_SESSION['id_user'])) {
+                            // Test user to do login                           
+                            $result = $this->query->selectLoginUser('users', 'roles', 'id_role', $this->fields['email']);                                                       
+                                                        
+                            if($result) {                                
+                                if(password_verify($this->fields['password'], $result['password'])) {
+                                    session_regenerate_id();
 
-                                        $_SESSION['id_user']    = $result['id'];						
-                                        $_SESSION['user_name']  = $result['user_name'];
-                                        $_SESSION['role']       = $result['role'];												
-                                                                                                        
-                                        header("Location: /home");                                      
-                                        return;						
-                                    }
-                                    else {
-                                        $variables['error_message'] = 'Please test your credentials';
-                                    }                                                                
+                                    $_SESSION['id_user']    = $result['id'];						
+                                    $_SESSION['user_name']  = $result['user_name'];
+                                    $_SESSION['role']       = $result['role'];												
+                                                                                                    
+                                    header("Location: /home");                                      
+                                    return;						
                                 }
                                 else {
                                     $variables['error_message'] = 'Please test your credentials';
-                                }                            
+                                }                                                                
                             }
                             else {
-                                header("Location: /home");
-                                die();	
-                            }
+                                $variables['error_message'] = 'Please test your credentials';
+                            }                            
                         }
-                    } 
-                    
-                    $this->render('login/login_view.twig', $variables);
-                }                                                                             
+                        else {
+                            header("Location: /home");
+                            die();	
+                        }
+                    }
+                } 
+                
+                $this->render('login/login_view.twig', $variables);
+            }                                                                             
 
-                $this->render('login/login_view.twig', [
-                    'menus'         => $this->showNavLinks(),                    
-                    'active'        => 'login',
-                    'csrf_token'    => $this->validate,              
-                ]);
-
-            } catch (\Throwable $th) {
-                $error_msg = [
-                    'error' =>  $th->getMessage(),
-                ];
-
-                if($this->testAccess(['ROLE_ADMIN'])) {
-                    $error_msg = [
-                        "Message:"  =>  $th->getMessage(),
-                        "Path:"     =>  $th->getFile(),
-                        "Line:"     =>  $th->getLine(),
-                    ];
-                }
-
-                $this->render('error_view.twig', [
-                    'menus'             => $this->showNavLinks(),
-                    'exception_message' => $error_msg,                
-                ]);
-            }                                             
+            $this->render('login/login_view.twig', [
+                'menus'         => $this->showNavLinks(),                    
+                'active'        => 'login',
+                'csrf_token'    => $this->validate,              
+            ]);                                            
         }        
     }    
 ?>

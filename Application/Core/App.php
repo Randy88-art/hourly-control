@@ -16,10 +16,10 @@
             private string $controller = "", 
             private string $method = "index",
             private string $route = "",
-            private array $dependencies = [],            
+            private array $dependencies = [],           
         )
         {
-            $this->dbcon = new Connection(include DB_CONFIG_FILE);
+            $this->dbcon = new Connection(include DB_CONFIG_FILE);            
 
             $this->dependencies['validate']             = new Validate;
             $this->dependencies['query']                = new Query($this->dbcon->getConnection());
@@ -30,6 +30,7 @@
                 $this->dbcon->getConnection()
             );
         }
+        
         private function splitUrl(): array|string {           
             $url = $_SERVER['REQUEST_URI'] === '/' ? 'home' : $_SERVER['REQUEST_URI'];
             $url = explode('/', trim($url, "/")); 
@@ -42,10 +43,11 @@
             return $url;
         }
 
-        public function router(): void {                                 
-            $url = $this->splitUrl();
+        public function router(): void {            
+            try {
+                $url = $this->splitUrl();
 
-            // Test diferent options to configure to Controller                         
+                // Test diferent options to configure to Controller                         
                 if(count($url) == 1 && !empty($url[0])){
                     $this->controller = ucfirst($url[0]);
                     $this->method = "index";
@@ -98,6 +100,11 @@
                 $params = isset($id) ? [$id] : [];
 
                 call_user_func_array([$controller, $this->method], $params);
+
+            } catch (\Throwable $th) {
+                \Application\Core\ErrorHandler::handle($th, $controller ?? null);
+            }                                
+            
         }
 
         private function createController(string $className): object
@@ -137,6 +144,7 @@
                     $this->dependencies['validate'],
                     $this->dependencies['query']
                 ),
+                "\Application\Controller\ErrorController" => fn() => new $className()
             ];
 
             if(isset($controllerMaps[$className])) return $controllerMaps[$className]();

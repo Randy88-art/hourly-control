@@ -63,7 +63,7 @@
 					{% if error_message is iterable %}
 					<p class="alert alert-danger text-center">
 						{% for key, row in error_message %}
-						{{ key }} {{ row }}<br>
+						{{ key }} : {{ row }}<br>
 						{% endfor %}
 					</p>  
 					{% else %}
