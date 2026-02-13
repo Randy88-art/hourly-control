@@ -20,29 +20,8 @@ final class AdminController extends Controller
 
     public function index()
     {                        
-        try {
-            // Test for privileges
-            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');                    
-
-        } catch (\Throwable $th) {            
-            if($this->testAccess(['ROLE_ADMIN'])) {
-                $error_msg = [
-                    "Message:"  =>  $th->getMessage(),
-                    "Path:"     =>  $th->getFile(),
-                    "Line:"     =>  $th->getLine(),
-                ];
-            }
-            else {
-                $error_msg = [
-                    'Error:' =>  $th->getMessage(),
-                ];
-            }
-
-            $this->render('error_view.twig', [
-                'menus'             => $this->showNavLinks(),
-                'exception_message' => $error_msg,                
-            ]);
-        }
+        // Test for privileges
+            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
 
         $this->render('admin/dashboard_view.twig', [
             'menus'   => $this->showNavLinks(),
