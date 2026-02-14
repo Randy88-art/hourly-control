@@ -68,7 +68,7 @@ final class SearchController extends Controller
         $this->render('admin/search/search_view.twig', $variables);
     }
 
-    public function searchByProjectName(): void
+    public function searchByProjectName($id = null): void
     {
         // Test for privileges
         if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
@@ -89,9 +89,7 @@ final class SearchController extends Controller
             if(!$this->validate->validate_csrf_token()) {
                 $variables['error_message'] = "Invalid token";                                                      
             }
-            else if($this->validate->validate_form($fields)) {
-                global $id;
-
+            else if($this->validate->validate_form($fields)) {                
                 // Create pagination
                 $currentPage = isset($id) ? (int) $id : 1;
                 $limit = MAX_ROWS_PER_PAGES;
@@ -127,7 +125,7 @@ final class SearchController extends Controller
         $this->render('admin/search/by_name/search_by_project_name_view.twig', $variables);
     }
 
-    public function searchByTaskName(): void
+    public function searchByTaskName($id = null): void
     {
         // Test for privileges
         if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
@@ -148,9 +146,7 @@ final class SearchController extends Controller
             if(!$this->validate->validate_csrf_token()) {
                 $variables['error_message'] = "Invalid token";                                                      
             }
-            else if($this->validate->validate_form($fields)) {
-                global $id;
-
+            else if($this->validate->validate_form($fields)) {                
                 // Create pagination
                 $currentPage = isset($id) ? (int) $id : 1;
                 $limit = MAX_ROWS_PER_PAGES;
