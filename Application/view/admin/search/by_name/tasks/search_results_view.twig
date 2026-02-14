@@ -34,7 +34,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a class="btn btn-outline-success" href="/tasks/task/edit/{{ task.task_id }}">Edit</a>
+                            <a class="btn btn-outline-success" href="/Tasks/task/edit/{{ task.task_id }}">Edit</a>
                             {{ include('admin/tasks/_delete_form.twig') }}
                         </td>
                     </tr>
@@ -42,7 +42,7 @@
             </tbody>
         </table>
         <div class="mt-3">
-            <a href="/tasks/task/new" class="btn btn-primary">Create New Task</a>
+            <a href="/Tasks/task/new" class="btn btn-primary">Create New Task</a>
         </div>
         <!-- Pagination -->
         {% if totalPages > 1 %}
