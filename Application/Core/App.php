@@ -10,12 +10,16 @@
             private string $controller = "", 
             private string $method = "index",
             private string $route = "",
-            private array $protectedRoutes = [
-                'AdminController'  => 'auth'
-            ]                     
+            private array $protectedRoutes = []                     
         )
         {           
-            $this->container = new Container();                     
+            $this->container = new Container();
+            $this->protectedRoutes = [
+                'AdminController'   =>  'auth',
+                'SearchController'  =>  'auth',
+                'ProjectController' =>  'auth',
+                'TaskController'    =>  'auth'
+            ];                     
         }
         
         private function splitUrl(): array|string {           

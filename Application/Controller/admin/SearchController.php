@@ -20,9 +20,6 @@ final class SearchController extends Controller
     }
     public function searchByUserAndDate(): void
     {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
         // Initialize variables
         $variables = [
             'menus'      => $this->showNavLinks(),
@@ -70,9 +67,6 @@ final class SearchController extends Controller
 
     public function searchByProjectName($id = null): void
     {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
         // Initialize variables
         $variables = [
             'menus'      => $this->showNavLinks(),
@@ -127,9 +121,6 @@ final class SearchController extends Controller
 
     public function searchByTaskName($id = null): void
     {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
         // Initialize variables
         $variables = [
             'menus'      => $this->showNavLinks(),
