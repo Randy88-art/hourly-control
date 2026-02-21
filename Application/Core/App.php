@@ -9,7 +9,10 @@
             private ?Container $container = null,
             private string $controller = "", 
             private string $method = "index",
-            private string $route = "",                     
+            private string $route = "",
+            private array $protectedRoutes = [
+                'AdminController'  => 'auth'
+            ]                     
         )
         {           
             $this->container = new Container();                     
@@ -29,6 +32,8 @@
 
         public function router(): void {            
             try {
+                session_start();
+
                 $url = $this->splitUrl();
 
                 // Test diferent options to configure to Controller                         
@@ -53,7 +58,7 @@
         
                     $this->controller = ucfirst($url[count($url) - 2]);
                     $this->method = $url[count($url) - 1];                                                       
-                } 
+                }                
 
                 // Build the Controller
                 $this->route = "/Application/Controller/" . $this->route;        
@@ -67,7 +72,13 @@
                 else {                    
                     $this->controller = "ErrorController";
                     $controller_path = '\Application\Controller\\' . ucfirst($this->controller);                                                        
-                } 
+                }
+                
+                /** Manage Middlewares */
+                if(isset($this->protectedRoutes[$this->controller])) {
+                    $middleware = $this->container->getMiddleware($this->protectedRoutes[$this->controller]);            
+                    $middleware->handle();
+                }
                                                 
                 $controller = $this->container->get($controller_path);
 
@@ -85,7 +96,7 @@
 
                 call_user_func_array([$controller, $this->method], $params);
 
-            } catch (\Throwable $th) {
+            } catch(\Throwable $th) {
                 \Application\Core\ErrorHandler::handle($th, $controller ?? null);
             }                                            
         }        
