@@ -5,9 +5,9 @@ namespace Application\Middlewares;
 
 use Application\interfaces\MiddlewareInterface;
 
-final class AuthMiddleware implements MiddlewareInterface
+final class RoleMiddeleware implements MiddlewareInterface
 {
-    public function __construct()
+    public function __construct(private array $roles)
     {}
 
     public function handle(): void
@@ -16,6 +16,12 @@ final class AuthMiddleware implements MiddlewareInterface
             $_SESSION['error_message'] = "Debes logearte para la acción requerida.";            
             
             header("Location: /");
-        }                
+        }
+        
+        if(isset($_SESSION['role']) && !in_array($_SESSION['role'], $this->roles)) {
+            $_SESSION['error_message'] = "No tienes privilegios para realizar la acción.";
+
+            header("Location: /");
+        }
     }
 }

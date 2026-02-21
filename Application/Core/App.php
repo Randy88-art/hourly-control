@@ -15,10 +15,10 @@
         {           
             $this->container = new Container();
             $this->protectedRoutes = [
-                'AdminController'   =>  'auth',
-                'SearchController'  =>  'auth',
-                'ProjectController' =>  'auth',
-                'TaskController'    =>  'auth'
+                'AdminController'   =>  'admin',
+                'SearchController'  =>  'admin',
+                'ProjectController' =>  'admin',
+                'TaskController'    =>  'admin'
             ];                     
         }
         

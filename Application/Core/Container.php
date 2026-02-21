@@ -27,7 +27,10 @@ final class Container
     /** Resgister Middlewares */
     private function registerMiddlewares(): void
     {
-        $this->middlewares['auth'] = fn() => new \Application\Middlewares\AuthMiddleware();
+        $this->middlewares['auth']  = fn() => new \Application\Middlewares\AuthMiddleware();
+        $this->middlewares['admin'] = fn() => new \Application\Middlewares\RoleMiddeleware([
+            'ROLE_ADMIN'
+        ]);
     }
 
     public function getMiddleware(string $name): object
