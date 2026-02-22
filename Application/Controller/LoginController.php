@@ -20,26 +20,27 @@
         }
 
         public function index(): void
-        {               
+        {
+            $twig_variables = [
+                'menus'         => $this->showNavLinks(),                    
+                'active'        => 'login',
+                'csrf_token'    => $this->validate,              
+            ];
+
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                 // Get values from login form
                 $this->fields = [
                     'email'     =>  $this->validate->validate_email(strtolower($_POST['email'])) ? $this->validate->test_input(strtolower($_POST['email'])) : "",
                     'password'  =>  $this->validate->test_input($_POST['password']) ?? "",
-                ];
+                ];                
 
-                $variables = [
-                    'menus'         => $this->showNavLinks(),
-                    'fields'        => $this->fields,                        
-                    'active'        => 'login',
-                    'csrf_token'    => $this->validate,
-                ];
+                $twig_variables = array_merge($twig_variables, ['fields' => $this->fields]);
 
                 // Validate csrf token
                 if(!$this->validate->validate_csrf_token()) {
                     $this->message = "Invalid csrf token";
-                    $variables['error_message'] = $this->message;
+                    $twig_variables['error_message'] = $this->message;
                 }
                 else {
                     // Validate form                    
@@ -60,28 +61,21 @@
                                     return;						
                                 }
                                 else {
-                                    $variables['error_message'] = 'Please test your credentials';
+                                    $twig_variables['error_message'] = 'Please test your credentials';
                                 }                                                                
                             }
                             else {
-                                $variables['error_message'] = 'Please test your credentials';
+                                $twig_variables['error_message'] = 'Please test your credentials';
                             }                            
                         }
                         else {
-                            header("Location: /home");
-                            die();	
+                            header("Location: /home");                            
                         }
                     }
-                } 
-                
-                $this->render('login/login_view.twig', $variables);
+                }                               
             }                                                                             
 
-            $this->render('login/login_view.twig', [
-                'menus'         => $this->showNavLinks(),                    
-                'active'        => 'login',
-                'csrf_token'    => $this->validate,              
-            ]);                                            
+            $this->render('login/login_view.twig', $twig_variables);                                           
         }        
     }    
 ?>

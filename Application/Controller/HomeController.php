@@ -34,6 +34,8 @@
                 'active' => 'home',                                 
             ];
 
+            if(isset($_SESSION['message']) || isset($_SESSION['error_message'])) $options = array_merge($options, ['session' => $_SESSION]);
+
             // If there is an active session test the working state
             // of the user and shows worked hours
             if(isset($_SESSION['id_user'])) {                    
@@ -68,7 +70,8 @@
                 ]);                    
             }            
                                                             
-            $this->render('main_view.twig', $options );                                             
+            $this->render('main_view.twig', $options );
+            $this->clearSessionMessages();                                             
         }
     }    
 ?>

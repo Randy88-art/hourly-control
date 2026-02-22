@@ -20,10 +20,7 @@ class ProjectController extends Controller
     }
 
     public function index($id = null): void
-    {        
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
+    {
         // Set variables to pass to the view
         $variables = [
             'menus'      => $this->showNavLinks(),
@@ -59,10 +56,7 @@ class ProjectController extends Controller
     }
     
     public function new(): void
-    {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
+    {        
         $variables = [
             'menus'      => $this->showNavLinks(),
             'session'    => $_SESSION,
@@ -102,9 +96,6 @@ class ProjectController extends Controller
 
     public function edit($id) :void
     {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
         // Get the current project from the database
         $this->fields = $this->query->selectOneBy('projects', 'project_id', $id);
             
@@ -152,9 +143,6 @@ class ProjectController extends Controller
 
     public function delete($id): void
     {
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
         // Check if the project exists
         $project = $this->query->selectOneBy('projects', 'project_id', $id);
         if (!$project) {

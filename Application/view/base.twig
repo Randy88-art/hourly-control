@@ -57,17 +57,17 @@
 					<p class="date text-end pe-3" id="date">&nbsp;</p>
 				{% endif %}
 				
-				{% if message is defined %}
-					<p class="alert alert-success text-center">{{ message }}</p>					
-				{% elseif error_message is defined %}
+				{% if message is defined or session.message is defined%}
+					<p class="alert alert-success text-center">{{ message }} {{ session.message }}</p>					
+				{% elseif error_message is defined or session.error_message is defined %}
 					{% if error_message is iterable %}
 					<p class="alert alert-danger text-center">
 						{% for key, row in error_message %}
-						{{ key }} : {{ row }}<br>
+						{{ key }}: {{ row }}<br>
 						{% endfor %}
 					</p>  
 					{% else %}
-					<p class="alert alert-danger text-center">{{ error_message }}</p>
+					<p class="alert alert-danger text-center">{{ error_message }} {{ session.error_message }}</p>
 					{% endif %}						
 				{% endif %}
 				{% block main %}

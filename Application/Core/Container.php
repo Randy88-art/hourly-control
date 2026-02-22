@@ -13,13 +13,33 @@ final class Container
 {
     public function __construct(
         private ?Connection $dbcon = null,
-        private array $services  = [],
-        private array $factories = []
+        private array $services     = [],
+        private array $factories    = [],
+        private array $middlewares  = []
     )
     {
         $this->dbcon = new Connection(include DB_CONFIG_FILE);
         $this->registerBaseServices();
         $this->registerControllerFactories();
+        $this->registerMiddlewares();
+    }
+
+    /** Resgister Middlewares */
+    private function registerMiddlewares(): void
+    {
+        $this->middlewares['auth']  = fn() => new \Application\Middlewares\AuthMiddleware();
+        $this->middlewares['admin'] = fn() => new \Application\Middlewares\RoleMiddeleware([
+            'ROLE_ADMIN'
+        ]);
+    }
+
+    public function getMiddleware(string $name): object
+    {
+        if(isset($this->middlewares[$name])) {
+            return $this->middlewares[$name]();
+        }
+
+        throw new \Exception("Middleware $name not found.", 1);        
     }
 
     /** 

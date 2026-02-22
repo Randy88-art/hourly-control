@@ -6,7 +6,7 @@ namespace Application\Core;
 
 final class ErrorHandler
 {
-    public static function handle(\Throwable $th, $controllerInstance = null): void
+    public static function handle(\Throwable $th, ?object $controllerInstance = null): void
     {
         $error_msg = [
             'Error' => $th->getMessage()
@@ -23,7 +23,7 @@ final class ErrorHandler
 
         if($controllerInstance) {
             $controllerInstance->render('error_view.twig', [
-                'menus' => $controllerInstance->showNavLinks(),
+                'menus'             => $controllerInstance->showNavLinks(),
                 'exception_message' => $error_msg,
             ]);
 

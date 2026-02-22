@@ -1,6 +1,4 @@
-<?php	
-	session_start();	
-
+<?php		
 	/** Define root folder */
 	define("SITE_ROOT", $_SERVER['DOCUMENT_ROOT']);	
 

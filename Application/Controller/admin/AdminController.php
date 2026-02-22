@@ -19,10 +19,7 @@ final class AdminController extends Controller
     }
 
     public function index()
-    {                        
-        // Test for privileges
-            if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');
-
+    {
         $this->render('admin/dashboard_view.twig', [
             'menus'   => $this->showNavLinks(),
             'session' => $_SESSION,
