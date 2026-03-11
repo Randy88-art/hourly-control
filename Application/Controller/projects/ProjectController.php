@@ -7,6 +7,7 @@ namespace Application\Controller\projects;
 use Application\Core\Controller;
 use Application\model\classes\Query;
 use Application\model\classes\Validate;
+use Application\model\Entity\Project;
 
 class ProjectController extends Controller
 {
@@ -96,13 +97,13 @@ class ProjectController extends Controller
 
     public function edit($id) :void
     {
-        // Get the current project from the database
-        $this->fields = $this->query->selectOneBy('projects', 'project_id', $id);
+        // Get the current project from the database        
+        $project = $this->query->findOneBy('projects', 'project_id', $id, Project::class);
             
         $variables = [
             'menus'      => $this->showNavLinks(),
             'session'    => $_SESSION,
-            'fields'     => $this->fields,
+            'fields'     => $project,
             'csrf_token' => $this->validate,
             'active'     => 'administration',
         ];
@@ -110,7 +111,7 @@ class ProjectController extends Controller
         // Check if the form is submitted
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->fields = [
-                'project_id'          => $id, // Assuming $id is the project ID being edited
+                'project_id'          => $project->project_id, // Assuming $id is the project ID being edited
                 'project_name'        => $this->validate->test_input($_POST['project_name']),                    
                 'active'              => isset($_POST['project_active']) ? 1 : 0, // Checkbox handling
             ];
@@ -124,6 +125,7 @@ class ProjectController extends Controller
 
                 // Update the project in the database
                 $this->fields['project_description'] = $this->validate->test_input($_POST['project_description']);
+                $project->with($this->fields);
                 $this->query->updateRegistry('projects', $this->fields, 'project_id');
 
                 // Redirect to the projects index page after saving

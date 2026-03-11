@@ -97,14 +97,18 @@ use PDO;
             }
         }
 
-        public function updateRegistry(string $table, array|object $fields, string $primary_key_name): void
+        public function updateRegistry(string $table, array|object $fields, string $primary_key_name = 'id'): void
         {
+            $data = is_object($fields) ? (array) $fields : $fields;
+
+            if(!isset($data[$primary_key_name])) throw new \Exception("Primary key '$primary_key_name' don't exist, test correct name please!", 1);
+            
             $query = "UPDATE $table SET";
             $params = [];
 
-            if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
+            //if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
             
-            foreach ($fields as $key => $value) {
+            foreach ($data as $key => $value) {
                if($key !== $primary_key_name)  $query .= " $key = :$key,";
                $params[":$key"] = $value;
             }
@@ -119,7 +123,7 @@ use PDO;
                 $stm->closeCursor();                
 
             } catch (\Throwable $th) {
-                throw new \Exception("{$th->getMessage()}", 1);
+                throw new \Exception("Error on update $table table {$th->getMessage()}", 1);
             }             
         }
 
@@ -548,6 +552,33 @@ use PDO;
 
             } catch (\Throwable $th) {
                 throw new \Exception("{$th->getMessage()}", 1);
+            }
+        }
+
+        /**
+         * Método genérico para obtener CUALQUIER entidad por CUALQUIER campo
+         * @template T
+         * @param class-string<T> $className Nombre de la clase (ej: User::class)
+         * @return T|bool
+         */
+        public function findOneBy(string $table, string $field, mixed $value, string $className): object|bool
+        {
+            $query = "SELECT * FROM $table WHERE $field = :val LIMIT 1";
+
+            try {
+                $stm = $this->pdo->prepare($query);
+                $stm->bindValue(":val", $value);
+                $stm->execute();
+                $data = $stm->fetch(PDO::FETCH_ASSOC);
+                $stm->closeCursor();
+
+                if (!$data) return false;
+
+                // ¡Magia! Creamos cualquier clase dinámicamente
+                return new $className(...$data);
+
+            } catch (\Throwable $th) {
+                throw new \Exception("Error buscando en $table: " . $th->getMessage());
             }
         }
     }    
