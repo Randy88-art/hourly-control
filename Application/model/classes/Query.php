@@ -105,7 +105,7 @@ use PDO;
             
             $query = "UPDATE $table SET";
             $params = [];            
-            
+
             foreach ($data as $key => $value) {
                if($key !== $primary_key_name)  $query .= " $key = :$key,";
                $params[":$key"] = $value;
