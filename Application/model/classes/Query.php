@@ -104,9 +104,7 @@ use PDO;
             if(!isset($data[$primary_key_name])) throw new \Exception("Primary key '$primary_key_name' don't exist, test correct name please!", 1);
             
             $query = "UPDATE $table SET";
-            $params = [];
-
-            //if(is_object($fields) && method_exists($fields, 'getFields')) $fields = $fields->getFields();
+            $params = [];            
             
             foreach ($data as $key => $value) {
                if($key !== $primary_key_name)  $query .= " $key = :$key,";
