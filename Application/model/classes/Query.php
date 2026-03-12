@@ -113,7 +113,7 @@ use PDO;
             
             $query = rtrim($query, ",");
             $query .= " WHERE $primary_key_name = :$primary_key_name";
-            $params[":$primary_key_name"] = $fields[$primary_key_name];                        
+            $params[":$primary_key_name"] = $data[$primary_key_name];                        
                                                   
             try {
                 $stm = $this->pdo->prepare($query);                        
