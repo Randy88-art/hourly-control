@@ -7,7 +7,7 @@ namespace Application\Controller\tasks;
 use Application\Core\Controller;
 use Application\model\classes\Query;
 use Application\model\classes\Validate;
-use Application\model\Task;
+use Application\model\Entity\Task;
 
 final class TaskController extends Controller
 {
@@ -98,36 +98,28 @@ final class TaskController extends Controller
 
     public function edit($id): void
     {
+        $task = $this->query->findOneBy('tasks', 'task_id', $id, Task::class);
+
         $variables = [
             'menus'      => $this->showNavLinks(),
             'priorities' => $this->query->selectAll('tasks_priority'),
             'session'    => $_SESSION,
+            'fields'     => $task,
             'csrf_token' => $this->validate,
             'active'     => 'administration',
-        ];
-
-        // Test for privileges
-        if(!$this->testAccess(['ROLE_ADMIN'])) throw new \Exception('Only admins can access this page');            
-
-        $task = new Task($this->query->selectOneBy('tasks', 'task_id', $id));
-        $this->fields = [
-            'task_name'        => $task->getTaskName(),
-            'task_description' => $task->getTaskDescription(),
-            'task_priority'    => $task->getTaskPriorityId(),
-            'active'           => $task->getActive(),
-        ];            
+        ];                  
 
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->fields  = [
-                'task_id'          => $id,
+            $this->fields  = [                
                 'task_name'        => $this->validate->test_input($_POST['task_name']),                    
-                'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
+                'task_priority_id' => (int) $this->validate->test_input($_POST['task_priority']),
                 'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                    
             ];
 
             if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
                 $this->fields['task_description'] = isset($_POST['task_description']) ? $this->validate->test_input($_POST['task_description']) : "";
-                $this->query->updateRegistry('tasks', $this->fields, 'task_id');                    
+                $task = $task->with($this->fields);
+                $this->query->updateRegistry('tasks', $task, 'task_id');                    
 
                 header("Location: /Tasks/task/index");
             }
@@ -137,9 +129,7 @@ final class TaskController extends Controller
                                                 $this->validate->get_msg() : 
                                                 "Invalid csrf_token";
             }
-        }
-
-        $variables['fields'] = $this->fields;
+        }        
 
         $this->render('admin/tasks/edit_task_view.twig', $variables);
     }
