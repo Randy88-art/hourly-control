@@ -67,7 +67,7 @@ class ProjectController extends Controller
 
         // Check if the form is submitted
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->fields = [
+            $this->fields = [                
                 'project_name'        => $this->validate->test_input($_POST['project_name']),
                 'project_description' => $this->validate->test_input($_POST['project_description']),                    
                 'active'              => isset($_POST['project_active']) ? 1 : 0, // Assuming 'active' is a checkbox
@@ -75,8 +75,11 @@ class ProjectController extends Controller
 
             // Validate CSRF token
             if ($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
+                // Create a new project
+                $project = new Project(...$this->fields);
+
                 // Insert the new project into the database
-                $this->query->insertInto('projects', $this->fields);
+                $this->query->insertInto('projects', $project);
                 
                 // Redirect to the projects index page after saving
                 header('Location: /projects/project/index');
