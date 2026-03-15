@@ -8,8 +8,8 @@ use Application\Core\Controller;
 use DateTime;
 use Application\model\classes\QueryHourlyControl;
 use Application\model\classes\Validate;
-use Application\model\Project;
-use Application\model\Task;
+use Application\model\Entity\Project;
+use Application\model\Entity\Task;
 use PDO;
 
 class HourlyController extends Controller
@@ -55,10 +55,10 @@ class HourlyController extends Controller
             'csrf_token'        => $this->validate,
             'fields'            => [
                 'project' => $this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project'])) != false ? 
-                                new Project($this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
+                                new Project(...$this->queryHourlyControl->selectOneBy('projects', 'project_id', $this->validate->test_input($_POST['project']))) : 
                                 null,
                 'task'    => $this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task'])) != false ? 
-                                new Task($this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
+                                new Task(...$this->queryHourlyControl->selectOneBy('tasks', 'task_id', $this->validate->test_input($_POST['task']))) : 
                                 null,
             ]
         ];            
@@ -84,8 +84,8 @@ class HourlyController extends Controller
             $this->queryHourlyControl->insertInto("hourly_control", [
                 "id_user"    => $_SESSION['id_user'],
                 "date_in"    => $dateIn,
-                "project_id" => $variables['fields']['project']->getProjectId(),
-                "task_id"    => $variables['fields']['task']->getTaskId(),
+                "project_id" => $variables['fields']['project']->project_id,
+                "task_id"    => $variables['fields']['task']->task_id,
             ]);
         }
                         

@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{ project.project_id }}</td>
                         <td>{{ project.project_name }}</td>
-                        <td class="text-align-left">{{ project.project_description }}</td>
+                        <td class="text-align-left">{{ project.project_description|raw }}</td>
                         <td>
                             {% if project.active %}
                                 <span class="text-success">&#10003;</span> {# ✔ #}
