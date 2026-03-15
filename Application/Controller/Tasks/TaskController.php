@@ -75,13 +75,16 @@ final class TaskController extends Controller
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->fields  = [
                 'task_name'        => $this->validate->test_input($_POST['task_name']),                    
-                'task_priority_id' => $this->validate->test_input($_POST['task_priority']),
+                'task_priority_id' => (int) $this->validate->test_input($_POST['task_priority']),
                 'active'           => isset($_POST['task_active']) ? 1 : 0, // Checkbox handling                   
             ];
 
             if($this->validate->validate_csrf_token() && $this->validate->validate_form($this->fields)) {
                 $this->fields['task_description'] = isset($_POST['task_description']) ? $this->validate->test_input($_POST['task_description']) : "";
-                $this->query->insertInto('tasks', $this->fields);
+                
+                // Create a new task
+                $task = new Task(...$this->fields);
+                $this->query->insertInto('tasks', $task);
 
                 header("Location: /Tasks/task/index");
             }
