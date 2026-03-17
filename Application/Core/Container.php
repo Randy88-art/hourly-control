@@ -73,44 +73,44 @@ final class Container
      */
     private function registerControllerFactories(): void
     {
-        $this->factories["\Application\Controller\LoginController"] = fn() => new \Application\Controller\LoginController(
+        $this->factories[\Application\Controller\LoginController::class] = fn() => new \Application\Controller\LoginController(
             $this->get('validate'),
             $this->get('query')
         );
 
-        $this->factories["\Application\Controller\HomeController"] = fn() => new \Application\Controller\HomeController(
+        $this->factories[\Application\Controller\HomeController::class] = fn() => new \Application\Controller\HomeController(
             $this->get('validate'),
             $this->get('query_hourly_control'),
             $this->get('hourly_control')
         );
 
-        $this->factories["\Application\Controller\admin\AdminController"] = fn() => new \Application\Controller\admin\AdminController(
+        $this->factories[\Application\Controller\admin\AdminController::class] = fn() => new \Application\Controller\admin\AdminController(
             $this->get('validate'),
             $this->get('query')
         );
 
-        $this->factories["\Application\Controller\hourlycontrol\HourlyController"] = fn() => new \Application\Controller\hourlycontrol\HourlyController(
+        $this->factories[\Application\Controller\hourlycontrol\HourlyController::class] = fn() => new \Application\Controller\hourlycontrol\HourlyController(
             $this->get('validate'),
             $this->get('query_hourly_control'),
             $this->dbcon->getConnection()
         );
 
-        $this->factories["\Application\Controller\projects\ProjectController"] = fn() => new \Application\Controller\projects\ProjectController(
+        $this->factories[\Application\Controller\projects\ProjectController::class] = fn() => new \Application\Controller\projects\ProjectController(
             $this->get('validate'),
             $this->get('query')
         );
 
-        $this->factories["\Application\Controller\Tasks\TaskController"] = fn() => new \Application\Controller\Tasks\TaskController(
+        $this->factories[\Application\Controller\Tasks\TaskController::class] = fn() => new \Application\Controller\Tasks\TaskController(
             $this->get('validate'),
             $this->get('query')
         );
 
-        $this->factories["\Application\Controller\RegisterController"] = fn() => new \Application\Controller\RegisterController(
+        $this->factories[\Application\Controller\RegisterController::class] = fn() => new \Application\Controller\RegisterController(
             $this->get('validate'),
             $this->get('query')
         );
 
-        $this->factories["\Application\Controller\admin\SearchController"] = fn() => new \Application\Controller\admin\SearchController(
+        $this->factories[\Application\Controller\admin\SearchController::class] = fn() => new \Application\Controller\admin\SearchController(
             $this->get('validate'),
             $this->get('query_hourly_control')
         );
@@ -119,6 +119,8 @@ final class Container
     /** We get a service or build a controller */
     public function get(string $id): object
     {
+        $id = ltrim($id, '\\');
+
         // If it's a controller defined in our factories
         if(isset($this->factories[$id])) {
             return $this->factories[$id]();
