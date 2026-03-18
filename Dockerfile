@@ -30,6 +30,7 @@ RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype && docke
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer self-update
 
 # Configure virtual host
 RUN mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.old
