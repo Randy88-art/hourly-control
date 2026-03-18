@@ -8,30 +8,25 @@ git clone git@github.com:u83mm/hourly-control.git "directoryName"
 ```
 cd directoryName
 ```
-3.- Create "log" directory inside "Application" directory and inside "log" directory create "apache", "db" and "php" directories.
-```
-cd Application
-mkdir log log/apache log/db log/php
-```
-4.- Build the project and stands up the containers
+3.- Build the project and stands up the containers
 ```
 docker compose build
 docker compose up -d
 ```
-5.- Enter in php container and run "composer install"
+4.- Enter in php container and run "composer install"
 ```
 docker exec -it php bash
 composer install
 ```
-6.- Access to phpMyAdmin.
+5.- Access to phpMyAdmin.
 ```
 http://localhost:8080/
 user: admin
 passwd: admin
 ```
-7.- Select "my_database" and go to "import" menu and search my_database.sql file in your "Application/MariaDB" directory.
+6.- Select "my_database" and go to "import" menu and search my_database.sql file in your "Application/MariaDB" directory.
 
-8.- Go to your localhost in the browser and you can do login.
+7.- Go to your localhost in the browser and you can do login.
 ```
 http://localhost/
 user: admin@admin.com
