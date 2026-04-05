@@ -19,7 +19,7 @@ RUN adduser --disabled-password --gecos '' --uid ${USER_ID} --gid ${GROUP_ID} ${
 # Set working directory
 WORKDIR /var/lib/mysql
 
-COPY my_database.sql /var/lib/mysql
+COPY my_database.sql /docker-entrypoint-initdb.d/
 
 USER 1000
 
