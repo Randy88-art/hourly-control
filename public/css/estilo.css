@@ -89,6 +89,7 @@ td {
 	text-align: center;
 	padding: 0.5em;	
 	border: 1px solid whitesmoke;
+	vertical-align: middle;
 }
 
 .table-antiquewhite tr {
@@ -115,10 +116,14 @@ footer p{
 }
 
 footer {
-	background-color: darkslategray;
+	background-color: rgb(197, 225, 212);
 	padding: 1em;
 	clear: both;
 	min-height: 10em;
+}
+
+footer h3 {
+	text-align: center;
 }
 
 .error {
@@ -292,9 +297,13 @@ div:has(input[type="checkbox"]) {
 	margin-top: 0.5em;
 }
 
-#delete_form {
+.delete_form {
 	display: inline-block;
 	margin: 0;
+}
+
+.delete_form button {
+	width: 10em;
 }
 
 #pagination {
@@ -331,6 +340,10 @@ div:has(input[type="checkbox"]) {
 	color: white;
 }
 
+.actions a {
+	width: 10em;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {
@@ -344,6 +357,10 @@ div:has(input[type="checkbox"]) {
 			width: 100%;
 			margin: 0.5em 0em;
 		}
+	}
+
+	.actions a {
+		margin-bottom: 0.5em;
 	}
 }
 
@@ -377,13 +394,19 @@ div:has(input[type="checkbox"]) {
 			margin: 0.5em 0em;
 		}
 	}
+
+	.actions a {
+		margin-bottom: 0.5em;
+	}
 }
 
 /***************************************************************
 *		Configuración para tablets landscape (horizontal)	   *
 ***************************************************************/
 @media (min-width: 769px) and (max-width: 1050px) {
-
+	.actions a {
+		margin-bottom: 0.5em;
+	}
 }
 
 /***************************************************************

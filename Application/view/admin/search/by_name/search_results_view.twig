@@ -33,7 +33,7 @@
                                 <span class="text-danger">&#10007;</span> {# ✖ #}
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="actions">
                             <a class="btn btn-outline-success" href="/projects/project/edit/{{ project.project_id }}">Edit</a>
                             {{ include('admin/projects/_delete_form.twig') }}
                         </td>
