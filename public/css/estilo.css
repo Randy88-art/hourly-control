@@ -344,6 +344,10 @@ div:has(input[type="checkbox"]) {
 	width: 10em;
 }
 
+#search_results thead tr {
+	background: darkkhaki;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {
