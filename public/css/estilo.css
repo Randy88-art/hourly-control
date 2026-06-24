@@ -324,6 +324,10 @@ div:has(input[type="checkbox"]) {
 	text-align: center;
 }
 
+.text-align-right {
+	text-align: right;
+}
+
 #search_by_project_name, #search_by_task_name {
 	width: 65%;
 	display: inline-block;
