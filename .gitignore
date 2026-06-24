@@ -23,3 +23,5 @@
 /Application/log/
 /Application/db_vol
 ###< my files to ignore ###
+.aider*
+
