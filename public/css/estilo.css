@@ -29,25 +29,27 @@ src: url('../ttf/Ubuntu-I.ttf') format('truetype');
 
 body {
 	font-size: 100%;
-	/* max-width: 1140px; */
-	width: 90%;
+	background-color: #121212; /* Fondo oscuro principal */
+	color: #e0e0e0; /* Texto claro por defecto */
+	/* max-width: 1200px; */
+	width: 95%;
 	font-family: ubuntuRegular;
 	margin: 0 auto;
 }
 
 hr {
-	margin-top: 10px;
+	border-color: #444;
 }
 
 h1 {
 	font-size: 2em;
-	margin-bottom: 30px;
+	margin-bottom: 40px;
 	text-align: center;
-	transform: translate(0px, 20px);
 }
 
 h2 {
-	font-size: 1.5em;	
+	font-size: 1.8em;	
+	color: #f0f0f0;
 }
 
 h3 {
@@ -81,19 +83,23 @@ nav a {
 }
 
 p{	
-	text-align: justify;	
+	text-align: left;	
 	margin-bottom: 1em;
 }
 
 td {
 	text-align: center;
-	padding: 0.5em;	
-	border: 1px solid whitesmoke;
+	padding: 0.7em;	
+	border: 1px solid #333; /* Borde sutil en modo oscuro */
 	vertical-align: middle;
 }
 
-.table-antiquewhite tr {
-	background-color: antiquewhite;
+.table-dark tbody tr {
+	background-color: #1e1e1e; /* Fondo de fila oscura */
+}
+
+.table-dark tbody tr:nth-child(odd) {
+	background-color: #2a2a2a; /* Variación de color para filas impares */
 }
 
 .table-antiquewhite tr:nth-child(odd) {
@@ -116,7 +122,7 @@ footer p{
 }
 
 footer {
-	background-color: rgb(197, 225, 212);
+	background-color: #1e1e1e; /* Fondo oscuro para el pie de página */
 	padding: 1em;
 	clear: both;
 	min-height: 10em;
@@ -352,6 +358,17 @@ div:has(input[type="checkbox"]) {
 	background: darkkhaki;
 }
 
+.footer-column {
+	border: 1px solid white;
+	/* Simula un ligero efecto border-box con una sombra sutil */
+	box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+	width: 23%; 
+}
+
+div.row:has(.footer-column) {	
+	justify-content: space-evenly;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {
@@ -369,6 +386,13 @@ div:has(input[type="checkbox"]) {
 
 	.actions a {
 		margin-bottom: 0.5em;
+	}
+
+	.footer-column {
+		border: 1px solid white;
+		/* Simula un ligero efecto border-box con una sombra sutil */
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+		width: inherit; 
 	}
 }
 
@@ -406,6 +430,13 @@ div:has(input[type="checkbox"]) {
 	.actions a {
 		margin-bottom: 0.5em;
 	}
+
+	.footer-column {
+		border: 1px solid white;
+		/* Simula un ligero efecto border-box con una sombra sutil */
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+		width: inherit; 
+	}
 }
 
 /***************************************************************
@@ -415,12 +446,18 @@ div:has(input[type="checkbox"]) {
 	.actions a {
 		margin-bottom: 0.5em;
 	}
+
+	.footer-column {
+		border: 1px solid white;
+		/* Simula un ligero efecto border-box con una sombra sutil */
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+		width: 45%; 
+	}
 }
 
 /***************************************************************
 *			 Configuración para KINDLE FIRE					   *
 ***************************************************************/
 @media (min-width: 1051px) and (max-width: 1280px) {
-		
-}
 
+}
