@@ -94,12 +94,22 @@ td {
 	vertical-align: middle;
 }
 
+.table-dark {
+	margin: 0 auto;
+	border-collapse: collapse;
+	width: 100%;
+}
+
 .table-dark tbody tr {
 	background-color: #1e1e1e; /* Fondo de fila oscura */
 }
 
 .table-dark tbody tr:nth-child(odd) {
 	background-color: #2a2a2a; /* Variación de color para filas impares */
+}
+
+.table-dark thead {
+	background-color: #333; /* Fondo de cabecera oscura */
 }
 
 .table-antiquewhite tr:nth-child(odd) {
