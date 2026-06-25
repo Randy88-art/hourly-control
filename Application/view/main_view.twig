@@ -6,10 +6,10 @@
     <form id="hours_control_form" action="#" method="post">
         <input type="hidden" name="csrf_token" value="{% if csrf_token is defined %}{{ csrf_token.csrf_token }}{% endif %}">
         <section class="row mb-5">
-            <h2 class="text-center mb-4">Select project and task</h2>
-            <div class="text-center">
+            <h2 class="text-align-center mb-4">Select project and task</h2>
+            <div class="text-align-center">
                 <!-- Project -->
-                <select class="col-2 text-center" name="project" id="project">
+                <select class="col-2 text-align-center" name="project" id="project">
                     {% if fields.project is defined and fields.project != null %}
                         <option value="{{ fields.project.getProjectId() }}">{{ fields.project.getProjectName() }}</option>
                     {% else %}
@@ -25,7 +25,7 @@
                 </select>
 
                 <!-- Task -->
-                <select class="col-2 text-center" name="task" id="task">
+                <select class="col-2 text-align-center" name="task" id="task">
                     {% if fields.task is defined and fields.task != null %}
                         <option value="{{ fields.task.getTaskId() }}">{{ fields.task.getTaskName() }}</option>
                     {% else %}
@@ -41,10 +41,10 @@
                 </select>
             </div>        
         </section>
-        <section class="row text-center mb-5">    
+        <section class="row text-align-center mb-5">    
             <h2>Work time information</h2>
             <div class="col col-md-8 col-lg-6 m-auto">
-                <table class="table table-bordered table-striped m-auto">
+                <table class="table table-bordered table-striped m-auto table-dark">
                     <thead>
                         <tr>
                             <th>Work state</th>
@@ -70,7 +70,7 @@
                 </table>
             </div>                   
         </section>
-        <section class="row text-center">
+        <section class="row text-align-center">
             <h2>Hours Control</h2>
             <div>
                 <button id="enter" class="col-3 col-md-2 btn btn-outline-success">Enter</button>
@@ -80,7 +80,7 @@
     </form>
     {% else %}
     {# Shows main view for not logged users #}
-    <section class="row text-center">
+    <section class="row text-align-center">
         <h2>Hours Control</h2>
         <figure class="mb-3 col-6 m-auto">
             <img src="/images/hourlycontrol.png" alt="clock">

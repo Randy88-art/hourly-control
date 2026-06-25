@@ -2,10 +2,10 @@
 
 {% block main %}    
     <section class="row"> 
-        <h2 class="text-center">Tasks Index</h2>
+        <h2 class="text-align-center">Tasks Index</h2>
         <div class="table-responsive">
-            <table class="table ">
-                <thead class="text-center">
+            <table class="table-dark">
+                <thead class="text-align-center">
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
@@ -17,10 +17,10 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="table-antiquewhite">
+                <tbody>
                     {% if tasks is empty %}
                         <tr>
-                            <td colspan="8" class="text-center">No tasks found.</td>
+                            <td colspan="8" class="text-align-center">No tasks found.</td>
                         </tr>
                     {% endif %}
                     {% for task in tasks %}
