@@ -379,6 +379,24 @@ div.row:has(.footer-column) {
 	justify-content: space-evenly;
 }
 
+#clock {
+	border: 1px solid wheat;
+	padding: 1em;
+	border-radius: 0.5em;
+	box-shadow: 0 0 0.5em;
+	background: rgba(255, 255, 255, .1);
+	width: 40%;
+}
+
+#clock + div {
+	color: wheat;
+	display: inline-block;
+	width: 60%;
+	padding: 1em;
+	font-size: 2em;
+	text-align: left;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {
@@ -403,6 +421,14 @@ div.row:has(.footer-column) {
 		/* Simula un ligero efecto border-box con una sombra sutil */
 		box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 		width: inherit; 
+	}
+
+	#clock {
+		width: 100%;
+	}
+
+	#clock + div {
+		width: 100%;
 	}
 }
 
