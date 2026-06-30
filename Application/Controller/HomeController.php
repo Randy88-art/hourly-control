@@ -44,6 +44,10 @@
                 $workstate       = $this->queryHourlyControl->getWorkState();
                 $workstate_color = $this->queryHourlyControl->getWorkStateSuccessOrDanger();
                 
+
+                // Get current project and task if working
+                $current_project_task = $this->queryHourlyControl->getCurrentProjectAndTask();
+
                 // We obtain the input, output hours and total time worked
                 $hours = $this->queryHourlyControl->getHours();
 
@@ -60,13 +64,14 @@
 
                 // Add new options to the lastest ones
                 $options = array_merge($options, [
-                    'session'         => $_SESSION,
-                    'workstate'       => $workstate,
-                    'workstate_color' => $workstate_color,
-                    'hours'           => $hours,
-                    'projects'        => $this->queryHourlyControl->selectAll('projects'),
-                    'tasks'           => $this->queryHourlyControl->selectAll('tasks'),
-                    'csrf_token'      => $this->validate
+                    'session'               => $_SESSION,
+                    'workstate'             => $workstate,
+                    'workstate_color'       => $workstate_color,
+                    'hours'                 => $hours,
+                    'current_project_task'  => $current_project_task,
+                    'projects'              => $this->queryHourlyControl->selectAll('projects'),
+                    'tasks'                 => $this->queryHourlyControl->selectAll('tasks'),
+                    'csrf_token'            => $this->validate
                 ]);                    
             }            
                                                             

@@ -114,6 +114,30 @@ final class QueryHourlyControl extends Query
         }                    
     }
 
+    public function getCurrentProjectAndTask(): array|null
+    {
+        // Query to fetch the name of the current project and task if a record is currently active (date_out IS NULL)
+        $query = "SELECT p.project_name, t.task_name 
+                  FROM projects p, tasks t 
+                  WHERE p.project_id = (SELECT project_id FROM hourly_control WHERE date_out IS NULL LIMIT 1)
+                    AND t.task_id = (SELECT task_id FROM hourly_control WHERE date_out IS NULL LIMIT 1)";
+
+        try {
+            $stm = $this->pdo->prepare($query);
+            $stm->execute();
+
+            $rows = $stm->fetch(PDO::FETCH_ASSOC);
+
+            return $rows ?: null;
+
+        } catch (\Throwable $th) {
+            // If the query fails (e.g., no active record found, or DB error), we throw an exception 
+            // following existing patterns, although returning null might be safer depending on usage context.
+            // Sticking to the pattern of throwing exceptions for database failures:
+            throw new \Exception("{$th->getMessage()}", 1);
+        }
+    }
+
     public function getWorkState() : string
     {
         $rows = $this->testWorkState();
