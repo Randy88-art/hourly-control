@@ -172,4 +172,41 @@ final class SearchController extends Controller
         
         $this->render('admin/search/by_name/tasks/search_by_task_name_view.twig', $variables);
     }
+
+    public function searchByActiveTasks($id = null): void
+    {
+        // Initialize variables
+        $variables = [
+            'menus'      => $this->showNavLinks(),
+            'session'    => $_SESSION,                
+            'csrf_token' => $this->validate,
+            'active'     => 'administration'
+        ];
+
+        // Create pagination
+        $currentPage = isset($id) ? (int) $id : 1;
+        $limit = MAX_ROWS_PER_PAGES;
+        $offset = ($currentPage - 1) * $limit;
+
+        // Total tasks where active=1
+        $totalTasks = $this->queryHourlyControl->selectAllFromTableWhereFieldLike('tasks', 'active', '1');
+        $totalPages = ceil(count($totalTasks) / $limit); // calculate total number of pages   
+
+        // Paginated results where active=1
+        $tasks = $this->queryHourlyControl->selectRowsForPaginationWhereFieldLikeValue('tasks', $limit, $offset, 'active', '1');
+
+        if($tasks) {
+            // New pagination variables to pass to the view
+            $variables = array_merge($variables, [
+                'tasks'          => $tasks,
+                'currentPage'    => $currentPage, // Assuming MAX_ITEMS_TO_SHOW is defined elsewhere or handled by context
+                'totalPages'     => $totalPages,
+                'totalTasks'     => $totalTasks,
+                'limit'          => $limit,
+                'maxPagesToShow' => MAX_ITEMS_TO_SHOW,
+            ]);
+        }
+
+        $this->render('admin/search/active_tasks/active_tasks_view.twig', $variables);
+    }
 }
