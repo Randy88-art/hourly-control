@@ -1,0 +1,53 @@
+{% extends 'base.twig' %}
+
+{% block title %}Tareas Activas{% endblock %}
+
+{% block main %}
+    <h2>Active Tasks</h2>
+
+    {% if tasks is defined and tasks is not empty %}
+        <h2 class="text-align-center">Found Tasks ({{ totalTasks|length}})</h2>
+        <div class="table-responsive">
+            <table class="table-dark">
+                <thead class="text-align-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.task_id }}</td>
+                            <td class="text-align-left">{{ task.task_name }}</td>
+                            <td class="text-align-left">{{ task.task_description|default('N/A') }}</td>
+                            <td>
+                                {% if task.active %}
+                                    <span class="text-success">&#10003;</span> {# ✔ #}
+                                {% else %}
+                                    <span class="text-danger">&#10007;</span> {# ✖ #}
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a class="btn btn-outline-success" href="/Tasks/task/edit/{{ task.task_id }}">Edit</a>
+                                {{ include('admin/tasks/_delete_form.twig') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>    
+        </div>        
+
+        {# Pagination Controls #}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {# Implement pagination links using currentPage, totalPages, limit #}
+            </ul>
+        </nav>
+    {% elseif tasks is defined and tasks is empty %}
+        <div class="alert alert-info">No se encontraron tareas activas.</div>
+    {% endif %}
+{% endblock %}

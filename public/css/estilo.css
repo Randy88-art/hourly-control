@@ -397,6 +397,18 @@ div.row:has(.footer-column) {
 	text-align: left;
 }
 
+.dashboard-options h3 {
+	margin-left: initial;
+}
+
+.dashboard-options h4 {
+	margin: initial;
+}
+
+footer h3 {
+	margin-left: initial;
+}
+
 /***************** Configuración para móviles **********************/
 @media (max-width:480px) {
 	main {
