@@ -209,4 +209,41 @@ final class SearchController extends Controller
 
         $this->render('admin/search/active_tasks/active_tasks_view.twig', $variables);
     }
+
+    public function searchByActiveProjects($id = null): void
+    {
+        // Initialize variables
+        $variables = [
+            'menus'      => $this->showNavLinks(),
+            'session'    => $_SESSION,                
+            'csrf_token' => $this->validate,
+            'active'     => 'administration'
+        ];
+
+        // Create pagination setup variables
+        $currentPage = isset($id) ? (int) $id : 1;
+        $limit = MAX_ROWS_PER_PAGES;
+        $offset = ($currentPage - 1) * $limit;
+
+        // Total projects where active=1
+        $totalProjects = $this->queryHourlyControl->selectAllFromTableWhereFieldLike('projects', 'active', '1');
+        $totalPages = ceil(count($totalProjects) / $limit); // calculate total number of pages   
+
+        // Paginated results where active=1
+        $projects = $this->queryHourlyControl->selectRowsForPaginationWhereFieldLikeValue('projects', $limit, $offset, 'active', '1');
+
+        if($projects) {
+            // New pagination variables to pass to the view
+            $variables = array_merge($variables, [
+                'projects'       => $projects,
+                'currentPage'    => $currentPage, 
+                'totalPages'     => $totalPages,
+                'totalProjects'  => $totalProjects,
+                'limit'          => $limit,
+                'maxPagesToShow' => MAX_ITEMS_TO_SHOW,
+            ]);
+        }
+
+        $this->render('admin/search/active_projects/active_projects_view.twig', $variables);
+    }
 }
