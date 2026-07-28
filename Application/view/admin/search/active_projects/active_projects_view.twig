@@ -1,0 +1,54 @@
+{% extends 'base.twig' %}
+
+{% block title %}Proyectos Activos{% endblock %}
+
+{% block main %}
+    <h2>Active Projects</h2>    
+
+    {% if projects is defined and projects is not empty %}
+        <h2 class="text-align-center">Found Projects ({{ totalProjects|length }})</h2>
+        <div class="table-responsive">
+            <table class="table-dark">
+                <thead class="text-align-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td class="text-align-center">{{ project.project_id }}</td>
+                            <td class="text-align-left">{{ project.project_name }}</td>
+                            <td class="text-align-left">{{ project.project_description|default('N/A') }}</td>
+                            <td class="text-align-center">
+                                {% if project.active %}
+                                    <span class="text-success">&#10003;</span> {# ✔ #}
+                                {% else %}
+                                    <span class="text-danger">&#10007;</span> {# ✖ #}
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a class="btn btn-outline-success" href="/projects/project/edit/{{ project.project_id }}">Edit</a>
+                                <!-- Assuming a delete form template exists -->
+                                {{ include('admin/projects/_delete_form.twig') }} 
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>    
+        </div>        
+
+        {# Pagination Controls #}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {# Implement pagination links using currentPage, totalPages, limit #}
+            </ul>
+        </nav>
+    {% elseif projects is defined and projects is empty %}
+        <div class="alert alert-info text-center">No se encontraron proyectos activos.</div>
+    {% endif %}
+{% endblock %}
